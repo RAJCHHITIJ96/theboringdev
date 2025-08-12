@@ -4,17 +4,23 @@ import { Button } from '@/components/ui/button';
 
 const Header = () => {
   return (
-    <header className="border-b border-border-subtle theme-transition">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border-subtle bg-background/80 backdrop-blur-md theme-transition">
       <div className="content-container">
         <div className="flex items-center justify-between py-4">
           <div className="flex items-center space-x-8">
-            <h1 className="text-xl font-bold font-serif">theboringdev</h1>
+            <h1 className="text-xl font-bold font-mono">theboringdev</h1>
             <nav className="hidden md:flex items-center space-x-6">
-              <a 
-                href="#" 
-                className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium"
-              >
-                Overview
+              <a href="#" className="nav-link">
+                Latest Intel
+              </a>
+              <a href="#" className="nav-link">
+                Start Reading
+              </a>
+              <a href="#" className="nav-link">
+                Explore Now
+              </a>
+              <a href="#" className="nav-link">
+                Get Updates
               </a>
             </nav>
           </div>

@@ -64,9 +64,9 @@ export default {
 				sm: 'calc(var(--radius) - 2px)',
 			},
 			fontFamily: {
-				'serif': ['IBM Plex Serif', 'serif'],
-				'mono': ['IBM Plex Mono', 'monospace'],
-				'sans': ['Inter', 'sans-serif'],
+				'serif': ['IBM Plex Serif', 'Playfair Display', 'Georgia', 'serif'],
+				'mono': ['IBM Plex Mono', 'JetBrains Mono', 'Fira Code', 'monospace'],
+				'sans': ['Inter', 'SF Pro Display', 'Helvetica Neue', 'sans-serif'],
 			},
 			maxWidth: {
 				'prose': '720px',
