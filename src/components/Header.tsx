@@ -8,7 +8,12 @@ const Header = () => {
       <div className="content-container">
         <div className="flex items-center justify-between py-4">
           <div className="flex items-center space-x-8">
-            <h1 className="text-xl font-bold font-mono">theboringdev</h1>
+            <div className="flex items-center">
+              <h1 className="text-xl font-bold font-mono text-foreground">
+                theboringdev
+              </h1>
+            </div>
+            
             <nav className="hidden md:flex items-center space-x-6">
               <a href="#" className="nav-link">
                 Latest Intel

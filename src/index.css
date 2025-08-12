@@ -198,18 +198,35 @@
     @apply theme-transition;
   }
 
-  /* Bento Box Layout */
+  /* Enhanced Bento Box Layout */
   .bento-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+    @apply grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-6 max-w-5xl mx-auto;
   }
 
   .bento-card {
-    @apply bg-card border border-border-subtle rounded-lg p-6 hover:shadow-lg transition-all duration-300;
-    @apply theme-transition;
+    @apply bg-card border border-border-subtle rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:scale-105;
+    @apply theme-transition animate-fade-in;
+    @apply md:col-span-6 lg:col-span-6;
+  }
+
+  .bento-card:nth-child(1) {
+    @apply md:col-span-6 lg:col-span-4;
+  }
+
+  .bento-card:nth-child(2) {
+    @apply md:col-span-6 lg:col-span-8;
+  }
+
+  .bento-card:nth-child(3) {
+    @apply md:col-span-12 lg:col-span-7;
+  }
+
+  .bento-card:nth-child(4) {
+    @apply md:col-span-12 lg:col-span-5;
   }
 
   .bento-card-large {
-    @apply md:col-span-2;
+    @apply md:col-span-12;
   }
 
   .bento-card-tall {

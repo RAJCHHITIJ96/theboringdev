@@ -1,5 +1,5 @@
 
-import { Clock, DollarSign, MessageCircle, Globe, User, Settings } from 'lucide-react';
+import { Clock, DollarSign, MessageCircle, Settings } from 'lucide-react';
 
 const DifferentiationSection = () => {
   const features = [
@@ -23,20 +23,6 @@ const DifferentiationSection = () => {
       emphasis: "Intelligence that gives you an edge.",
       icon: MessageCircle,
       gridClass: "bento-card bento-card-large"
-    },
-    {
-      title: "Multiple Language Support",
-      description: "Serve customers in their preferred language. Break communication barriers and expand your business reach across different markets.",
-      emphasis: "Global accessibility made simple.",
-      icon: Globe,
-      gridClass: "bento-card"
-    },
-    {
-      title: "Personalized Customer Experience",
-      description: "Create unique interactions for every customer. AI agents remember preferences and provide tailored recommendations that feel personal.",
-      emphasis: "Individual attention at scale.",
-      icon: User,
-      gridClass: "bento-card"
     },
     {
       title: "We deliver it systematically",
