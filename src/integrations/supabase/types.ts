@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      batch_processing_analytics: {
+        Row: {
+          analytics_id: string
+          average_quality_score: number | null
+          created_at: string | null
+          end_time: string | null
+          error_messages: Json | null
+          processing_date: string
+          processing_duration_seconds: number | null
+          records_failed: number | null
+          records_processed: number | null
+          records_successful: number | null
+          recovery_actions: Json | null
+          scenario_name: string
+          start_time: string | null
+          success_rate: number | null
+          system_notes: string | null
+          top_17_selected: number | null
+        }
+        Insert: {
+          analytics_id?: string
+          average_quality_score?: number | null
+          created_at?: string | null
+          end_time?: string | null
+          error_messages?: Json | null
+          processing_date?: string
+          processing_duration_seconds?: number | null
+          records_failed?: number | null
+          records_processed?: number | null
+          records_successful?: number | null
+          recovery_actions?: Json | null
+          scenario_name: string
+          start_time?: string | null
+          success_rate?: number | null
+          system_notes?: string | null
+          top_17_selected?: number | null
+        }
+        Update: {
+          analytics_id?: string
+          average_quality_score?: number | null
+          created_at?: string | null
+          end_time?: string | null
+          error_messages?: Json | null
+          processing_date?: string
+          processing_duration_seconds?: number | null
+          records_failed?: number | null
+          records_processed?: number | null
+          records_successful?: number | null
+          recovery_actions?: Json | null
+          scenario_name?: string
+          start_time?: string | null
+          success_rate?: number | null
+          system_notes?: string | null
+          top_17_selected?: number | null
+        }
+        Relationships: []
+      }
       competitor_intelligence: {
         Row: {
           analysis_date: string | null
@@ -479,14 +536,19 @@ export type Database = {
         Row: {
           brief_id: string | null
           claude_prompt_optimized: string | null
+          composite_quality_score: number | null
           content_angle: string | null
           content_rank: number | null
           content_urgency_score: number | null
+          creation_date: string | null
+          discovery_date: string | null
+          expected_traffic_estimate: number | null
           final_trend_score: number | null
           keyword_id: string | null
           opportunity_score: number | null
           primary_keyword: string | null
           recommended_structure: Json | null
+          scoring_method: string | null
           search_volume_monthly: number | null
           trend_context: string | null
           trend_description: string | null
@@ -494,48 +556,21 @@ export type Database = {
           trend_keywords: Json | null
           trend_topic: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "content_briefs_keyword_id_fkey"
-            columns: ["keyword_id"]
-            isOneToOne: false
-            referencedRelation: "keyword_intelligence"
-            referencedColumns: ["keyword_id"]
-          },
-          {
-            foreignKeyName: "content_briefs_trend_id_fkey"
-            columns: ["trend_id"]
-            isOneToOne: false
-            referencedRelation: "trend_master"
-            referencedColumns: ["trend_id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Functions: {
-      generate_brief_id: {
-        Args: { keyword_id_ref: string }
-        Returns: string
-      }
-      generate_competitor_id: {
-        Args: { keyword_id_ref: string; competitor_rank_val: number }
-        Returns: string
-      }
-      generate_keyword_id: {
-        Args: { primary_keyword: string; trend_id_ref: string }
-        Returns: string
-      }
-      generate_tracking_id: {
-        Args: { keyword_id_ref: string }
-        Returns: string
-      }
-      generate_trend_id: {
-        Args: {
+      get_emergency_content_batch: {
+        Args: { target_count?: number }
+        Returns: {
+          trend_id: string
           trend_topic: string
-          discovery_date?: string
-          time_period?: string
-        }
-        Returns: string
+          keyword_id: string
+          primary_keyword: string
+          brief_id: string
+          content_angle: string
+          emergency_rank: number
+        }[]
       }
     }
     Enums: {
