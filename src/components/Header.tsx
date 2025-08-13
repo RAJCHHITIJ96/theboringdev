@@ -1,11 +1,8 @@
 
 import ThemeToggle from './ThemeToggle';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/useAuth';
-import { LogOut } from 'lucide-react';
 
 const Header = () => {
-  const { user, signOut } = useAuth();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border-subtle bg-background/80 backdrop-blur-md theme-transition">
@@ -35,22 +32,8 @@ const Header = () => {
           </div>
           
           <div className="flex items-center space-x-4">
-            {user && (
-              <span className="text-sm text-muted-foreground hidden md:block">
-                {user.email}
-              </span>
-            )}
             <Button className="btn-primary">
               Start Calculating
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={signOut}
-              className="p-2"
-              title="Sign out"
-            >
-              <LogOut className="h-4 w-4" />
             </Button>
             <ThemeToggle />
           </div>
