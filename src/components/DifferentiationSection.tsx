@@ -1,5 +1,5 @@
 
-import { Clock, DollarSign, MessageCircle, Settings } from 'lucide-react';
+import { CheckCircle, BarChart3, Search, Zap } from 'lucide-react';
 
 const DifferentiationSection = () => {
   const features = [
@@ -7,29 +7,25 @@ const DifferentiationSection = () => {
       title: "We validate everything",
       description: "Every trend. Every tool. Every \"breakthrough\" announcement.",
       emphasis: "Before we tell you about it.",
-      icon: Clock,
-      gridClass: "bento-card"
+      icon: CheckCircle,
     },
     {
       title: "We show you the data", 
       description: "Traffic stats, keyword research, competitive analysis.",
       emphasis: "The numbers behind the hype.",
-      icon: DollarSign,
-      gridClass: "bento-card"
+      icon: BarChart3,
     },
     {
       title: "We find what others miss",
       description: "Content gaps, SEO opportunities, market positioning.", 
       emphasis: "Intelligence that gives you an edge.",
-      icon: MessageCircle,
-      gridClass: "bento-card bento-card-large"
+      icon: Search,
     },
     {
       title: "We deliver it systematically",
       description: "50-60 pieces of validated AI intelligence daily.",
       emphasis: "While maintaining quality that rivals The New York Times.",
-      icon: Settings,
-      gridClass: "bento-card"
+      icon: Zap,
     }
   ];
 
@@ -46,7 +42,7 @@ const DifferentiationSection = () => {
           {features.map((feature, index) => {
             const IconComponent = feature.icon;
             return (
-              <div key={index} className={feature.gridClass} style={{ animationDelay: `${index * 0.1}s` }}>
+              <div key={index} className="bento-card" style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="flex items-center mb-4">
                   <IconComponent className="w-8 h-8 mr-3 text-foreground" />
                   <h3 className="subsection-headline mb-0">

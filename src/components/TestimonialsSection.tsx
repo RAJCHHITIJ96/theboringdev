@@ -16,7 +16,7 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section className="section-spacing bg-accent-warm theme-transition">
+    <section className="section-spacing bg-accent-success theme-transition">
       <div className="content-container">
         <div className="content-narrow">
           <h2 className="section-headline mb-12">

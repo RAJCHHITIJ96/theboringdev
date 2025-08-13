@@ -1,6 +1,4 @@
 
-import { Button } from '@/components/ui/button';
-
 const HeroSection = () => {
   return (
     <section className="section-spacing animate-fade-in">
