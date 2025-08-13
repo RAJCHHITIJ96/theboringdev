@@ -30,10 +30,18 @@ export default {
 				'success-green': 'hsl(var(--success-green))',
 				'attention-orange': 'hsl(var(--attention-orange))',
 				
+				// New Refined Accent Colors
+				'accent-subtle': 'hsl(var(--accent-subtle))',
+				'error-subtle': 'hsl(var(--error-subtle))',
+				'success-subtle': 'hsl(var(--success-subtle))',
+				'warm-accent': 'hsl(var(--warm-accent))',
+				
 				// Legacy support for existing components
 				border: 'hsl(var(--foreground) / 0.08)',
 				input: 'hsl(var(--foreground) / 0.08)',
 				ring: 'hsl(var(--intelligence-blue))',
+				'border-subtle': 'hsl(var(--foreground) / var(--border-subtle))',
+				
 				primary: {
 					DEFAULT: 'hsl(var(--foreground))',
 					foreground: 'hsl(var(--background))'
@@ -63,6 +71,7 @@ export default {
 				'small': 'var(--radius-small)',
 				'medium': 'var(--radius-medium)',
 				'large': 'var(--radius-large)',
+				'xl': 'var(--radius-xl)',
 			},
 			fontFamily: {
 				'serif-display': ['IBM Plex Serif', 'Georgia', 'serif'],
