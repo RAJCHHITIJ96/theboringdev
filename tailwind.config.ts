@@ -75,11 +75,10 @@ export default {
 				'xl': 'var(--radius-xl)',         /* 16px */
 			},
 			fontFamily: {
-				// Typography System
-				'serif-display': ['IBM Plex Serif', 'Georgia', 'serif'],
-				'sans-interface': ['Inter', 'SF Pro Display', 'Helvetica Neue', 'sans-serif'],
-				'serif-body': ['Source Serif 4', 'Georgia', 'serif'],
-				'mono-data': ['IBM Plex Mono', 'JetBrains Mono', 'Fira Code', 'monospace'],
+				// Premium Typography System
+				'serif': ['Crimson Text', 'Times New Roman', 'serif'],
+				'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+				'mono': ['JetBrains Mono', 'Monaco', 'Consolas', 'monospace'],
 			},
 			maxWidth: {
 				// Content Containers

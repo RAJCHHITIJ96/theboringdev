@@ -1,4 +1,6 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -61,40 +63,41 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Source Serif 4', 'Georgia', serif;
-    font-size: 1.125rem; /* 18px - optimal reading */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 1rem;
     line-height: 1.6;
     transition: all 0.4s ease;
+    font-weight: 400;
   }
 
-  /* Typography System - Big-Medium-Small Hierarchy */
+  /* Premium Typography System */
   
   /* LARGE Elements (Primary Focus - 40% visual weight) */
   h1 {
-    font-family: 'IBM Plex Serif', 'Georgia', serif;
+    font-family: 'Crimson Text', 'Times New Roman', serif;
     font-weight: 700;
-    font-size: clamp(2.5rem, 5vw, 4.5rem); /* 40px mobile, 72px desktop */
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
     line-height: 1.1;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     color: hsl(var(--foreground));
     margin-bottom: var(--space-medium);
   }
 
   h2 {
-    font-family: 'IBM Plex Serif', 'Georgia', serif;
+    font-family: 'Crimson Text', 'Times New Roman', serif;
     font-weight: 700;
-    font-size: clamp(1.75rem, 4vw, 3rem); /* 28px mobile, 48px desktop */
-    line-height: 1.1;
-    letter-spacing: -0.03em;
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
     color: hsl(var(--foreground));
     margin-bottom: var(--space-medium);
   }
 
   /* MEDIUM Elements (Secondary Support - 35% visual weight) */
   h3 {
-    font-family: 'Inter', 'SF Pro Display', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 600;
-    font-size: clamp(1.25rem, 2vw, 1.5rem); /* 20px mobile, 24px desktop */
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
     line-height: 1.3;
     letter-spacing: -0.01em;
     color: hsl(var(--foreground));
@@ -103,8 +106,8 @@
 
   /* SMALL Elements (Supporting Details - 25% visual weight) */
   p {
-    font-family: 'Source Serif 4', 'Georgia', serif;
-    font-size: 1.125rem; /* 18px */
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
     line-height: 1.6;
     color: hsl(var(--foreground));
     max-width: 65ch;
@@ -113,9 +116,9 @@
 
   /* Data & Statistics */
   .stat-number {
-    font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-weight: 600;
-    font-size: 1.25rem; /* 20px */
+    font-size: 1.25rem;
     color: hsl(var(--foreground));
   }
 }
@@ -123,19 +126,19 @@
 @layer components {
   /* Container System */
   .container-main {
-    max-width: 80rem; /* 1280px */
+    max-width: 80rem;
     margin: 0 auto;
     padding: 0 1.5rem;
   }
 
   .container-reading {
-    max-width: 45rem; /* 720px */
+    max-width: 45rem;
     margin: 0 auto;
     padding: 0 1.5rem;
   }
 
   .container-article {
-    max-width: 42.5rem; /* 680px */
+    max-width: 42.5rem;
     margin: 0 auto;
     padding: 0 1.5rem;
   }
@@ -145,12 +148,12 @@
     @apply inline-flex items-center justify-center;
     background: hsl(var(--foreground));
     color: hsl(var(--background));
-    font-family: 'Inter', 'SF Pro Display', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 600;
-    font-size: 1rem; /* 16px */
-    padding: 1.25rem 2rem; /* 20px 32px */
+    font-size: 1rem;
+    padding: 1.25rem 2rem;
     border-radius: var(--radius-medium);
-    min-height: 2.75rem; /* 44px - touch friendly */
+    min-height: 2.75rem;
     letter-spacing: -0.01em;
     transition: all 0.2s ease;
     border: none;
@@ -176,10 +179,10 @@
     background: transparent;
     color: hsl(var(--foreground));
     border: 1px solid hsl(var(--foreground) / 0.08);
-    font-family: 'Inter', 'SF Pro Display', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 600;
-    font-size: 0.875rem; /* 14px */
-    padding: 0.75rem 1.5rem; /* 12px 24px */
+    font-size: 0.875rem;
+    padding: 0.75rem 1.5rem;
     border-radius: var(--radius-small);
     transition: all 0.2s ease;
     cursor: pointer;
@@ -200,83 +203,13 @@
     background: hsl(var(--success-subtle));
   }
 
-  /* Card System */
-  .content-card {
-    background: hsl(var(--foreground) / 0.02);
-    border: 1px solid hsl(var(--foreground) / 0.08);
-    border-radius: var(--radius-large);
-    padding: var(--space-large);
-    transition: all 0.3s ease;
-    overflow: hidden;
-  }
-
-  .content-card:hover {
-    border-color: hsl(var(--foreground) / 0.12);
-    transform: translateY(-2px);
-    box-shadow: 0 0.5rem 2rem hsl(var(--foreground) / 0.06);
-    border-radius: var(--radius-xl);
-  }
-
-  .hero-card {
-    background: hsl(var(--foreground) / 0.04);
-    border: 1px solid hsl(var(--foreground) / 0.08);
-    border-radius: var(--radius-large);
-    padding: 4rem 3rem; /* 64px 48px */
-    transition: all 0.3s ease;
-    overflow: hidden;
-  }
-
-  @media (max-width: 768px) {
-    .hero-card {
-      padding: 3rem 2rem; /* 48px 32px mobile */
-    }
-    
-    .content-card {
-      padding: 2rem; /* 32px mobile */
-    }
-  }
-
-  /* Navigation System */
-  .nav-item {
-    font-family: 'Inter', 'SF Pro Display', sans-serif;
-    font-weight: 500;
-    font-size: 0.875rem; /* 14px */
-    color: hsl(var(--foreground) / 0.7);
-    padding: 0.5rem 1rem; /* 8px 16px */
-    margin: 0 0.5rem; /* 8px */
-    border-radius: var(--radius-small);
-    transition: all 0.2s ease;
-    text-decoration: none;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .nav-item:hover {
-    color: hsl(var(--foreground));
-    background: hsl(var(--accent-subtle));
-    transform: translateY(-1px);
-    border-radius: var(--radius-medium);
-  }
-
-  .nav-item:active {
-    transform: translateY(0) scale(0.98);
-    border-radius: var(--radius-large);
-    background: hsl(var(--success-subtle));
-  }
-
-  .nav-item.active {
-    background: hsl(var(--foreground) / 0.08);
-    color: hsl(var(--foreground));
-    font-weight: 700;
-  }
-
   /* Section Spacing */
   .section-spacing {
-    padding: var(--space-xl) 0; /* 96px */
+    padding: var(--space-xl) 0;
   }
 
   .section-spacing-large {
-    padding: var(--space-xxl) 0; /* 128px */
+    padding: var(--space-xxl) 0;
   }
 
   /* Background Variants */
@@ -330,10 +263,9 @@
 
 @layer utilities {
   /* Typography Utilities */
-  .font-serif-display { font-family: 'IBM Plex Serif', 'Georgia', serif; }
-  .font-sans-interface { font-family: 'Inter', 'SF Pro Display', sans-serif; }
-  .font-serif-body { font-family: 'Source Serif 4', 'Georgia', serif; }
-  .font-mono-data { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; }
+  .font-serif { font-family: 'Crimson Text', 'Times New Roman', serif; }
+  .font-sans { font-family: 'Inter', sans-serif; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
 
   /* Spacing Utilities */
   .space-micro { margin: var(--space-micro); }
@@ -342,37 +274,6 @@
   .space-large { margin: var(--space-large); }
   .space-xl { margin: var(--space-xl); }
   .space-xxl { margin: var(--space-xxl); }
-
-  /* Margin Bottom Utilities */
-  .mb-micro { margin-bottom: var(--space-micro); }
-  .mb-small { margin-bottom: var(--space-small); }
-  .mb-medium { margin-bottom: var(--space-medium); }
-  .mb-large { margin-bottom: var(--space-large); }
-  .mb-xl { margin-bottom: var(--space-xl); }
-  .mb-xxl { margin-bottom: var(--space-xxl); }
-
-  /* Margin Top Utilities */
-  .mt-micro { margin-top: var(--space-micro); }
-  .mt-small { margin-top: var(--space-small); }
-  .mt-medium { margin-top: var(--space-medium); }
-  .mt-large { margin-top: var(--space-large); }
-  .mt-xl { margin-top: var(--space-xl); }
-  .mt-xxl { margin-top: var(--space-xxl); }
-
-  /* Padding Utilities */
-  .p-micro { padding: var(--space-micro); }
-  .p-small { padding: var(--space-small); }
-  .p-medium { padding: var(--space-medium); }
-  .p-large { padding: var(--space-large); }
-  .p-xl { padding: var(--space-xl); }
-  .p-xxl { padding: var(--space-xxl); }
-
-  .py-micro { padding-top: var(--space-micro); padding-bottom: var(--space-micro); }
-  .py-small { padding-top: var(--space-small); padding-bottom: var(--space-small); }
-  .py-medium { padding-top: var(--space-medium); padding-bottom: var(--space-medium); }
-  .py-large { padding-top: var(--space-large); padding-bottom: var(--space-large); }
-  .py-xl { padding-top: var(--space-xl); padding-bottom: var(--space-xl); }
-  .py-xxl { padding-top: var(--space-xxl); padding-bottom: var(--space-xxl); }
 
   /* Border Utilities */
   .border-subtle { border-color: hsl(var(--foreground) / 0.08); }
