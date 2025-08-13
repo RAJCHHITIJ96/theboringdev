@@ -6,14 +6,14 @@ interface CategoryProps {
 }
 
 const ExploreCard = ({ title, description, disclaimer }: CategoryProps) => (
-  <div className="minimal-card hover:bg-accent-warm transition-colors duration-200 cursor-pointer group">
-    <h3 className="subsection-headline mb-3 group-hover:text-foreground transition-colors">
+  <div className="content-card hover:bg-warm-accent transition-colors duration-200 cursor-pointer group">
+    <h3 className="font-sans-interface mb-small group-hover:text-foreground transition-colors">
       <strong>{title}</strong>
     </h3>
-    <p className="mb-2">
+    <p className="mb-small font-serif-body">
       {description}
     </p>
-    <p className="text-sm text-muted-foreground">
+    <p className="text-sm text-foreground/70 font-serif-body">
       <em>{disclaimer}</em>
     </p>
   </div>
@@ -54,18 +54,18 @@ const ExploreSection = () => {
   ];
 
   return (
-    <section className="section-spacing bg-accent-warm theme-transition">
-      <div className="content-container">
-        <div className="content-narrow">
-          <h2 className="section-headline mb-8">
+    <section className="section-spacing-large bg-warm-accent theme-transition">
+      <div className="container-reading">
+        <div className="fade-in-up">
+          <h2 className="text-center mb-large font-serif-display">
             Ready to dive into real AI intelligence?
           </h2>
           
-          <p className="text-xl mb-12 text-center">
+          <p className="text-xl mb-xl text-center font-serif-body">
             <strong>Start exploring what interests you most:</strong>
           </p>
           
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-large md:grid-cols-2">
             {categories.map((category, index) => (
               <ExploreCard 
                 key={index}

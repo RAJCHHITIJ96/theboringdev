@@ -16,20 +16,20 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section className="section-spacing bg-accent-success theme-transition">
-      <div className="content-container">
-        <div className="content-narrow">
-          <h2 className="section-headline mb-12">
+    <section className="section-spacing-large bg-success-subtle theme-transition">
+      <div className="container-reading">
+        <div className="fade-in-up">
+          <h2 className="text-center mb-xl font-serif-display">
             What people are saying:
           </h2>
           
-          <div className="space-y-8">
+          <div className="space-y-large">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="minimal-card">
-                <p className="testimonial">
+              <div key={index} className="content-card">
+                <p className="text-lg mb-medium font-serif-body italic">
                   "{testimonial.quote}"
                 </p>
-                <p className="testimonial-author">
+                <p className="text-foreground/70 font-sans-interface">
                   — {testimonial.author}
                 </p>
               </div>

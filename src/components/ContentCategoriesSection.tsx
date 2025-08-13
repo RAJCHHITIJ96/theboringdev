@@ -6,14 +6,14 @@ interface CategoryProps {
 }
 
 const CategoryCard = ({ title, description, disclaimer }: CategoryProps) => (
-  <div className="minimal-card hover:bg-accent-green transition-colors duration-200 cursor-pointer">
-    <h3 className="subsection-headline mb-3">
+  <div className="content-card hover:bg-success-subtle transition-colors duration-200 cursor-pointer">
+    <h3 className="font-sans-interface mb-small">
       <strong>{title}</strong>
     </h3>
-    <p className="mb-2">
+    <p className="mb-small font-serif-body">
       {description}
     </p>
-    <p className="text-sm text-muted-foreground">
+    <p className="text-sm text-foreground/70 font-serif-body">
       <em>{disclaimer}</em>
     </p>
   </div>
@@ -54,14 +54,14 @@ const ContentCategoriesSection = () => {
   ];
 
   return (
-    <section className="section-spacing">
-      <div className="content-container">
-        <div className="content-narrow">
-          <h2 className="section-headline mb-12">
+    <section className="section-spacing-large theme-transition">
+      <div className="container-reading">
+        <div className="fade-in-up">
+          <h2 className="text-center mb-xl font-serif-display">
             What you'll find here:
           </h2>
           
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-large md:grid-cols-2">
             {categories.map((category, index) => (
               <CategoryCard 
                 key={index}

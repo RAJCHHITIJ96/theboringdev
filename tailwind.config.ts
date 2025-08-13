@@ -30,7 +30,7 @@ export default {
 				'success-green': 'hsl(var(--success-green))',
 				'attention-orange': 'hsl(var(--attention-orange))',
 				
-				// New Refined Accent Colors
+				// Subtle Accent Backgrounds
 				'accent-subtle': 'hsl(var(--accent-subtle))',
 				'error-subtle': 'hsl(var(--error-subtle))',
 				'success-subtle': 'hsl(var(--success-subtle))',
@@ -40,7 +40,7 @@ export default {
 				border: 'hsl(var(--foreground) / 0.08)',
 				input: 'hsl(var(--foreground) / 0.08)',
 				ring: 'hsl(var(--intelligence-blue))',
-				'border-subtle': 'hsl(var(--foreground) / var(--border-subtle))',
+				'border-subtle': 'hsl(var(--foreground) / 0.08)',
 				
 				primary: {
 					DEFAULT: 'hsl(var(--foreground))',
@@ -60,29 +60,33 @@ export default {
 				},
 			},
 			spacing: {
-				'micro': 'var(--space-micro)',
-				'small': 'var(--space-small)',
-				'medium': 'var(--space-medium)',
-				'large': 'var(--space-large)',
-				'xl': 'var(--space-xl)',
-				'xxl': 'var(--space-xxl)',
+				// 8px Base Unit Spacing System
+				'micro': 'var(--space-micro)',    /* 8px */
+				'small': 'var(--space-small)',    /* 16px */
+				'medium': 'var(--space-medium)',  /* 32px */
+				'large': 'var(--space-large)',    /* 64px */
+				'xl': 'var(--space-xl)',          /* 96px */
+				'xxl': 'var(--space-xxl)',        /* 128px */
 			},
 			borderRadius: {
-				'small': 'var(--radius-small)',
-				'medium': 'var(--radius-medium)',
-				'large': 'var(--radius-large)',
-				'xl': 'var(--radius-xl)',
+				'small': 'var(--radius-small)',   /* 6px */
+				'medium': 'var(--radius-medium)', /* 8px */
+				'large': 'var(--radius-large)',   /* 12px */
+				'xl': 'var(--radius-xl)',         /* 16px */
 			},
 			fontFamily: {
+				// Typography System
 				'serif-display': ['IBM Plex Serif', 'Georgia', 'serif'],
 				'sans-interface': ['Inter', 'SF Pro Display', 'Helvetica Neue', 'sans-serif'],
 				'serif-body': ['Source Serif 4', 'Georgia', 'serif'],
 				'mono-data': ['IBM Plex Mono', 'JetBrains Mono', 'Fira Code', 'monospace'],
 			},
 			maxWidth: {
+				// Content Containers
 				'reading': '45rem',   /* 720px */
 				'article': '42.5rem', /* 680px */
 				'main': '80rem',      /* 1280px */
+				'prose': '65ch',      /* Optimal reading width */
 			},
 			animation: {
 				'fade-in-up': 'fadeInUp 0.6s ease-out',

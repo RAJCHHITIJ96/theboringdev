@@ -1,28 +1,26 @@
 
-import { Button } from '@/components/ui/button';
-
 const FinalCTASection = () => {
   return (
-    <section className="section-spacing">
-      <div className="content-container">
-        <div className="content-narrow text-center">
-          <h2 className="section-headline mb-8">
+    <section className="section-spacing-large theme-transition">
+      <div className="container-reading">
+        <div className="text-center fade-in-up">
+          <h2 className="mb-large font-serif-display">
             Start anywhere. Start now.
           </h2>
           
-          <div className="prose mb-12">
-            <p className="text-xl mb-6">
+          <div className="max-w-prose mx-auto mb-xl">
+            <p className="text-xl mb-large font-serif-body">
               The AI revolution is happening with or without you.
             </p>
             
-            <p className="text-2xl font-bold">
+            <p className="text-2xl font-bold font-serif-body">
               <strong>The question is: Will you have the intelligence to navigate it?</strong>
             </p>
           </div>
           
-          <Button className="btn-primary text-lg px-8 py-4">
+          <button className="btn-primary text-lg px-large py-medium interactive-element focusable">
             <strong>Explore AI Intelligence →</strong>
-          </Button>
+          </button>
         </div>
       </div>
     </section>

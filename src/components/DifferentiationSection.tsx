@@ -30,29 +30,29 @@ const DifferentiationSection = () => {
   ];
 
   return (
-    <section className="section-spacing bg-accent-green theme-transition">
-      <div className="content-container">
-        <div className="content-narrow mb-12">
-          <h2 className="section-headline text-center">
+    <section className="section-spacing-large bg-accent-subtle theme-transition">
+      <div className="container-main">
+        <div className="container-reading mb-xl">
+          <h2 className="text-center font-serif-display">
             Here's what makes us different:
           </h2>
         </div>
         
-        <div className="bento-grid">
+        <div className="grid gap-large md:grid-cols-2 max-w-5xl mx-auto">
           {features.map((feature, index) => {
             const IconComponent = feature.icon;
             return (
-              <div key={index} className="bento-card" style={{ animationDelay: `${index * 0.1}s` }}>
-                <div className="flex items-center mb-4">
-                  <IconComponent className="w-8 h-8 mr-3 text-foreground" />
-                  <h3 className="subsection-headline mb-0">
+              <div key={index} className="content-card fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div className="flex items-center mb-medium">
+                  <IconComponent className="w-8 h-8 mr-medium text-foreground" />
+                  <h3 className="font-sans-interface">
                     {feature.title}
                   </h3>
                 </div>
-                <p className="mb-3 text-lg leading-relaxed">
+                <p className="mb-small text-lg leading-relaxed font-serif-body">
                   {feature.description}
                 </p>
-                <p className="text-muted-foreground">
+                <p className="text-foreground/70 font-serif-body">
                   <em>{feature.emphasis}</em>
                 </p>
               </div>
