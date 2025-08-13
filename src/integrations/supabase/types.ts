@@ -14,6 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
+      batch_content_selection: {
+        Row: {
+          brief_id: string | null
+          claude_prompt_optimized: string | null
+          composite_quality_score: number | null
+          content_angle: string | null
+          content_rank: number | null
+          content_urgency_score: number | null
+          creation_date: string | null
+          discovery_date: string | null
+          expected_traffic_estimate: number | null
+          final_trend_score: number | null
+          keyword_id: string | null
+          opportunity_score: number | null
+          primary_keyword: string | null
+          recommended_structure: Json | null
+          scoring_method: string | null
+          search_volume_monthly: number | null
+          trend_context: string | null
+          trend_description: string | null
+          trend_id: string | null
+          trend_keywords: Json | null
+          trend_topic: string | null
+          user_id: string | null
+        }
+        Insert: {
+          brief_id?: string | null
+          claude_prompt_optimized?: string | null
+          composite_quality_score?: number | null
+          content_angle?: string | null
+          content_rank?: number | null
+          content_urgency_score?: number | null
+          creation_date?: string | null
+          discovery_date?: string | null
+          expected_traffic_estimate?: number | null
+          final_trend_score?: number | null
+          keyword_id?: string | null
+          opportunity_score?: number | null
+          primary_keyword?: string | null
+          recommended_structure?: Json | null
+          scoring_method?: string | null
+          search_volume_monthly?: number | null
+          trend_context?: string | null
+          trend_description?: string | null
+          trend_id?: string | null
+          trend_keywords?: Json | null
+          trend_topic?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          brief_id?: string | null
+          claude_prompt_optimized?: string | null
+          composite_quality_score?: number | null
+          content_angle?: string | null
+          content_rank?: number | null
+          content_urgency_score?: number | null
+          creation_date?: string | null
+          discovery_date?: string | null
+          expected_traffic_estimate?: number | null
+          final_trend_score?: number | null
+          keyword_id?: string | null
+          opportunity_score?: number | null
+          primary_keyword?: string | null
+          recommended_structure?: Json | null
+          scoring_method?: string | null
+          search_volume_monthly?: number | null
+          trend_context?: string | null
+          trend_description?: string | null
+          trend_id?: string | null
+          trend_keywords?: Json | null
+          trend_topic?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       batch_processing_analytics: {
         Row: {
           analytics_id: string
@@ -32,6 +107,7 @@ export type Database = {
           success_rate: number | null
           system_notes: string | null
           top_17_selected: number | null
+          user_id: string | null
         }
         Insert: {
           analytics_id?: string
@@ -50,6 +126,7 @@ export type Database = {
           success_rate?: number | null
           system_notes?: string | null
           top_17_selected?: number | null
+          user_id?: string | null
         }
         Update: {
           analytics_id?: string
@@ -68,6 +145,7 @@ export type Database = {
           success_rate?: number | null
           system_notes?: string | null
           top_17_selected?: number | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -532,32 +610,7 @@ export type Database = {
       }
     }
     Views: {
-      batch_content_selection: {
-        Row: {
-          brief_id: string | null
-          claude_prompt_optimized: string | null
-          composite_quality_score: number | null
-          content_angle: string | null
-          content_rank: number | null
-          content_urgency_score: number | null
-          creation_date: string | null
-          discovery_date: string | null
-          expected_traffic_estimate: number | null
-          final_trend_score: number | null
-          keyword_id: string | null
-          opportunity_score: number | null
-          primary_keyword: string | null
-          recommended_structure: Json | null
-          scoring_method: string | null
-          search_volume_monthly: number | null
-          trend_context: string | null
-          trend_description: string | null
-          trend_id: string | null
-          trend_keywords: Json | null
-          trend_topic: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       get_emergency_content_batch: {

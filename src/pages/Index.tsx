@@ -1,4 +1,5 @@
 
+import ProtectedRoute from '@/components/ProtectedRoute';
 import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
 import ProblemSection from '@/components/ProblemSection';
@@ -14,22 +15,24 @@ import Footer from '@/components/Footer';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground theme-transition">
-      <Header />
-      <main className="pt-20">
-        <HeroSection />
-        <ProblemSection />
-        <SolutionSection />
-        <DifferentiationSection />
-        <FounderSection />
-        <ContentCategoriesSection />
-        <DuplicateCategoriesSection />
-        <LogicSection />
-        <TestimonialsSection />
-        <FinalCTASection />
-      </main>
-      <Footer />
-    </div>
+    <ProtectedRoute>
+      <div className="min-h-screen bg-background text-foreground theme-transition">
+        <Header />
+        <main className="pt-20">
+          <HeroSection />
+          <ProblemSection />
+          <SolutionSection />
+          <DifferentiationSection />
+          <FounderSection />
+          <ContentCategoriesSection />
+          <DuplicateCategoriesSection />
+          <LogicSection />
+          <TestimonialsSection />
+          <FinalCTASection />
+        </main>
+        <Footer />
+      </div>
+    </ProtectedRoute>
   );
 };
 
