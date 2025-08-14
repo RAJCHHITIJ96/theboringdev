@@ -5,7 +5,6 @@ import ProblemSection from "@/components/ProblemSection";
 import SolutionSection from "@/components/SolutionSection";
 import DifferentiationSection from "@/components/DifferentiationSection";
 import FounderSection from "@/components/FounderSection";
-import ContentCategoriesSection from "@/components/ContentCategoriesSection";
 import ExploreSection from "@/components/ExploreSection";
 import LogicSection from "@/components/LogicSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
@@ -16,13 +15,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground theme-transition">
       <Header />
-      <main className="pt-20">
+      <main className="pt-16">
         <HeroSection />
         <ProblemSection />
         <SolutionSection />
         <DifferentiationSection />
         <FounderSection />
-        <ContentCategoriesSection />
         <ExploreSection />
         <LogicSection />
         <TestimonialsSection />
