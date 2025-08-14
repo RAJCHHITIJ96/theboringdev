@@ -1,9 +1,8 @@
 
 const HeroSection = () => {
   return (
-    <section className="relative h-screen w-screen overflow-hidden bg-[#F6F5EF] dark:bg-background border-b border-foreground/5">
-      {/* Remove all container/padding constraints */}
-      <div className="relative h-full w-full flex flex-col items-center justify-center text-center">
+    <section className="relative min-h-screen w-full overflow-x-hidden bg-[#F6F5EF] dark:bg-background border-b border-foreground/5">
+      <div className="relative min-h-screen w-full flex flex-col items-center justify-center text-center px-4">
         
         {/* Decorative Scribbles */}
         <svg className="absolute top-[20%] left-[10%] w-24 h-20 opacity-30" viewBox="0 0 100 80">

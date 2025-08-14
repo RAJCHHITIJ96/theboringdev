@@ -11,49 +11,40 @@ const NewHeader = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-foreground/5">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16 w-full">
-          {/* Left - Logo - Fixed width to prevent shifting */}
-          <div className="flex-shrink-0 min-w-fit">
-            <h1 className="text-lg font-bold font-mono tracking-tight text-foreground whitespace-nowrap">
+        <div className="flex items-center justify-between h-16">
+          
+          {/* Left - Logo - SAME HEIGHT AS NAV ITEMS */}
+          <div className="flex items-center h-full">
+            <h1 className="text-lg font-bold font-mono tracking-tight text-foreground">
               theboringdev
             </h1>
           </div>
-          
-          {/* Middle - Navigation (Desktop) - Centered with flex-1 */}
-          <nav className="hidden md:flex items-center justify-center flex-1 mx-8">
-            <div className="flex items-center space-x-8">
-              <a 
-                href="#intelligence" 
-                className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors duration-200 whitespace-nowrap"
-              >
+
+          {/* Right - Navigation + CTA */}
+          <div className="flex items-center h-full space-x-8">
+            
+            {/* Navigation Links - Desktop */}
+            <nav className="hidden md:flex items-center h-full space-x-8">
+              <a href="#intelligence" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
                 Intelligence
               </a>
-              <a 
-                href="#validation" 
-                className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors duration-200 whitespace-nowrap"
-              >
+              <a href="#validation" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
                 Validation
               </a>
-              <a 
-                href="#trends" 
-                className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors duration-200 whitespace-nowrap"
-              >
+              <a href="#trends" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
                 Trends
               </a>
-              <a 
-                href="#analysis" 
-                className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors duration-200 whitespace-nowrap"
-              >
+              <a href="#analysis" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
                 Analysis
               </a>
-            </div>
-          </nav>
-          
-          {/* Right - CTA and Theme Toggle - Fixed width */}
-          <div className="flex items-center space-x-3 flex-shrink-0">
-            <button className="btn-primary interactive-element focusable text-sm px-6 py-2 whitespace-nowrap">
-              <strong>Latest Intel</strong>
+            </nav>
+
+            {/* CTA Button */}
+            <button className="btn-primary interactive-element focusable text-sm px-6 py-2">
+              <strong>Start Reading →</strong>
             </button>
+
+            {/* Theme Toggle */}
             <ThemeToggle />
             
             {/* Mobile Menu Button */}
