@@ -3,9 +3,9 @@ import ThemeToggle from './ThemeToggle';
 
 const Header = () => {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm theme-transition">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-border theme-transition">
       <div className="container mx-auto max-w-7xl px-6">
-        <div className="flex items-center justify-between py-6">
+        <div className="flex items-center justify-between py-4">
           {/* Left Section - Logo */}
           <div className="flex-shrink-0">
             <h1 className="text-lg font-bold font-mono tracking-tight text-foreground">
@@ -31,7 +31,7 @@ const Header = () => {
           
           {/* Right Section - CTA and Theme Toggle */}
           <div className="flex items-center space-x-4">
-            <button className="hidden sm:inline-flex px-6 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:opacity-90 transition-opacity duration-200">
+            <button className="hidden sm:inline-flex px-6 py-2 text-sm font-medium text-foreground/90 hover:text-foreground transition-colors duration-200">
               Start Reading
             </button>
             <ThemeToggle />
