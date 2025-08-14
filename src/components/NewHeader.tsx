@@ -49,8 +49,8 @@ const NewHeader = () => {
           
           {/* Right - CTA and Theme Toggle */}
           <div className="flex items-center space-x-3">
-            <button className="hidden sm:inline-flex px-5 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:opacity-90 transition-opacity duration-200">
-              Start Reading
+            <button className="btn-primary interactive-element focusable text-lg px-8 py-4">
+              <strong>Start Reading →</strong>
             </button>
             <ThemeToggle />
             
@@ -104,8 +104,8 @@ const NewHeader = () => {
                 Analysis
               </a>
               <div className="px-3 py-2">
-                <button className="w-full px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:opacity-90 transition-opacity duration-200">
-                  Start Reading
+                <button className="w-full btn-primary interactive-element focusable text-lg px-8 py-4">
+                  <strong>Start Reading →</strong>
                 </button>
               </div>
             </nav>
