@@ -1,9 +1,9 @@
 
 const HeroSection = () => {
   return (
-    <section className="py-24 md:py-32 theme-transition">
-      <div className="container mx-auto max-w-4xl px-6">
-        <div className="bg-[#F6F5EF] dark:bg-background rounded-[10px] p-12 md:p-20 lg:p-24">
+    <section className="py-16 md:py-24 lg:py-32 theme-transition">
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="bg-[#F6F5EF] dark:bg-background rounded-[10px] p-8 sm:p-12 md:p-16 lg:p-20 xl:p-24">
           <div className="text-center fade-in-up">
             {/* LARGE Elements - Primary Focus (40% visual weight) */}
             <h1 className="mb-12 font-serif text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight text-foreground">

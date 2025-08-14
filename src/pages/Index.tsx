@@ -1,5 +1,5 @@
 
-import Header from "@/components/Header";
+import NewHeader from "@/components/NewHeader";
 import HeroSection from "@/components/HeroSection";
 import ProblemSection from "@/components/ProblemSection";
 import SolutionSection from "@/components/SolutionSection";
@@ -14,8 +14,8 @@ import Footer from "@/components/Footer";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground theme-transition">
-      <Header />
-      <main className="pt-20">
+      <NewHeader />
+      <main className="pt-16">
         <HeroSection />
         <ProblemSection />
         <SolutionSection />

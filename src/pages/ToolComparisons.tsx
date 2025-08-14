@@ -1,5 +1,5 @@
 
-import Header from "@/components/Header";
+import NewHeader from "@/components/NewHeader";
 import Footer from "@/components/Footer";
 
 const ToolComparisons = () => {
@@ -29,11 +29,11 @@ const ToolComparisons = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground theme-transition">
-      <Header />
-      <main className="pt-24">
-        <div className="container mx-auto max-w-2xl px-6">
+      <NewHeader />
+      <main className="pt-20">
+        <div className="container mx-auto max-w-2xl px-4 sm:px-6">
           {/* Header Section */}
-          <div className="mb-16 fade-in-up">
+          <div className="mb-12 fade-in-up">
             <div className="text-sm font-mono text-foreground/50 mb-4 tracking-wider uppercase">
               COMPARISONS
             </div>
@@ -44,11 +44,11 @@ const ToolComparisons = () => {
           </div>
 
           {/* Articles List */}
-          <div className="space-y-12 fade-in-up">
+          <div className="space-y-8 fade-in-up">
             {articles.map((article, index) => (
               <article 
                 key={index}
-                className="group cursor-pointer border-b border-foreground/10 pb-12 last:border-b-0 hover:border-foreground/20 transition-all duration-200"
+                className="group cursor-pointer border-b border-foreground/10 pb-8 last:border-b-0 hover:border-foreground/20 transition-all duration-200"
               >
                 <h2 className="font-serif font-semibold text-xl md:text-2xl text-foreground group-hover:text-foreground/80 transition-colors mb-3 leading-tight">
                   {article.title}
@@ -68,7 +68,7 @@ const ToolComparisons = () => {
           </div>
         </div>
       </main>
-      <div className="mt-24">
+      <div className="mt-16">
         <Footer />
       </div>
     </div>
