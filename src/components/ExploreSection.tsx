@@ -3,107 +3,110 @@ interface CategoryProps {
   title: string;
   description: string;
   disclaimer: string;
-  featured?: boolean;
+  ctaText: string;
+  ctaLink: string;
 }
 
-const ExploreCard = ({ title, description, disclaimer, featured = false }: CategoryProps) => (
-  <div className={`
-    group relative overflow-hidden rounded-2xl border border-border-gray bg-background 
-    hover:shadow-xl hover:border-foreground/20 transition-all duration-500 hover:-translate-y-2
-    ${featured ? 'md:col-span-2 md:row-span-1 p-8' : 'p-6'}
-  `}>
-    <div className="relative z-10 h-full flex flex-col justify-between">
-      <div className="space-y-4">
-        <h3 className={`font-serif font-bold text-foreground group-hover:text-foreground transition-colors ${featured ? 'text-2xl' : 'text-xl'}`}>
-          {title}
-        </h3>
-        <p className={`font-sans text-foreground/80 leading-relaxed ${featured ? 'text-lg' : 'text-base'}`}>
-          {description}
-        </p>
-      </div>
+const CategoryCard = ({ title, description, disclaimer, ctaText, ctaLink }: CategoryProps) => (
+  <div className="group relative bg-background border border-border-gray rounded-xl p-6 hover:shadow-lg hover:border-foreground/20 transition-all duration-300 hover:-translate-y-1">
+    <div className="space-y-4">
+      <h3 className="font-serif font-semibold text-lg leading-tight text-foreground group-hover:text-foreground transition-colors">
+        {title}
+      </h3>
+      <p className="font-sans text-foreground/80 leading-relaxed">
+        {description}
+      </p>
+      <p className="font-sans text-sm text-foreground/60 italic">
+        {disclaimer}
+      </p>
       
-      <div className="mt-6 pt-4 border-t border-border-gray/50">
-        <p className="font-sans text-sm text-foreground/60 italic">
-          {disclaimer}
-        </p>
+      {/* CTA Button */}
+      <div className="pt-2">
+        <a 
+          href={ctaLink}
+          className="inline-flex items-center text-sm font-medium text-foreground hover:text-foreground/80 transition-colors group-hover:translate-x-1 duration-200"
+        >
+          {ctaText}
+          <span className="ml-1 transition-transform group-hover:translate-x-1 duration-200">→</span>
+        </a>
       </div>
     </div>
     
-    {/* Gradient overlay on hover */}
-    <div className="absolute inset-0 bg-gradient-to-br from-accent-subtle/20 to-warm-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-    
-    {/* Corner accent */}
-    <div className="absolute -top-8 -right-8 w-16 h-16 bg-accent-subtle rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:scale-150"></div>
+    {/* Subtle accent indicator */}
+    <div className="absolute top-4 right-4 w-2 h-2 bg-accent-subtle rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
   </div>
 );
 
 const ExploreSection = () => {
   const categories = [
     {
-      title: "AI Intelligence",
-      description: "Real trends backed by traffic data and market analysis",
+      title: "Trending AI Opportunities",
+      description: "Spot opportunities before they become crowded markets. Early movers make the most money",
       disclaimer: "Not recycled LinkedIn posts",
-      featured: true
+      ctaText: "Find Your Edge",
+      ctaLink: "/trending-opportunities"
     },
     {
       title: "AI Automation",
-      description: "Systems that actually work in real businesses", 
-      disclaimer: "Not theoretical frameworks"
+      description: "Systems that actually work in real businesses. Real implementations with measurable ROI", 
+      disclaimer: "Not theoretical frameworks",
+      ctaText: "See What Works",
+      ctaLink: "/ai-automation"
     },
     {
       title: "Tool Comparisons",
-      description: "Side-by-side analysis with usage data",
-      disclaimer: "Not affiliate marketing disguised as reviews"
+      description: "Side-by-side analysis with usage data. Data-driven decisions, not affiliate commissions",
+      disclaimer: "Not marketing disguised as reviews",
+      ctaText: "Compare Smart",
+      ctaLink: "/tool-comparisons"
     },
     {
       title: "AI News", 
-      description: "What happened, what it means, what you should do",
-      disclaimer: "Not breathless hype cycles"
+      description: "What happened, what it means, what you should do. Context that leads to action",
+      disclaimer: "Not breathless hype cycles",
+      ctaText: "Get Context",
+      ctaLink: "/ai-news"
     },
     {
       title: "AI Reality Check",
-      description: "Separating genuine breakthroughs from marketing campaigns",
-      disclaimer: "Not echo chamber amplification"
+      description: "Separating genuine breakthroughs from marketing campaigns. Truth over trending topics",
+      disclaimer: "Not echo chamber amplification",
+      ctaText: "Cut the Hype",
+      ctaLink: "/ai-reality-check"
     },
     {
-      title: "Trending Intelligence",
-      description: "What's actually gaining traction vs. what's just loud",
-      disclaimer: "Not social media noise"
+      title: "Builder Stories",
+      description: "What's actually working for developers vs. what gurus claim works. Real wins from real builders",
+      disclaimer: "Not theoretical case studies",
+      ctaText: "Learn from Builders",
+      ctaLink: "/builder-stories"
     }
   ];
 
   return (
-    <section className="py-24 bg-accent-subtle/30 theme-transition">
-      <div className="container-main max-w-7xl">
+    <section className="py-24 theme-transition">
+      <div className="container-main max-w-6xl">
         <div className="text-center mb-16 fade-in-up">
-          <h2 className="font-serif font-bold text-4xl md:text-6xl text-foreground mb-8 tracking-tight">
-            Ready to dive into real 
-            <span className="block text-foreground/70">AI intelligence?</span>
+          <h2 className="font-serif font-bold text-4xl md:text-5xl text-foreground mb-6 tracking-tight">
+            Intelligence Categories
           </h2>
-          
-          <p className="font-sans text-xl md:text-2xl font-medium text-foreground/80 max-w-3xl mx-auto leading-relaxed mb-8">
-            Start exploring what interests you most
+          <p className="font-sans text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed">
+            Curated insights across six core areas of AI development
           </p>
         </div>
         
-        {/* Masonry-style bento grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-fr fade-in-up">
+        {/* Grid layout matching the original Intelligence Categories design */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 fade-in-up">
           {categories.map((category, index) => (
-            <ExploreCard 
+            <CategoryCard 
               key={index}
               title={category.title}
               description={category.description}
               disclaimer={category.disclaimer}
-              featured={category.featured}
+              ctaText={category.ctaText}
+              ctaLink={category.ctaLink}
             />
           ))}
-        </div>
-        
-        {/* Call to action */}
-        <div className="text-center mt-16 fade-in-up">
-          <button className="inline-flex items-center px-8 py-4 bg-foreground text-background font-sans font-semibold text-lg rounded-xl hover:opacity-90 hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
-            Start Exploring →
-          </button>
         </div>
       </div>
     </section>
