@@ -158,7 +158,7 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        <div className="mt-8 text-center">
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
           <Card className="border-dashed border-2 border-primary/20">
             <CardContent className="pt-6">
               <h3 className="text-lg font-semibold mb-2">🔧 Ready for Make.com Integration</h3>
@@ -169,6 +169,80 @@ const Dashboard = () => {
               <Badge variant="secondary" className="mt-3">
                 All 5 tables • 25+ optimized indexes • Batch selection algorithm
               </Badge>
+            </CardContent>
+          </Card>
+
+          <Card className="border-2 border-green-500/20 bg-gradient-to-r from-green-500/5 to-green-500/10">
+            <CardContent className="pt-6">
+              <h3 className="text-lg font-semibold mb-2">🤖 AI Intelligence Processor</h3>
+              <p className="text-muted-foreground text-sm mb-3">
+                Custom endpoint that analyzes raw JSON from AI agents and structures data for database insertion.
+              </p>
+              <div className="space-y-2 text-xs">
+                <div><strong>Endpoint:</strong> /functions/v1/ai-intelligence-processor</div>
+                <div><strong>Method:</strong> POST</div>
+                <div><strong>Status:</strong> <Badge variant="outline" className="text-green-600">🟢 Live & Ready</Badge></div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>📋 AI Intelligence Processor API Documentation</CardTitle>
+              <CardDescription>
+                Send raw JSON data from your AI agents to automatically structure and insert into the correct database table
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-muted p-4 rounded-lg">
+                <h4 className="font-semibold mb-2">Request Format:</h4>
+                <pre className="text-xs overflow-x-auto">{`{
+  "database_id": 1,     // 1-4 (see mapping below)
+  "raw_data": {         // Your raw JSON data
+    "trend_topic": "AI Automation Tools",
+    "trend_description": "...",
+    // ... any other fields
+  }
+}`}</pre>
+              </div>
+              
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <h4 className="font-semibold mb-2">Database ID Mapping:</h4>
+                  <div className="space-y-1 text-sm">
+                    <div><Badge variant="outline">1</Badge> TREND_MASTER</div>
+                    <div><Badge variant="outline">2</Badge> KEYWORD_INTELLIGENCE</div>
+                    <div><Badge variant="outline">3</Badge> COMPETITOR_INTELLIGENCE</div>
+                    <div><Badge variant="outline">4</Badge> CONTENT_BRIEFS</div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-2">Response Format:</h4>
+                  <pre className="text-xs bg-muted p-2 rounded">{`{
+  "success": true,
+  "message": "Data successfully processed...",
+  "table": "trend_master",
+  "inserted_records": 1
+}`}</pre>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
+                <h4 className="font-semibold mb-2">🚀 Usage Example:</h4>
+                <pre className="text-xs overflow-x-auto">{`curl -X POST https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/ai-intelligence-processor \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "database_id": 1,
+    "raw_data": {
+      "trend_topic": "Voice AI Assistants",
+      "trend_momentum_score": 85,
+      "social_mentions_count": 1250
+    }
+  }'`}</pre>
+              </div>
             </CardContent>
           </Card>
         </div>
