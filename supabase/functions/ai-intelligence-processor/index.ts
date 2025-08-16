@@ -7,10 +7,18 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+interface BatchOperation {
+  operation: 'insert';
+  table: 'TREND_MASTER' | 'KEYWORD_INTELLIGENCE' | 'COMPETITOR_INTELLIGENCE' | 'CONTENT_BRIEFS';
+  data: any;
+}
+
 interface IntelligenceRequest {
   database_id: number;
   raw_data: any;
 }
+
+type BatchIntelligenceRequest = BatchOperation[];
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -24,49 +32,154 @@ serve(async (req) => {
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2eGZhanRpYmtxeXRydnZ2aXJiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTExMDkzOCwiZXhwIjoyMDcwNjg2OTM4fQ.6sBXlXUTPKXpJA3J_6RhkTUQ8hwRNNBjLDdB_zzG3RE'
     );
 
-    const { database_id, raw_data }: IntelligenceRequest = await req.json();
+    const requestBody = await req.json();
 
-    console.log(`Processing intelligence request for database_id: ${database_id}`);
+    // Check if request is in batch format (array) or legacy format (object)
+    const isBatchRequest = Array.isArray(requestBody);
 
-    // Validate input
-    if (!database_id || !raw_data) {
+    if (isBatchRequest) {
+      // Handle batch request format
+      const operations: BatchIntelligenceRequest = requestBody;
+      
+      console.log(`Processing batch intelligence request with ${operations.length} operations`);
+
+      // Validate batch size (1-10 operations)
+      if (operations.length < 1 || operations.length > 10) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'Batch size must be between 1 and 10 operations',
+            success: false,
+            received_operations: operations.length
+          }),
+          { 
+            status: 400, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
+
+      // Process all operations
+      const results = [];
+      let totalInserted = 0;
+      let hasErrors = false;
+
+      for (let i = 0; i < operations.length; i++) {
+        const operation = operations[i];
+        
+        try {
+          // Validate operation structure
+          if (!operation.operation || !operation.table || !operation.data) {
+            results.push({
+              operation_index: i,
+              success: false,
+              error: 'Missing required fields: operation, table, and data'
+            });
+            hasErrors = true;
+            continue;
+          }
+
+          if (operation.operation !== 'insert') {
+            results.push({
+              operation_index: i,
+              success: false,
+              error: 'Only "insert" operation is currently supported'
+            });
+            hasErrors = true;
+            continue;
+          }
+
+          // Map table name to database function
+          let result;
+          let tableName = '';
+          
+          switch (operation.table) {
+            case 'TREND_MASTER':
+              tableName = 'trend_master';
+              result = await processTrendMasterData(supabaseClient, operation.data);
+              break;
+            case 'KEYWORD_INTELLIGENCE':
+              tableName = 'keyword_intelligence';
+              result = await processKeywordIntelligenceData(supabaseClient, operation.data);
+              break;
+            case 'COMPETITOR_INTELLIGENCE':
+              tableName = 'competitor_intelligence';
+              result = await processCompetitorIntelligenceData(supabaseClient, operation.data);
+              break;
+            case 'CONTENT_BRIEFS':
+              tableName = 'content_briefs';
+              result = await processContentBriefsData(supabaseClient, operation.data);
+              break;
+            default:
+              results.push({
+                operation_index: i,
+                success: false,
+                error: 'Invalid table name. Use: TREND_MASTER, KEYWORD_INTELLIGENCE, COMPETITOR_INTELLIGENCE, or CONTENT_BRIEFS'
+              });
+              hasErrors = true;
+              continue;
+          }
+
+          if (result.error) {
+            console.error(`Error in operation ${i} for ${tableName}:`, result.error);
+            results.push({
+              operation_index: i,
+              table: tableName,
+              success: false,
+              error: result.error.message
+            });
+            hasErrors = true;
+          } else {
+            const insertedCount = result.data?.length || 1;
+            totalInserted += insertedCount;
+            results.push({
+              operation_index: i,
+              table: tableName,
+              success: true,
+              inserted_records: insertedCount
+            });
+          }
+        } catch (operationError) {
+          console.error(`Error processing operation ${i}:`, operationError);
+          results.push({
+            operation_index: i,
+            success: false,
+            error: operationError.message
+          });
+          hasErrors = true;
+        }
+      }
+
+      // Return batch results
+      const responseStatus = hasErrors ? 207 : 200; // 207 Multi-Status for partial success
       return new Response(
-        JSON.stringify({ 
-          error: 'Missing required fields: database_id and raw_data',
-          success: false 
+        JSON.stringify({
+          success: !hasErrors,
+          message: hasErrors 
+            ? `Batch processed with ${results.filter(r => r.success).length}/${operations.length} successful operations`
+            : `All ${operations.length} operations completed successfully`,
+          total_operations: operations.length,
+          successful_operations: results.filter(r => r.success).length,
+          failed_operations: results.filter(r => !r.success).length,
+          total_inserted_records: totalInserted,
+          results: results
         }),
         { 
-          status: 400, 
+          status: responseStatus,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         }
       );
-    }
 
-    // Process data based on database_id
-    let result;
-    let tableName = '';
+    } else {
+      // Handle legacy single request format
+      const { database_id, raw_data }: IntelligenceRequest = requestBody;
 
-    switch (database_id) {
-      case 1: // TREND_MASTER
-        tableName = 'trend_master';
-        result = await processTrendMasterData(supabaseClient, raw_data);
-        break;
-      case 2: // KEYWORD_INTELLIGENCE
-        tableName = 'keyword_intelligence';
-        result = await processKeywordIntelligenceData(supabaseClient, raw_data);
-        break;
-      case 3: // COMPETITOR_INTELLIGENCE
-        tableName = 'competitor_intelligence';
-        result = await processCompetitorIntelligenceData(supabaseClient, raw_data);
-        break;
-      case 4: // CONTENT_BRIEFS
-        tableName = 'content_briefs';
-        result = await processContentBriefsData(supabaseClient, raw_data);
-        break;
-      default:
+      console.log(`Processing legacy intelligence request for database_id: ${database_id}`);
+
+      // Validate input
+      if (!database_id || !raw_data) {
         return new Response(
           JSON.stringify({ 
-            error: 'Invalid database_id. Use: 1=TREND_MASTER, 2=KEYWORD_INTELLIGENCE, 3=COMPETITOR_INTELLIGENCE, 4=CONTENT_BRIEFS',
+            error: 'Missing required fields: database_id and raw_data',
             success: false 
           }),
           { 
@@ -74,35 +187,70 @@ serve(async (req) => {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
           }
         );
-    }
+      }
 
-    if (result.error) {
-      console.error(`Error inserting into ${tableName}:`, result.error);
+      // Process data based on database_id
+      let result;
+      let tableName = '';
+
+      switch (database_id) {
+        case 1: // TREND_MASTER
+          tableName = 'trend_master';
+          result = await processTrendMasterData(supabaseClient, raw_data);
+          break;
+        case 2: // KEYWORD_INTELLIGENCE
+          tableName = 'keyword_intelligence';
+          result = await processKeywordIntelligenceData(supabaseClient, raw_data);
+          break;
+        case 3: // COMPETITOR_INTELLIGENCE
+          tableName = 'competitor_intelligence';
+          result = await processCompetitorIntelligenceData(supabaseClient, raw_data);
+          break;
+        case 4: // CONTENT_BRIEFS
+          tableName = 'content_briefs';
+          result = await processContentBriefsData(supabaseClient, raw_data);
+          break;
+        default:
+          return new Response(
+            JSON.stringify({ 
+              error: 'Invalid database_id. Use: 1=TREND_MASTER, 2=KEYWORD_INTELLIGENCE, 3=COMPETITOR_INTELLIGENCE, 4=CONTENT_BRIEFS',
+              success: false 
+            }),
+            { 
+              status: 400, 
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+            }
+          );
+      }
+
+      if (result.error) {
+        console.error(`Error inserting into ${tableName}:`, result.error);
+        return new Response(
+          JSON.stringify({ 
+            error: result.error.message,
+            success: false,
+            table: tableName 
+          }),
+          { 
+            status: 500, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
+
+      console.log(`Successfully processed data for ${tableName}`);
       return new Response(
         JSON.stringify({ 
-          error: result.error.message,
-          success: false,
-          table: tableName 
+          success: true,
+          message: `Data successfully processed and inserted into ${tableName}`,
+          table: tableName,
+          inserted_records: result.data?.length || 1
         }),
         { 
-          status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         }
       );
     }
-
-    console.log(`Successfully processed data for ${tableName}`);
-    return new Response(
-      JSON.stringify({ 
-        success: true,
-        message: `Data successfully processed and inserted into ${tableName}`,
-        table: tableName,
-        inserted_records: result.data?.length || 1
-      }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
-    );
 
   } catch (error) {
     console.error('Error in ai-intelligence-processor:', error);

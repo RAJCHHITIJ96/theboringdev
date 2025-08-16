@@ -196,8 +196,34 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 p-4 rounded-lg border-2 border-green-200 dark:border-green-800">
+                <h4 className="font-semibold mb-2">🆕 Batch Request Format (1-10 Operations):</h4>
+                <pre className="text-xs overflow-x-auto">{`[
+  {
+    "operation": "insert",
+    "table": "TREND_MASTER",
+    "data": {
+      "trend_id": "trend_20250816_ai_gpt_5_rollout",
+      "trend_topic": "OpenAI GPT-5 Rollout Challenges",
+      "status": "ACTIVE",
+      // ... other fields
+    }
+  },
+  {
+    "operation": "insert", 
+    "table": "KEYWORD_INTELLIGENCE",
+    "data": {
+      "keyword_id": "kw_123",
+      "primary_keyword": "GPT-5",
+      // ... other fields
+    }
+  }
+  // ... up to 10 operations total
+]`}</pre>
+              </div>
+
               <div className="bg-muted p-4 rounded-lg">
-                <h4 className="font-semibold mb-2">Request Format:</h4>
+                <h4 className="font-semibold mb-2">Legacy Single Request Format:</h4>
                 <pre className="text-xs overflow-x-auto">{`{
   "database_id": 1,     // 1-4 (see mapping below)
   "raw_data": {         // Your raw JSON data
@@ -210,7 +236,17 @@ const Dashboard = () => {
               
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <h4 className="font-semibold mb-2">Database ID Mapping:</h4>
+                  <h4 className="font-semibold mb-2">Table Names (Batch Format):</h4>
+                  <div className="space-y-1 text-sm">
+                    <div><Badge variant="outline">TREND_MASTER</Badge> Trend analysis</div>
+                    <div><Badge variant="outline">KEYWORD_INTELLIGENCE</Badge> Keyword research</div>
+                    <div><Badge variant="outline">COMPETITOR_INTELLIGENCE</Badge> Competitor analysis</div>
+                    <div><Badge variant="outline">CONTENT_BRIEFS</Badge> Content planning</div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-2">Database IDs (Legacy Format):</h4>
                   <div className="space-y-1 text-sm">
                     <div><Badge variant="outline">1</Badge> TREND_MASTER</div>
                     <div><Badge variant="outline">2</Badge> KEYWORD_INTELLIGENCE</div>
@@ -218,10 +254,25 @@ const Dashboard = () => {
                     <div><Badge variant="outline">4</Badge> CONTENT_BRIEFS</div>
                   </div>
                 </div>
-                
-                <div>
-                  <h4 className="font-semibold mb-2">Response Format:</h4>
-                  <pre className="text-xs bg-muted p-2 rounded">{`{
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="bg-muted/50 p-4 rounded-lg">
+                  <h4 className="font-semibold mb-2">Batch Response Format:</h4>
+                  <pre className="text-xs">{`{
+  "success": true,
+  "message": "All 5 operations completed successfully",
+  "total_operations": 5,
+  "successful_operations": 5,
+  "failed_operations": 0,
+  "total_inserted_records": 5,
+  "results": [...]
+}`}</pre>
+                </div>
+
+                <div className="bg-muted/50 p-4 rounded-lg">
+                  <h4 className="font-semibold mb-2">Legacy Response Format:</h4>
+                  <pre className="text-xs">{`{
   "success": true,
   "message": "Data successfully processed...",
   "table": "trend_master",
@@ -231,17 +282,39 @@ const Dashboard = () => {
               </div>
 
               <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
-                <h4 className="font-semibold mb-2">🚀 Usage Example:</h4>
+                <h4 className="font-semibold mb-2">🚀 Batch Usage Example:</h4>
                 <pre className="text-xs overflow-x-auto">{`curl -X POST https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/ai-intelligence-processor \\
   -H "Content-Type: application/json" \\
-  -d '{
-    "database_id": 1,
-    "raw_data": {
-      "trend_topic": "Voice AI Assistants",
-      "trend_momentum_score": 85,
-      "social_mentions_count": 1250
+  -d '[
+    {
+      "operation": "insert",
+      "table": "TREND_MASTER",
+      "data": {
+        "trend_topic": "AI Voice Assistants",
+        "trend_momentum_score": 85,
+        "social_mentions_count": 1250
+      }
+    },
+    {
+      "operation": "insert",
+      "table": "KEYWORD_INTELLIGENCE", 
+      "data": {
+        "primary_keyword": "voice AI",
+        "search_volume_monthly": 12000
+      }
     }
-  }'`}</pre>
+  ]'`}</pre>
+              </div>
+
+              <div className="bg-yellow-50 dark:bg-yellow-950/20 p-4 rounded-lg border-l-4 border-yellow-400">
+                <h4 className="font-semibold mb-2">⚡ Key Features:</h4>
+                <ul className="text-sm space-y-1">
+                  <li>• Batch processing: Send 1-10 operations in a single request</li>
+                  <li>• Automatic data structuring for each database table</li>
+                  <li>• Mixed operations: Different tables in the same batch</li>
+                  <li>• Partial success handling: Some operations can fail without affecting others</li>
+                  <li>• Backward compatibility: Legacy single format still supported</li>
+                </ul>
               </div>
             </CardContent>
           </Card>
