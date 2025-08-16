@@ -271,15 +271,28 @@ serve(async (req) => {
   }
 });
 
-// Category mapping function to ensure valid trend_category values
+// BULLETPROOF Category mapping and validation functions
+const VALID_TREND_CATEGORIES = ['AI_DEVELOPMENT', 'NO_CODE', 'AUTOMATION', 'AI_BUSINESS'] as const;
+
 function mapTrendCategory(inputCategory: string): string {
-  if (!inputCategory) return 'AI_DEVELOPMENT'; // default fallback
+  console.log(`🔍 Processing category: "${inputCategory}"`);
   
-  const normalizedCategory = inputCategory.toUpperCase();
+  if (!inputCategory || inputCategory.trim() === '') {
+    console.log(`⚠️ Empty category provided, using default: AI_DEVELOPMENT`);
+    return 'AI_DEVELOPMENT';
+  }
   
-  // Map common AI-related categories to valid database values
-  const categoryMappings = {
-    // AI Development related
+  const normalizedCategory = inputCategory.toUpperCase().trim();
+  
+  // Check if it's already a valid category first
+  if (VALID_TREND_CATEGORIES.includes(normalizedCategory as any)) {
+    console.log(`✅ Category "${inputCategory}" is already valid`);
+    return normalizedCategory;
+  }
+  
+  // Comprehensive category mapping with all variations
+  const categoryMappings: { [key: string]: string } = {
+    // AI Development related - all variations
     'AI_PRODUCT_NEWS': 'AI_DEVELOPMENT',
     'AI_INNOVATION': 'AI_DEVELOPMENT', 
     'AI_PRODUCT_UPDATE': 'AI_DEVELOPMENT',
@@ -288,8 +301,17 @@ function mapTrendCategory(inputCategory: string): string {
     'AI_RESEARCH': 'AI_DEVELOPMENT',
     'LLM_UPDATE': 'AI_DEVELOPMENT',
     'MACHINE_LEARNING': 'AI_DEVELOPMENT',
+    'AI_TECHNOLOGY': 'AI_DEVELOPMENT',
+    'AI_PLATFORM': 'AI_DEVELOPMENT',
+    'DEEP_LEARNING': 'AI_DEVELOPMENT',
+    'LLM': 'AI_DEVELOPMENT',
+    'NEURAL_NETWORKS': 'AI_DEVELOPMENT',
+    'AI_MODEL_RELEASE': 'AI_DEVELOPMENT',
+    'GPT': 'AI_DEVELOPMENT',
+    'CLAUDE': 'AI_DEVELOPMENT',
+    'GEMINI': 'AI_DEVELOPMENT',
     
-    // AI Business related
+    // AI Business related - all variations  
     'AI_ETHICS': 'AI_BUSINESS',
     'AI_IMPACT': 'AI_BUSINESS',
     'AI_SOCIETAL_IMPACT': 'AI_BUSINESS', 
@@ -298,79 +320,170 @@ function mapTrendCategory(inputCategory: string): string {
     'AI_MARKET': 'AI_BUSINESS',
     'AI_INDUSTRY': 'AI_BUSINESS',
     'AI_INVESTMENT': 'AI_BUSINESS',
+    'AI_BUSINESS_NEWS': 'AI_BUSINESS',
+    'AI_STRATEGY': 'AI_BUSINESS',
+    'AI_ADOPTION': 'AI_BUSINESS',
+    'AI_GOVERNANCE': 'AI_BUSINESS',
+    'AI_COMPLIANCE': 'AI_BUSINESS',
+    'AI_SAFETY': 'AI_BUSINESS',
+    'AI_RESPONSIBILITY': 'AI_BUSINESS',
     
-    // Automation related
+    // Automation related - all variations
     'AI_AUTOMATION': 'AUTOMATION',
     'PROCESS_AUTOMATION': 'AUTOMATION',
     'WORKFLOW_AUTOMATION': 'AUTOMATION',
     'RPA': 'AUTOMATION',
+    'INTELLIGENT_AUTOMATION': 'AUTOMATION',
+    'BUSINESS_AUTOMATION': 'AUTOMATION',
+    'TASK_AUTOMATION': 'AUTOMATION',
     
-    // No-Code related
+    // No-Code related - all variations
     'NO_CODE_AI': 'NO_CODE',
     'LOW_CODE': 'NO_CODE',
     'VISUAL_PROGRAMMING': 'NO_CODE',
-    'DRAG_DROP': 'NO_CODE'
+    'DRAG_DROP': 'NO_CODE',
+    'CITIZEN_DEVELOPER': 'NO_CODE',
+    'NO_CODE_TOOLS': 'NO_CODE',
+    'LOW_CODE_PLATFORM': 'NO_CODE'
   };
   
-  // Return mapped category or fallback to direct match if it's already valid
-  if (categoryMappings[normalizedCategory]) {
-    console.log(`Category mapping: ${inputCategory} -> ${categoryMappings[normalizedCategory]}`);
-    return categoryMappings[normalizedCategory];
+  // Try to find mapping
+  const mappedCategory = categoryMappings[normalizedCategory];
+  if (mappedCategory) {
+    console.log(`🔄 Category mapping: "${inputCategory}" -> "${mappedCategory}"`);
+    return mappedCategory;
   }
   
-  // Check if it's already a valid category
-  const validCategories = ['AI_DEVELOPMENT', 'NO_CODE', 'AUTOMATION', 'AI_BUSINESS'];
-  if (validCategories.includes(normalizedCategory)) {
-    return normalizedCategory;
-  }
-  
-  // Default fallback with logging
-  console.log(`Unknown category '${inputCategory}' mapped to default 'AI_DEVELOPMENT'`);
+  // Final fallback with detailed logging
+  console.log(`❌ Unknown category "${inputCategory}" (normalized: "${normalizedCategory}") mapped to default "AI_DEVELOPMENT"`);
+  console.log(`📋 Available valid categories: ${VALID_TREND_CATEGORIES.join(', ')}`);
   return 'AI_DEVELOPMENT';
 }
 
-// Process TREND_MASTER data (database_id: 1)
-async function processTrendMasterData(supabaseClient: any, rawData: any) {
-  const structuredData = {
-    trend_id: rawData.trend_id || `trend_${Date.now()}`,
-    trend_topic: rawData.trend_topic || rawData.topic || 'Unknown Trend',
-    trend_description: rawData.trend_description || rawData.description,
-    status: rawData.status || 'ACTIVE',
-    trend_category: mapTrendCategory(rawData.trend_category || rawData.category),
-    trend_momentum_score: rawData.trend_momentum_score || rawData.momentum_score,
-    trend_sustainability_score: rawData.trend_sustainability_score || rawData.sustainability_score,
-    final_trend_score: rawData.final_trend_score || rawData.score,
-    google_trends_score: rawData.google_trends_score || rawData.google_score,
-    social_mentions_count: rawData.social_mentions_count || rawData.mentions_count || 0,
-    twitter_hashtag_volume: rawData.twitter_hashtag_volume || rawData.twitter_volume || 0,
-    reddit_engagement_score: rawData.reddit_engagement_score || rawData.reddit_score,
-    trend_keywords: rawData.trend_keywords || rawData.keywords,
-    trend_hashtags: rawData.trend_hashtags || rawData.hashtags,
-    trend_technologies: rawData.trend_technologies || rawData.technologies,
-    trend_companies_mentioned: rawData.trend_companies_mentioned || rawData.companies,
-    trend_influencers: rawData.trend_influencers || rawData.influencers,
-    trend_source: rawData.trend_source || rawData.source,
-    discovery_date: rawData.discovery_date || new Date().toISOString(),
-    estimated_peak_date: rawData.estimated_peak_date || rawData.peak_date,
-    trend_peak_period: rawData.trend_peak_period || rawData.peak_period,
-    trend_sentiment: rawData.trend_sentiment || rawData.sentiment,
-    trend_audience: rawData.trend_audience || rawData.audience,
-    trend_context: rawData.trend_context || rawData.context,
-    trend_geographic_focus: rawData.trend_geographic_focus || rawData.geographic_focus,
-    trend_industry_tags: rawData.trend_industry_tags || rawData.industry_tags,
-    trend_content_types: rawData.trend_content_types || rawData.content_types,
-    trend_related_topics: rawData.trend_related_topics || rawData.related_topics,
-    news_articles_count: rawData.news_articles_count || rawData.articles_count || 0,
-    github_repo_count: rawData.github_repo_count || rawData.github_count || 0,
-    consistency_multiplier: rawData.consistency_multiplier || 1.0,
-    daily_momentum_history: rawData.daily_momentum_history || rawData.momentum_history,
-    discovery_time_period: rawData.discovery_time_period || rawData.time_period,
-    last_updated: new Date().toISOString()
-  };
+// Pre-insert validation function
+function validateAndMapTrendCategory(category: string): { isValid: boolean; validCategory: string; error?: string } {
+  console.log(`🔧 Validating trend category: "${category}"`);
+  
+  try {
+    const mappedCategory = mapTrendCategory(category);
+    
+    // Double-check the mapped category is actually valid
+    if (!VALID_TREND_CATEGORIES.includes(mappedCategory as any)) {
+      const error = `CRITICAL ERROR: Mapped category "${mappedCategory}" is not in valid categories list!`;
+      console.error(`🚨 ${error}`);
+      return {
+        isValid: false,
+        validCategory: 'AI_DEVELOPMENT',
+        error: error
+      };
+    }
+    
+    console.log(`✅ Category validation successful: "${category}" -> "${mappedCategory}"`);
+    return {
+      isValid: true,
+      validCategory: mappedCategory
+    };
+    
+  } catch (error) {
+    const errorMsg = `Error during category validation: ${error.message}`;
+    console.error(`🚨 ${errorMsg}`);
+    return {
+      isValid: false,
+      validCategory: 'AI_DEVELOPMENT',
+      error: errorMsg
+    };
+  }
+}
 
-  return await supabaseClient
-    .from('trend_master')
-    .insert([structuredData]);
+// Process TREND_MASTER data (database_id: 1) - BULLETPROOF VERSION
+async function processTrendMasterData(supabaseClient: any, rawData: any) {
+  console.log(`🚀 Processing TREND_MASTER data:`, JSON.stringify(rawData, null, 2));
+  
+  try {
+    // PRE-INSERT VALIDATION: Validate and map trend_category BEFORE creating structured data
+    const categoryInput = rawData.trend_category || rawData.category;
+    console.log(`📝 Raw category input: "${categoryInput}"`);
+    
+    const categoryValidation = validateAndMapTrendCategory(categoryInput);
+    
+    if (!categoryValidation.isValid && categoryValidation.error) {
+      console.error(`🚨 Category validation failed: ${categoryValidation.error}`);
+      // Continue with the fallback category but log the issue
+    }
+    
+    const finalCategory = categoryValidation.validCategory;
+    console.log(`✅ Final validated category: "${finalCategory}"`);
+    
+    // BULLETPROOF: Final check that the category is actually valid
+    const VALID_CATEGORIES = ['AI_DEVELOPMENT', 'NO_CODE', 'AUTOMATION', 'AI_BUSINESS'];
+    if (!VALID_CATEGORIES.includes(finalCategory)) {
+      const error = `CRITICAL: Final category "${finalCategory}" is still invalid after validation!`;
+      console.error(`🚨 ${error}`);
+      throw new Error(error);
+    }
+    
+    // Build structured data with validated category
+    const structuredData = {
+      trend_id: rawData.trend_id || `trend_${Date.now()}`,
+      trend_topic: rawData.trend_topic || rawData.topic || 'Unknown Trend',
+      trend_description: rawData.trend_description || rawData.description,
+      status: rawData.status || 'ACTIVE',
+      trend_category: finalCategory, // Use the validated category
+      trend_momentum_score: rawData.trend_momentum_score || rawData.momentum_score,
+      trend_sustainability_score: rawData.trend_sustainability_score || rawData.sustainability_score,
+      final_trend_score: rawData.final_trend_score || rawData.score,
+      google_trends_score: rawData.google_trends_score || rawData.google_score,
+      social_mentions_count: rawData.social_mentions_count || rawData.mentions_count || 0,
+      twitter_hashtag_volume: rawData.twitter_hashtag_volume || rawData.twitter_volume || 0,
+      reddit_engagement_score: rawData.reddit_engagement_score || rawData.reddit_score,
+      trend_keywords: rawData.trend_keywords || rawData.keywords,
+      trend_hashtags: rawData.trend_hashtags || rawData.hashtags,
+      trend_technologies: rawData.trend_technologies || rawData.technologies,
+      trend_companies_mentioned: rawData.trend_companies_mentioned || rawData.companies,
+      trend_influencers: rawData.trend_influencers || rawData.influencers,
+      trend_source: rawData.trend_source || rawData.source,
+      discovery_date: rawData.discovery_date || new Date().toISOString(),
+      estimated_peak_date: rawData.estimated_peak_date || rawData.peak_date,
+      trend_peak_period: rawData.trend_peak_period || rawData.peak_period,
+      trend_sentiment: rawData.trend_sentiment || rawData.sentiment,
+      trend_audience: rawData.trend_audience || rawData.audience,
+      trend_context: rawData.trend_context || rawData.context,
+      trend_geographic_focus: rawData.trend_geographic_focus || rawData.geographic_focus,
+      trend_industry_tags: rawData.trend_industry_tags || rawData.industry_tags,
+      trend_content_types: rawData.trend_content_types || rawData.content_types,
+      trend_related_topics: rawData.trend_related_topics || rawData.related_topics,
+      news_articles_count: rawData.news_articles_count || rawData.articles_count || 0,
+      github_repo_count: rawData.github_repo_count || rawData.github_count || 0,
+      consistency_multiplier: rawData.consistency_multiplier || 1.0,
+      daily_momentum_history: rawData.daily_momentum_history || rawData.momentum_history,
+      discovery_time_period: rawData.discovery_time_period || rawData.time_period,
+      last_updated: new Date().toISOString()
+    };
+
+    console.log(`💾 Final structured data for insertion:`, JSON.stringify(structuredData, null, 2));
+    
+    // FINAL VALIDATION: One last check before database insertion
+    if (!VALID_CATEGORIES.includes(structuredData.trend_category)) {
+      throw new Error(`ABORT: trend_category "${structuredData.trend_category}" is invalid. This should never happen!`);
+    }
+    
+    console.log(`🗄️ Attempting database insertion...`);
+    const result = await supabaseClient
+      .from('trend_master')
+      .insert([structuredData]);
+    
+    if (result.error) {
+      console.error(`❌ Database insertion failed:`, result.error);
+      return result;
+    }
+    
+    console.log(`✅ Database insertion successful!`);
+    return result;
+    
+  } catch (error) {
+    console.error(`🚨 Fatal error in processTrendMasterData:`, error);
+    return { error: error };
+  }
 }
 
 // Process KEYWORD_INTELLIGENCE data (database_id: 2)
