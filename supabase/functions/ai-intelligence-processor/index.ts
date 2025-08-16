@@ -27,10 +27,14 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseClient = createClient(
-      'https://ivxfajtibkqytrvvvirb.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2eGZhanRpYmtxeXRydnZ2aXJiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTExMDkzOCwiZXhwIjoyMDcwNjg2OTM4fQ.6sBXlXUTPKXpJA3J_6RhkTUQ8hwRNNBjLDdB_zzG3RE'
-    );
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      throw new Error('Missing Supabase environment variables');
+    }
+
+    const supabaseClient = createClient(supabaseUrl, supabaseServiceKey);
 
     const requestBody = await req.json();
 
