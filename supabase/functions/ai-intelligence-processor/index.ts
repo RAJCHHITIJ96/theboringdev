@@ -271,6 +271,64 @@ serve(async (req) => {
   }
 });
 
+// Category mapping function to ensure valid trend_category values
+function mapTrendCategory(inputCategory: string): string {
+  if (!inputCategory) return 'AI_DEVELOPMENT'; // default fallback
+  
+  const normalizedCategory = inputCategory.toUpperCase();
+  
+  // Map common AI-related categories to valid database values
+  const categoryMappings = {
+    // AI Development related
+    'AI_PRODUCT_NEWS': 'AI_DEVELOPMENT',
+    'AI_INNOVATION': 'AI_DEVELOPMENT', 
+    'AI_PRODUCT_UPDATE': 'AI_DEVELOPMENT',
+    'AI_TOOLS': 'AI_DEVELOPMENT',
+    'AI_MODELS': 'AI_DEVELOPMENT',
+    'AI_RESEARCH': 'AI_DEVELOPMENT',
+    'LLM_UPDATE': 'AI_DEVELOPMENT',
+    'MACHINE_LEARNING': 'AI_DEVELOPMENT',
+    
+    // AI Business related
+    'AI_ETHICS': 'AI_BUSINESS',
+    'AI_IMPACT': 'AI_BUSINESS',
+    'AI_SOCIETAL_IMPACT': 'AI_BUSINESS', 
+    'AI_POLICY': 'AI_BUSINESS',
+    'AI_REGULATION': 'AI_BUSINESS',
+    'AI_MARKET': 'AI_BUSINESS',
+    'AI_INDUSTRY': 'AI_BUSINESS',
+    'AI_INVESTMENT': 'AI_BUSINESS',
+    
+    // Automation related
+    'AI_AUTOMATION': 'AUTOMATION',
+    'PROCESS_AUTOMATION': 'AUTOMATION',
+    'WORKFLOW_AUTOMATION': 'AUTOMATION',
+    'RPA': 'AUTOMATION',
+    
+    // No-Code related
+    'NO_CODE_AI': 'NO_CODE',
+    'LOW_CODE': 'NO_CODE',
+    'VISUAL_PROGRAMMING': 'NO_CODE',
+    'DRAG_DROP': 'NO_CODE'
+  };
+  
+  // Return mapped category or fallback to direct match if it's already valid
+  if (categoryMappings[normalizedCategory]) {
+    console.log(`Category mapping: ${inputCategory} -> ${categoryMappings[normalizedCategory]}`);
+    return categoryMappings[normalizedCategory];
+  }
+  
+  // Check if it's already a valid category
+  const validCategories = ['AI_DEVELOPMENT', 'NO_CODE', 'AUTOMATION', 'AI_BUSINESS'];
+  if (validCategories.includes(normalizedCategory)) {
+    return normalizedCategory;
+  }
+  
+  // Default fallback with logging
+  console.log(`Unknown category '${inputCategory}' mapped to default 'AI_DEVELOPMENT'`);
+  return 'AI_DEVELOPMENT';
+}
+
 // Process TREND_MASTER data (database_id: 1)
 async function processTrendMasterData(supabaseClient: any, rawData: any) {
   const structuredData = {
@@ -278,7 +336,7 @@ async function processTrendMasterData(supabaseClient: any, rawData: any) {
     trend_topic: rawData.trend_topic || rawData.topic || 'Unknown Trend',
     trend_description: rawData.trend_description || rawData.description,
     status: rawData.status || 'ACTIVE',
-    trend_category: rawData.trend_category || rawData.category,
+    trend_category: mapTrendCategory(rawData.trend_category || rawData.category),
     trend_momentum_score: rawData.trend_momentum_score || rawData.momentum_score,
     trend_sustainability_score: rawData.trend_sustainability_score || rawData.sustainability_score,
     final_trend_score: rawData.final_trend_score || rawData.score,

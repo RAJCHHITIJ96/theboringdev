@@ -205,6 +205,7 @@ const Dashboard = () => {
     "data": {
       "trend_id": "trend_20250816_ai_gpt_5_rollout",
       "trend_topic": "OpenAI GPT-5 Rollout Challenges",
+      "trend_category": "AI_PRODUCT_NEWS", // Auto-mapped to AI_DEVELOPMENT
       "status": "ACTIVE",
       // ... other fields
     }
@@ -306,11 +307,34 @@ const Dashboard = () => {
   ]'`}</pre>
               </div>
 
+              <div className="bg-purple-50 dark:bg-purple-950/20 p-4 rounded-lg border-l-4 border-purple-400">
+                <h4 className="font-semibold mb-2">📊 Valid trend_category Values:</h4>
+                <div className="grid gap-2 md:grid-cols-2 text-sm">
+                  <div>
+                    <Badge variant="outline" className="mb-2">AI_DEVELOPMENT</Badge>
+                    <div className="text-xs text-muted-foreground">Auto-mapped from: AI_PRODUCT_NEWS, AI_INNOVATION, AI_TOOLS, AI_MODELS, etc.</div>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-2">AI_BUSINESS</Badge>
+                    <div className="text-xs text-muted-foreground">Auto-mapped from: AI_ETHICS, AI_IMPACT, AI_POLICY, AI_REGULATION, etc.</div>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-2">AUTOMATION</Badge>
+                    <div className="text-xs text-muted-foreground">Auto-mapped from: AI_AUTOMATION, PROCESS_AUTOMATION, RPA, etc.</div>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-2">NO_CODE</Badge>
+                    <div className="text-xs text-muted-foreground">Auto-mapped from: NO_CODE_AI, LOW_CODE, VISUAL_PROGRAMMING, etc.</div>
+                  </div>
+                </div>
+              </div>
+
               <div className="bg-yellow-50 dark:bg-yellow-950/20 p-4 rounded-lg border-l-4 border-yellow-400">
                 <h4 className="font-semibold mb-2">⚡ Key Features:</h4>
                 <ul className="text-sm space-y-1">
                   <li>• Batch processing: Send 1-10 operations in a single request</li>
                   <li>• Automatic data structuring for each database table</li>
+                  <li>• <strong>Smart category mapping:</strong> Invalid categories auto-mapped to valid ones</li>
                   <li>• Mixed operations: Different tables in the same batch</li>
                   <li>• Partial success handling: Some operations can fail without affecting others</li>
                   <li>• Backward compatibility: Legacy single format still supported</li>
