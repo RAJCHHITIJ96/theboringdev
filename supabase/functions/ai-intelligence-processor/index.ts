@@ -9,7 +9,7 @@ const corsHeaders = {
 
 interface BatchOperation {
   operation: 'insert';
-  table: 'TREND_MASTER' | 'KEYWORD_INTELLIGENCE' | 'COMPETITOR_INTELLIGENCE' | 'CONTENT_BRIEFS';
+  table: 'TREND_MASTER' | 'KEYWORD_INTELLIGENCE' | 'COMPETITOR_INTELLIGENCE' | 'CONTENT_BRIEFS' | 'EXISTING_ARTICLES';
   data: any;
 }
 
@@ -113,11 +113,15 @@ serve(async (req) => {
               tableName = 'content_briefs';
               result = await processContentBriefsData(supabaseClient, operation.data);
               break;
+            case 'EXISTING_ARTICLES':
+              tableName = 'existing_articles';
+              result = await processExistingArticlesData(supabaseClient, operation.data);
+              break;
             default:
               results.push({
                 operation_index: i,
                 success: false,
-                error: 'Invalid table name. Use: TREND_MASTER, KEYWORD_INTELLIGENCE, COMPETITOR_INTELLIGENCE, or CONTENT_BRIEFS'
+                error: 'Invalid table name. Use: TREND_MASTER, KEYWORD_INTELLIGENCE, COMPETITOR_INTELLIGENCE, CONTENT_BRIEFS, or EXISTING_ARTICLES'
               });
               hasErrors = true;
               continue;
@@ -214,10 +218,14 @@ serve(async (req) => {
           tableName = 'content_briefs';
           result = await processContentBriefsData(supabaseClient, raw_data);
           break;
+        case 5: // EXISTING_ARTICLES
+          tableName = 'existing_articles';
+          result = await processExistingArticlesData(supabaseClient, raw_data);
+          break;
         default:
           return new Response(
             JSON.stringify({ 
-              error: 'Invalid database_id. Use: 1=TREND_MASTER, 2=KEYWORD_INTELLIGENCE, 3=COMPETITOR_INTELLIGENCE, 4=CONTENT_BRIEFS',
+              error: 'Invalid database_id. Use: 1=TREND_MASTER, 2=KEYWORD_INTELLIGENCE, 3=COMPETITOR_INTELLIGENCE, 4=CONTENT_BRIEFS, 5=EXISTING_ARTICLES',
               success: false 
             }),
             { 
@@ -587,4 +595,45 @@ async function processContentBriefsData(supabaseClient: any, rawData: any) {
   return await supabaseClient
     .from('content_briefs')
     .insert([structuredData]);
+}
+
+// Process EXISTING_ARTICLES data (database_id: 5)
+async function processExistingArticlesData(supabaseClient: any, rawData: any) {
+  console.log(`🚀 Processing EXISTING_ARTICLES data:`, JSON.stringify(rawData, null, 2));
+  
+  try {
+    // Handle both single article and batch article processing
+    const articles = Array.isArray(rawData) ? rawData : [rawData];
+    const structuredArticles = [];
+    
+    for (const article of articles) {
+      const structuredData = {
+        url: article.url || article.article_url,
+        title: article.title || article.article_title || 'Untitled',
+        last_crawled: article.last_crawled || new Date().toISOString()
+      };
+      
+      // Validate required fields
+      if (!structuredData.url) {
+        console.error(`⚠️ Skipping article without URL:`, article);
+        continue;
+      }
+      
+      structuredArticles.push(structuredData);
+    }
+    
+    console.log(`💾 Final structured articles for insertion:`, JSON.stringify(structuredArticles, null, 2));
+    
+    if (structuredArticles.length === 0) {
+      throw new Error('No valid articles found to insert');
+    }
+    
+    return await supabaseClient
+      .from('existing_articles')
+      .upsert(structuredArticles, { onConflict: 'url' });
+    
+  } catch (error) {
+    console.error('Error processing existing articles data:', error);
+    throw error;
+  }
 }
