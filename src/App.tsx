@@ -13,7 +13,6 @@ import AINews from "./pages/AINews";
 import AIRealityCheck from "./pages/AIRealityCheck";
 import BuilderStories from "./pages/BuilderStories";
 import NotFound from "./pages/NotFound";
-import { TestDataInserter } from "./components/TestDataInserter";
 
 const queryClient = new QueryClient();
 
@@ -26,7 +25,6 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/temp-dashboard" element={<Dashboard />} />
-          <Route path="/test-data" element={<TestDataInserter />} />
           <Route path="/trending-opportunities" element={<TrendingOpportunities />} />
           <Route path="/ai-automation" element={<AIAutomation />} />
           <Route path="/tool-comparisons" element={<ToolComparisons />} />
