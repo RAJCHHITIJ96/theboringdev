@@ -1,5 +1,4 @@
 
-import { NavBar } from "@/components/NavBar";
 import HeroSection from "@/components/HeroSection";
 import ProblemSection from "@/components/ProblemSection";
 import SolutionSection from "@/components/SolutionSection";
@@ -13,21 +12,18 @@ import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground theme-transition">
-      <NavBar />
-      <main className="pt-16">
-        <HeroSection />
-        <ProblemSection />
-        <SolutionSection />
-        <DifferentiationSection />
-        <FounderSection />
-        <ExploreSection />
-        <LogicSection />
-        <TestimonialsSection />
-        <FinalCTASection />
-      </main>
+    <>
+      <HeroSection />
+      <ProblemSection />
+      <SolutionSection />
+      <DifferentiationSection />
+      <FounderSection />
+      <ExploreSection />
+      <LogicSection />
+      <TestimonialsSection />
+      <FinalCTASection />
       <Footer />
-    </div>
+    </>
   );
 };
 
