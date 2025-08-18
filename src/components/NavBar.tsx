@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import ThemeToggle from "@/components/ThemeToggle"
 
 interface NavItem {
   name: string
@@ -72,11 +73,12 @@ export function NavBar({ className }: NavBarProps) {
             </div>
           </div>
 
-          {/* CTA Button */}
-          <div className="flex-shrink-0">
+          {/* CTA Button and Theme Toggle */}
+          <div className="flex items-center space-x-3">
             <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
               Start Reading
             </Button>
+            <ThemeToggle />
           </div>
         </div>
       </div>
