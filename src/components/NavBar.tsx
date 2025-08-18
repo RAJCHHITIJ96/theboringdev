@@ -31,13 +31,11 @@ export function NavBar({ className }: NavBarProps) {
           {/* Logo */}
           <div className="flex-shrink-0">
             <a href="/" className="flex items-center space-x-2">
-              <svg 
-                className="w-8 h-8 text-primary" 
-                viewBox="0 0 24 24" 
-                fill="currentColor"
-              >
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-              </svg>
+              <img 
+                src="/lovable-uploads/bd4e78e0-b1da-42f7-b971-1669e9b1e69e.png" 
+                alt="theboringdev logo" 
+                className="w-8 h-8 object-contain"
+              />
               <span className="text-xl font-bold text-foreground">theboringdev</span>
             </a>
           </div>
