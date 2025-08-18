@@ -14,7 +14,7 @@ const NewHeader = () => {
         <div className="flex items-center justify-between h-16">
           
           {/* Left - Logo - SAME HEIGHT AS NAV ITEMS */}
-          <div className="flex items-center h-full">
+          <div className="flex items-end h-full pb-1">
             <h1 className="text-lg font-bold font-mono tracking-tight text-foreground">
               theboringdev
             </h1>
