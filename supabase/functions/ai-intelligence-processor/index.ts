@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { processPerformanceTrackingData } from './performance-tracking.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -9,7 +10,7 @@ const corsHeaders = {
 
 interface BatchOperation {
   operation: 'insert';
-  table: 'TREND_MASTER' | 'KEYWORD_INTELLIGENCE' | 'COMPETITOR_INTELLIGENCE' | 'CONTENT_BRIEFS' | 'EXISTING_ARTICLES';
+  table: 'TREND_MASTER' | 'KEYWORD_INTELLIGENCE' | 'COMPETITOR_INTELLIGENCE' | 'CONTENT_BRIEFS' | 'EXISTING_ARTICLES' | 'PERFORMANCE_TRACKING';
   data: any;
 }
 
@@ -117,11 +118,15 @@ serve(async (req) => {
               tableName = 'existing_articles';
               result = await processExistingArticlesData(supabaseClient, operation.data);
               break;
+            case 'PERFORMANCE_TRACKING':
+              tableName = 'performance_tracking';
+              result = await processPerformanceTrackingData(supabaseClient, operation.data);
+              break;
             default:
               results.push({
                 operation_index: i,
                 success: false,
-                error: 'Invalid table name. Use: TREND_MASTER, KEYWORD_INTELLIGENCE, COMPETITOR_INTELLIGENCE, CONTENT_BRIEFS, or EXISTING_ARTICLES'
+                error: 'Invalid table name. Use: TREND_MASTER, KEYWORD_INTELLIGENCE, COMPETITOR_INTELLIGENCE, CONTENT_BRIEFS, EXISTING_ARTICLES, or PERFORMANCE_TRACKING'
               });
               hasErrors = true;
               continue;
@@ -222,10 +227,14 @@ serve(async (req) => {
           tableName = 'existing_articles';
           result = await processExistingArticlesData(supabaseClient, raw_data);
           break;
+        case 6: // PERFORMANCE_TRACKING
+          tableName = 'performance_tracking';
+          result = await processPerformanceTrackingData(supabaseClient, raw_data);
+          break;
         default:
           return new Response(
             JSON.stringify({ 
-              error: 'Invalid database_id. Use: 1=TREND_MASTER, 2=KEYWORD_INTELLIGENCE, 3=COMPETITOR_INTELLIGENCE, 4=CONTENT_BRIEFS, 5=EXISTING_ARTICLES',
+              error: 'Invalid database_id. Use: 1=TREND_MASTER, 2=KEYWORD_INTELLIGENCE, 3=COMPETITOR_INTELLIGENCE, 4=CONTENT_BRIEFS, 5=EXISTING_ARTICLES, 6=PERFORMANCE_TRACKING',
               success: false 
             }),
             { 
@@ -496,105 +505,189 @@ async function processTrendMasterData(supabaseClient: any, rawData: any) {
 
 // Process KEYWORD_INTELLIGENCE data (database_id: 2)
 async function processKeywordIntelligenceData(supabaseClient: any, rawData: any) {
-  const structuredData = {
-    keyword_id: rawData.keyword_id || `keyword_${Date.now()}`,
-    trend_id: rawData.trend_id || `trend_${Date.now()}`,
-    primary_keyword: rawData.primary_keyword || rawData.keyword,
-    search_volume_monthly: rawData.search_volume_monthly || rawData.search_volume || 0,
-    keyword_difficulty: rawData.keyword_difficulty || rawData.difficulty,
-    cpc_value: rawData.cpc_value || rawData.cpc || 0,
-    commercial_intent_score: rawData.commercial_intent_score || rawData.intent_score,
-    search_intent: rawData.search_intent || rawData.intent,
-    priority_level: rawData.priority_level || rawData.priority,
-    opportunity_score: rawData.opportunity_score || rawData.opportunity,
-    search_volume_trend: rawData.search_volume_trend || rawData.volume_trend,
-    content_creation_status: rawData.content_creation_status || 'QUEUED',
-    semantic_keywords: rawData.semantic_keywords || rawData.semantics,
-    keyword_variations: rawData.keyword_variations || rawData.variations,
-    serp_features: rawData.serp_features || rawData.features,
-    related_questions: rawData.related_questions || rawData.questions,
-    seasonal_pattern: rawData.seasonal_pattern || rawData.seasonality,
-    ahrefs_data: rawData.ahrefs_data || rawData.ahrefs,
-    semrush_data: rawData.semrush_data || rawData.semrush,
-    ubersuggest_data: rawData.ubersuggest_data || rawData.ubersuggest,
-    last_updated: new Date().toISOString()
-  };
+  console.log(`🚀 Processing KEYWORD_INTELLIGENCE data:`, JSON.stringify(rawData, null, 2));
+  
+  try {
+    // Validate required fields
+    if (!rawData.primary_keyword && !rawData.keyword) {
+      throw new Error('Missing required field: primary_keyword or keyword');
+    }
 
-  return await supabaseClient
-    .from('keyword_intelligence')
-    .insert([structuredData]);
+    // Generate unique IDs to avoid conflicts in batch processing
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 1000);
+    
+    const structuredData = {
+      keyword_id: rawData.keyword_id || `keyword_${timestamp}_${random}`,
+      trend_id: rawData.trend_id || `trend_${timestamp}_${random}`,
+      primary_keyword: rawData.primary_keyword || rawData.keyword,
+      search_volume_monthly: parseInt(rawData.search_volume_monthly || rawData.search_volume || 0),
+      keyword_difficulty: rawData.keyword_difficulty || rawData.difficulty,
+      cpc_value: parseFloat(rawData.cpc_value || rawData.cpc || 0),
+      commercial_intent_score: rawData.commercial_intent_score || rawData.intent_score,
+      search_intent: rawData.search_intent || rawData.intent,
+      priority_level: rawData.priority_level || rawData.priority,
+      opportunity_score: rawData.opportunity_score || rawData.opportunity,
+      search_volume_trend: rawData.search_volume_trend || rawData.volume_trend,
+      content_creation_status: rawData.content_creation_status || 'QUEUED',
+      semantic_keywords: rawData.semantic_keywords || rawData.semantics,
+      keyword_variations: rawData.keyword_variations || rawData.variations,
+      serp_features: rawData.serp_features || rawData.features,
+      related_questions: rawData.related_questions || rawData.questions,
+      seasonal_pattern: rawData.seasonal_pattern || rawData.seasonality,
+      ahrefs_data: rawData.ahrefs_data || rawData.ahrefs,
+      semrush_data: rawData.semrush_data || rawData.semrush,
+      ubersuggest_data: rawData.ubersuggest_data || rawData.ubersuggest,
+      last_updated: new Date().toISOString()
+    };
+
+    console.log(`💾 Final structured data for insertion:`, JSON.stringify(structuredData, null, 2));
+    
+    const result = await supabaseClient
+      .from('keyword_intelligence')
+      .insert([structuredData]);
+    
+    if (result.error) {
+      console.error(`❌ Database insertion failed:`, result.error);
+      return result;
+    }
+    
+    console.log(`✅ Database insertion successful!`);
+    return result;
+    
+  } catch (error) {
+    console.error(`🚨 Fatal error in processKeywordIntelligenceData:`, error);
+    return { error: error };
+  }
 }
 
 // Process COMPETITOR_INTELLIGENCE data (database_id: 3)
 async function processCompetitorIntelligenceData(supabaseClient: any, rawData: any) {
-  const structuredData = {
-    competitor_id: rawData.competitor_id || `comp_${Date.now()}`,
-    keyword_id: rawData.keyword_id || `keyword_${Date.now()}`,
-    competitor_domain: rawData.competitor_domain || rawData.domain,
-    page_url: rawData.page_url || rawData.url,
-    page_title: rawData.page_title || rawData.title,
-    meta_description: rawData.meta_description || rawData.description,
-    competitor_rank: rawData.competitor_rank || 1,
-    current_ranking_position: rawData.current_ranking_position || rawData.position,
-    content_word_count: rawData.content_word_count || rawData.word_count || 0,
-    content_structure: rawData.content_structure || rawData.structure,
-    internal_links_count: rawData.internal_links_count || rawData.internal_links || 0,
-    external_links_count: rawData.external_links_count || rawData.external_links || 0,
-    images_count: rawData.images_count || rawData.images || 0,
-    videos_count: rawData.videos_count || rawData.videos || 0,
-    code_snippets_count: rawData.code_snippets_count || rawData.code_snippets || 0,
-    cta_elements_count: rawData.cta_elements_count || rawData.cta_count || 0,
-    page_load_speed: rawData.page_load_speed || rawData.load_speed,
-    mobile_score: rawData.mobile_score || rawData.mobile,
-    domain_authority: rawData.domain_authority || rawData.authority,
-    backlinks_count: rawData.backlinks_count || rawData.backlinks || 0,
-    social_shares_total: rawData.social_shares_total || rawData.social_shares || 0,
-    estimated_monthly_traffic: rawData.estimated_monthly_traffic || rawData.traffic || 0,
-    content_gaps_identified: rawData.content_gaps_identified || rawData.gaps,
-    content_weaknesses: rawData.content_weaknesses || rawData.weaknesses,
-    optimization_opportunities: rawData.optimization_opportunities || rawData.opportunities,
-    content_last_updated: rawData.content_last_updated || rawData.updated_date,
-    analysis_date: new Date().toISOString()
-  };
+  console.log(`🚀 Processing COMPETITOR_INTELLIGENCE data:`, JSON.stringify(rawData, null, 2));
+  
+  try {
+    // Validate required fields
+    if (!rawData.keyword_id && !rawData.keyword) {
+      throw new Error('Missing required field: keyword_id or keyword');
+    }
 
-  return await supabaseClient
-    .from('competitor_intelligence')
-    .insert([structuredData]);
+    // Generate unique IDs to avoid conflicts in batch processing
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 1000);
+    
+    const structuredData = {
+      competitor_id: rawData.competitor_id || `comp_${timestamp}_${random}`,
+      keyword_id: rawData.keyword_id || `keyword_${timestamp}_${random}`,
+      competitor_domain: rawData.competitor_domain || rawData.domain,
+      page_url: rawData.page_url || rawData.url,
+      page_title: rawData.page_title || rawData.title,
+      meta_description: rawData.meta_description || rawData.description,
+      competitor_rank: parseInt(rawData.competitor_rank || 1),
+      current_ranking_position: rawData.current_ranking_position || rawData.position,
+      content_word_count: parseInt(rawData.content_word_count || rawData.word_count || 0),
+      content_structure: rawData.content_structure || rawData.structure,
+      internal_links_count: parseInt(rawData.internal_links_count || rawData.internal_links || 0),
+      external_links_count: parseInt(rawData.external_links_count || rawData.external_links || 0),
+      images_count: parseInt(rawData.images_count || rawData.images || 0),
+      videos_count: parseInt(rawData.videos_count || rawData.videos || 0),
+      code_snippets_count: parseInt(rawData.code_snippets_count || rawData.code_snippets || 0),
+      cta_elements_count: parseInt(rawData.cta_elements_count || rawData.cta_count || 0),
+      page_load_speed: parseFloat(rawData.page_load_speed || rawData.load_speed),
+      mobile_score: rawData.mobile_score || rawData.mobile,
+      domain_authority: rawData.domain_authority || rawData.authority,
+      backlinks_count: parseInt(rawData.backlinks_count || rawData.backlinks || 0),
+      social_shares_total: parseInt(rawData.social_shares_total || rawData.social_shares || 0),
+      estimated_monthly_traffic: parseInt(rawData.estimated_monthly_traffic || rawData.traffic || 0),
+      content_gaps_identified: rawData.content_gaps_identified || rawData.gaps,
+      content_weaknesses: rawData.content_weaknesses || rawData.weaknesses,
+      optimization_opportunities: rawData.optimization_opportunities || rawData.opportunities,
+      content_last_updated: rawData.content_last_updated || rawData.updated_date,
+      analysis_date: new Date().toISOString()
+    };
+
+    console.log(`💾 Final structured data for insertion:`, JSON.stringify(structuredData, null, 2));
+    
+    const result = await supabaseClient
+      .from('competitor_intelligence')
+      .insert([structuredData]);
+    
+    if (result.error) {
+      console.error(`❌ Database insertion failed:`, result.error);
+      return result;
+    }
+    
+    console.log(`✅ Database insertion successful!`);
+    return result;
+    
+  } catch (error) {
+    console.error(`🚨 Fatal error in processCompetitorIntelligenceData:`, error);
+    return { error: error };
+  }
 }
 
 // Process CONTENT_BRIEFS data (database_id: 4)
 async function processContentBriefsData(supabaseClient: any, rawData: any) {
-  const structuredData = {
-    brief_id: rawData.brief_id || `brief_${Date.now()}`,
-    keyword_id: rawData.keyword_id || `keyword_${Date.now()}`,
-    trend_id: rawData.trend_id || `trend_${Date.now()}`,
-    content_angle: rawData.content_angle || rawData.angle,
-    target_word_count: rawData.target_word_count || rawData.word_count || 2000,
-    status: rawData.status || 'DRAFT',
-    recommended_structure: rawData.recommended_structure || rawData.structure,
-    must_include_topics: rawData.must_include_topics || rawData.topics,
-    semantic_keywords: rawData.semantic_keywords || rawData.keywords,
-    faq_questions: rawData.faq_questions || rawData.faqs,
-    code_examples_needed: rawData.code_examples_needed || rawData.code_examples,
-    video_requirements: rawData.video_requirements || rawData.videos,
-    image_requirements: rawData.image_requirements || rawData.images,
-    internal_linking_strategy: rawData.internal_linking_strategy || rawData.internal_links,
-    external_linking_targets: rawData.external_linking_targets || rawData.external_links,
-    competitor_gaps_to_exploit: rawData.competitor_gaps_to_exploit || rawData.gaps,
-    gumroad_placement_strategy: rawData.gumroad_placement_strategy || rawData.gumroad,
-    scheduled_publish_date: rawData.scheduled_publish_date || rawData.publish_date,
-    estimated_time_to_rank_weeks: rawData.estimated_time_to_rank_weeks || rawData.rank_time || 8,
-    content_urgency_score: rawData.content_urgency_score || rawData.urgency,
-    expected_traffic_estimate: rawData.expected_traffic_estimate || rawData.traffic_estimate || 0,
-    expected_revenue_estimate: rawData.expected_revenue_estimate || rawData.revenue_estimate || 0,
-    juhu_processing_notes: rawData.juhu_processing_notes || rawData.notes,
-    claude_prompt_optimized: rawData.claude_prompt_optimized || rawData.prompt,
-    creation_date: new Date().toISOString()
-  };
+  console.log(`🚀 Processing CONTENT_BRIEFS data:`, JSON.stringify(rawData, null, 2));
+  
+  try {
+    // Validate required fields
+    if (!rawData.keyword_id && !rawData.keyword) {
+      throw new Error('Missing required field: keyword_id or keyword');
+    }
+    if (!rawData.trend_id && !rawData.trend) {
+      throw new Error('Missing required field: trend_id or trend');
+    }
 
-  return await supabaseClient
-    .from('content_briefs')
-    .insert([structuredData]);
+    // Generate unique IDs to avoid conflicts in batch processing
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 1000);
+    
+    const structuredData = {
+      brief_id: rawData.brief_id || `brief_${timestamp}_${random}`,
+      keyword_id: rawData.keyword_id || rawData.keyword || `keyword_${timestamp}_${random}`,
+      trend_id: rawData.trend_id || rawData.trend || `trend_${timestamp}_${random}`,
+      content_angle: rawData.content_angle || rawData.angle,
+      target_word_count: parseInt(rawData.target_word_count || rawData.word_count || 2000),
+      status: rawData.status || 'DRAFT',
+      recommended_structure: rawData.recommended_structure || rawData.structure,
+      must_include_topics: rawData.must_include_topics || rawData.topics,
+      semantic_keywords: rawData.semantic_keywords || rawData.keywords,
+      faq_questions: rawData.faq_questions || rawData.faqs,
+      code_examples_needed: rawData.code_examples_needed || rawData.code_examples,
+      video_requirements: rawData.video_requirements || rawData.videos,
+      image_requirements: rawData.image_requirements || rawData.images,
+      internal_linking_strategy: rawData.internal_linking_strategy || rawData.internal_links,
+      external_linking_targets: rawData.external_linking_targets || rawData.external_links,
+      competitor_gaps_to_exploit: rawData.competitor_gaps_to_exploit || rawData.gaps,
+      gumroad_placement_strategy: rawData.gumroad_placement_strategy || rawData.gumroad,
+      scheduled_publish_date: rawData.scheduled_publish_date || rawData.publish_date,
+      estimated_time_to_rank_weeks: parseInt(rawData.estimated_time_to_rank_weeks || rawData.rank_time || 8),
+      content_urgency_score: rawData.content_urgency_score || rawData.urgency,
+      expected_traffic_estimate: parseInt(rawData.expected_traffic_estimate || rawData.traffic_estimate || 0),
+      expected_revenue_estimate: parseFloat(rawData.expected_revenue_estimate || rawData.revenue_estimate || 0),
+      juhu_processing_notes: rawData.juhu_processing_notes || rawData.notes,
+      claude_prompt_optimized: rawData.claude_prompt_optimized || rawData.prompt,
+      creation_date: new Date().toISOString()
+    };
+
+    console.log(`💾 Final structured data for insertion:`, JSON.stringify(structuredData, null, 2));
+    
+    const result = await supabaseClient
+      .from('content_briefs')
+      .insert([structuredData]);
+    
+    if (result.error) {
+      console.error(`❌ Database insertion failed:`, result.error);
+      return result;
+    }
+    
+    console.log(`✅ Database insertion successful!`);
+    return result;
+    
+  } catch (error) {
+    console.error(`🚨 Fatal error in processContentBriefsData:`, error);
+    return { error: error };
+  }
 }
 
 // Process EXISTING_ARTICLES data (database_id: 5)
