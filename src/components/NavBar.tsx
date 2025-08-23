@@ -23,6 +23,7 @@ export function NavBar({ className }: NavBarProps) {
     { name: "Validation", url: "#validation" },
     { name: "Trends", url: "#trends" },
     { name: "Analysis", url: "#analysis" },
+    { name: "MCP Converter", url: "/mcp-converter" },
   ]
 
   return (

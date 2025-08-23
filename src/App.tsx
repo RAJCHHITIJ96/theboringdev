@@ -14,6 +14,7 @@ import AINews from "./pages/AINews";
 import AIRealityCheck from "./pages/AIRealityCheck";
 import BuilderStories from "./pages/BuilderStories";
 import NotFound from "./pages/NotFound";
+import MCPConverter from "./pages/MCPConverter";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
               <Route path="/ai-news" element={<AINews />} />
               <Route path="/ai-reality-check" element={<AIRealityCheck />} />
               <Route path="/builder-stories" element={<BuilderStories />} />
+              <Route path="/mcp-converter" element={<MCPConverter />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
