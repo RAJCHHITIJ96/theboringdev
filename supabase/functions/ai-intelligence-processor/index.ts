@@ -439,26 +439,83 @@ async function processTrendMasterData(supabaseClient: any, rawData: any) {
       throw new Error(error);
     }
     
-    // Build structured data with validated category
+    // Helper function to truncate strings to fit database constraints
+    function truncateString(value: string | null | undefined, maxLength: number): string | null {
+      if (!value) return null;
+      const str = String(value);
+      return str.length > maxLength ? str.substring(0, maxLength - 3) + '...' : str;
+    }
+
+    // Helper function to convert google_trends_score to integer
+    function parseGoogleTrendsScore(score: any): number | null {
+      if (score === null || score === undefined) return null;
+      if (score === "Breakout") return 100; // Map "Breakout" to max score
+      const parsed = parseInt(score);
+      if (isNaN(parsed)) return null;
+      // Ensure it's within database constraint (0-100)
+      return Math.max(0, Math.min(100, parsed));
+    }
+
+    // Helper function to map discovery_time_period to valid values
+    function mapDiscoveryTimePeriod(period: any): string | null {
+      if (!period) return 'morning'; // Default fallback
+      const periodStr = String(period).toLowerCase();
+      
+      // Map various inputs to valid constraint values
+      const mappings = {
+        'day': 'afternoon',
+        'daily': 'afternoon',
+        'week': 'afternoon', 
+        'weekly': 'afternoon',
+        'month': 'afternoon',
+        'monthly': 'afternoon',
+        'morning': 'morning',
+        'afternoon': 'afternoon',
+        'evening': 'evening',
+        'night': 'evening'
+      };
+      
+      return mappings[periodStr] || 'afternoon'; // Default to afternoon
+    }
+
+    // Helper function to ensure final_trend_score is within constraint
+    function validateFinalTrendScore(score: any): number | null {
+      if (score === null || score === undefined) return null;
+      const parsed = parseInt(score);
+      if (isNaN(parsed)) return null;
+      // Ensure it's within database constraint (0-150)
+      return Math.max(0, Math.min(150, parsed));
+    }
+
+    // Helper function to ensure momentum score is within constraint
+    function validateMomentumScore(score: any): number | null {
+      if (score === null || score === undefined) return null;
+      const parsed = parseInt(score);
+      if (isNaN(parsed)) return null;
+      // Ensure it's within database constraint (0-100)
+      return Math.max(0, Math.min(100, parsed));
+    }
+
+    // Build structured data with validated category and proper constraints
     const structuredData = {
-      trend_id: rawData.trend_id || `trend_${Date.now()}`,
-      trend_topic: rawData.trend_topic || rawData.topic || 'Unknown Trend',
+      trend_id: rawData.trend_id || `trend_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+      trend_topic: truncateString(rawData.trend_topic || rawData.topic || 'Unknown Trend', 200),
       trend_description: rawData.trend_description || rawData.description,
       status: rawData.status || 'ACTIVE',
       trend_category: finalCategory, // Use the validated category
-      trend_momentum_score: rawData.trend_momentum_score || rawData.momentum_score,
-      trend_sustainability_score: rawData.trend_sustainability_score || rawData.sustainability_score,
-      final_trend_score: rawData.final_trend_score || rawData.score,
-      google_trends_score: rawData.google_trends_score || rawData.google_score,
-      social_mentions_count: rawData.social_mentions_count || rawData.mentions_count || 0,
-      twitter_hashtag_volume: rawData.twitter_hashtag_volume || rawData.twitter_volume || 0,
-      reddit_engagement_score: rawData.reddit_engagement_score || rawData.reddit_score,
+      trend_momentum_score: validateMomentumScore(rawData.trend_momentum_score || rawData.momentum_score),
+      trend_sustainability_score: validateMomentumScore(rawData.trend_sustainability_score || rawData.sustainability_score),
+      final_trend_score: validateFinalTrendScore(rawData.final_trend_score || rawData.score),
+      google_trends_score: parseGoogleTrendsScore(rawData.google_trends_score || rawData.google_score),
+      social_mentions_count: parseInt(rawData.social_mentions_count || rawData.mentions_count || 0) || 0,
+      twitter_hashtag_volume: parseInt(rawData.twitter_hashtag_volume || rawData.twitter_volume || 0) || 0,
+      reddit_engagement_score: validateMomentumScore(rawData.reddit_engagement_score || rawData.reddit_score),
       trend_keywords: rawData.trend_keywords || rawData.keywords,
       trend_hashtags: rawData.trend_hashtags || rawData.hashtags,
       trend_technologies: rawData.trend_technologies || rawData.technologies,
       trend_companies_mentioned: rawData.trend_companies_mentioned || rawData.companies,
       trend_influencers: rawData.trend_influencers || rawData.influencers,
-      trend_source: rawData.trend_source || rawData.source,
+      trend_source: truncateString(rawData.trend_source || rawData.source, 100),
       discovery_date: rawData.discovery_date || new Date().toISOString(),
       estimated_peak_date: rawData.estimated_peak_date || rawData.peak_date,
       trend_peak_period: rawData.trend_peak_period || rawData.peak_period,
@@ -469,11 +526,11 @@ async function processTrendMasterData(supabaseClient: any, rawData: any) {
       trend_industry_tags: rawData.trend_industry_tags || rawData.industry_tags,
       trend_content_types: rawData.trend_content_types || rawData.content_types,
       trend_related_topics: rawData.trend_related_topics || rawData.related_topics,
-      news_articles_count: rawData.news_articles_count || rawData.articles_count || 0,
-      github_repo_count: rawData.github_repo_count || rawData.github_count || 0,
-      consistency_multiplier: rawData.consistency_multiplier || 1.0,
+      news_articles_count: parseInt(rawData.news_articles_count || rawData.articles_count || 0) || 0,
+      github_repo_count: parseInt(rawData.github_repo_count || rawData.github_count || 0) || 0,
+      consistency_multiplier: parseFloat(rawData.consistency_multiplier || 1.0) || 1.0,
       daily_momentum_history: rawData.daily_momentum_history || rawData.momentum_history,
-      discovery_time_period: rawData.discovery_time_period || rawData.time_period,
+      discovery_time_period: mapDiscoveryTimePeriod(rawData.discovery_time_period || rawData.time_period),
       last_updated: new Date().toISOString()
     };
 
