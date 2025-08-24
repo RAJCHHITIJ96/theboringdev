@@ -1,7 +1,71 @@
-# AI Intelligence Processor API Documentation
+# AI Intelligence & MCP Converter API Documentation
 
-## Endpoint
+## AI Intelligence Processor API
+
+### Endpoint
 **POST** `https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/ai-intelligence-processor`
+
+---
+
+## MCP Converter API
+
+### Endpoint
+**POST** `https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/mcp-converter`
+
+### Headers
+```json
+{
+  "Content-Type": "application/json",
+  "Authorization": "Bearer YOUR_SUPABASE_ANON_KEY"
+}
+```
+
+### Request Format
+```json
+{
+  "input_data": "YOUR_RAW_DATA_STRING_OR_JSON",
+  "conversion_mode": "smart|strict|batch",
+  "target_tables": ["TREND_MASTER", "KEYWORD_INTELLIGENCE", "COMPETITOR_INTELLIGENCE", "CONTENT_BRIEFS", "PERFORMANCE_TRACKING"]
+}
+```
+
+### Response Format
+```json
+{
+  "success": true,
+  "conversion_method": "gemini",
+  "processing_time": 2459,
+  "converted_data": [
+    {
+      "operation": "insert",
+      "table": "KEYWORD_INTELLIGENCE", 
+      "data": { /* converted data */ }
+    }
+  ],
+  "validation_report": {
+    "total_records": 5,
+    "valid_records": 5,
+    "invalid_records": 0,
+    "warnings": []
+  }
+}
+```
+
+### Conversion Modes
+- **smart**: AI-powered conversion with intelligent field mapping (default)
+- **strict**: Manual conversion with exact field matching
+- **batch**: Optimized for large datasets with dependency ordering
+
+### Example Usage
+```bash
+curl -X POST \
+  https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/mcp-converter \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer YOUR_SUPABASE_ANON_KEY' \
+  -d '{"input_data":"raw keyword data","conversion_mode":"smart","target_tables":["KEYWORD_INTELLIGENCE"]}'
+```
+
+---
 
 ## Headers
 ```json
