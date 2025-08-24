@@ -578,19 +578,73 @@ serve(async (req) => {
   try {
     console.log('🔄 MCP Converter: Starting conversion...');
     
-    // Parse request with multiple strategies for robust input handling
+    // Parse request with ultra-robust handling for double-encoded JSON
     let requestBody;
     try {
       const rawBody = await req.text();
-      console.log('📝 Raw request body:', rawBody.substring(0, 500) + '...');
+      console.log('📝 Raw request body length:', rawBody.length);
+      console.log('📝 First 200 chars:', rawBody.substring(0, 200));
       
-      // Try to parse as JSON first
-      requestBody = JSON.parse(rawBody);
+      // Strategy 1: Try normal JSON parsing
+      try {
+        requestBody = JSON.parse(rawBody);
+        console.log('✅ Strategy 1: Normal JSON parsing successful');
+      } catch (firstError) {
+        console.log('⚠️ Strategy 1 failed:', firstError.message);
+        
+        // Strategy 2: Fix common JSON issues and try again
+        try {
+          // Remove \r\n and fix common escaping issues
+          const cleanedBody = rawBody
+            .replace(/\\r\\n/g, '')  // Remove \r\n sequences
+            .replace(/\\\"/g, '"')   // Fix escaped quotes
+            .replace(/"{/g, '{')     // Remove quotes around objects
+            .replace(/}"/g, '}');    // Remove quotes around objects
+          
+          requestBody = JSON.parse(cleanedBody);
+          console.log('✅ Strategy 2: Cleaned JSON parsing successful');
+        } catch (secondError) {
+          console.log('⚠️ Strategy 2 failed:', secondError.message);
+          
+          // Strategy 3: Try to extract JSON from malformed structure
+          try {
+            // Look for JSON-like patterns and extract them
+            const jsonMatch = rawBody.match(/\{.*\}/s);
+            if (jsonMatch) {
+              const extractedJson = jsonMatch[0]
+                .replace(/\\r\\n/g, '')
+                .replace(/\\\"/g, '"');
+              requestBody = JSON.parse(extractedJson);
+              console.log('✅ Strategy 3: Extracted JSON parsing successful');
+            } else {
+              throw new Error('No JSON pattern found');
+            }
+          } catch (thirdError) {
+            console.log('⚠️ Strategy 3 failed:', thirdError.message);
+            
+            // Final fallback: Return detailed error
+            return new Response(JSON.stringify({ 
+              success: false, 
+              error: 'Could not parse JSON after multiple attempts',
+              details: {
+                originalError: firstError.message,
+                cleanedError: secondError.message,
+                extractedError: thirdError.message
+              },
+              suggestion: 'Try using the new simplified format: {"data": "your raw data", "mode": "smart"}',
+              rawBodyPreview: rawBody.substring(0, 300)
+            }), {
+              status: 400,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+          }
+        }
+      }
     } catch (parseError) {
-      console.error('❌ JSON parsing failed:', parseError.message);
+      console.error('❌ All JSON parsing strategies failed:', parseError.message);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: 'Invalid JSON format in request body',
+        error: 'Invalid request format',
         details: parseError.message,
         example: { data: 'your raw data here', mode: 'smart' }
       }), {
