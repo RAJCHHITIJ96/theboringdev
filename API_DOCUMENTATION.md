@@ -27,14 +27,16 @@ The MCP (Multi Content Processor) Converter intelligently converts raw data into
 ```json
 {
   "data": "YOUR_RAW_DATA_OR_TEXT",
-  "mode": "smart"
+  "mode": "smart",
+  "clean": true
 }
 ```
 
 ### Request Parameters
 - **`data`** (required): Raw input data - can be plain text, JSON string, or structured object
 - **`mode`** (optional): Conversion mode - `smart` (default), `strict`, or `batch`
-- **`enableValidationReport`** (optional): Boolean to enable detailed validation report (default: true)
+- **`clean`** (optional): Boolean, when `true` returns only the converted data array without metadata wrapper
+- **`enableValidationReport`** (optional): Boolean to enable detailed validation report (default: true, ignored when clean=true)
 
 ### Supported Input Formats
 
@@ -68,6 +70,8 @@ The MCP (Multi Content Processor) Converter intelligently converts raw data into
 ```
 
 ### Response Format
+
+#### Standard Response (clean=false or not specified)
 ```json
 {
   "success": true,
@@ -102,6 +106,25 @@ The MCP (Multi Content Processor) Converter intelligently converts raw data into
 }
 ```
 
+#### Clean Response (clean=true) - Database Ready Format
+```json
+[
+  {
+    "operation": "insert",
+    "table": "TREND_MASTER",
+    "data": {
+      "trend_id": "trend_20250124_ai_chrome",
+      "trend_topic": "AI-Powered Browser Extensions",
+      "trend_description": "Growing interest in AI browser integrations",
+      "google_trends_score": 100,
+      "trend_sentiment": "POSITIVE",
+      "discovery_time_period": "afternoon",
+      "status": "ACTIVE"
+    }
+  }
+]
+```
+
 ### Conversion Modes
 
 #### Smart Mode (Default - Recommended)
@@ -117,11 +140,14 @@ The MCP (Multi Content Processor) Converter intelligently converts raw data into
 - **Faster processing** for well-structured data
 - **No AI processing** - uses manual conversion logic only
 
-#### Batch Mode  
-- **Optimized for large datasets** with dependency resolution
-- **Proper ordering** ensures TREND_MASTER → KEYWORD_INTELLIGENCE → etc.
-- **Bulk processing** with intelligent defaults for missing data
-- **Foreign key handling** creates missing references automatically
+#### Batch Mode - PREMIUM PROCESSING
+- **INTELLIGENT DEPENDENCY CHAIN ANALYSIS** - Automatically detect and resolve complex multi-table relationships
+- **SUPERIOR ORDERING ALGORITHM** - Process records in optimal dependency order (TREND_MASTER → KEYWORD_INTELLIGENCE → etc.)
+- **SMART FOREIGN KEY RESOLUTION** - Auto-create missing parent records with enriched data when child records reference non-existent keys
+- **BULK DATA ENRICHMENT** - Enhance input data with intelligent defaults, semantic analysis, and contextual improvements
+- **ADVANCED VALIDATION & CONSISTENCY** - Cross-reference data relationships and ensure referential integrity across all operations
+- **OPTIMIZED PERFORMANCE** - Process large datasets efficiently with minimal processing time
+- **ENHANCED VALUE GENERATION** - Add maximum business value by enriching sparse data with intelligent inferences
 
 ### Auto-Detection Intelligence
 
