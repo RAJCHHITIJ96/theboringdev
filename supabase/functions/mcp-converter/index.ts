@@ -369,19 +369,18 @@ function validateAndConvertField(value: any, fieldSchema: any, fieldName: string
   }
 }
 
-async function convertWithGemini(inputData: any, conversionMode: string = 'smart', targetTables?: string[]): Promise<any> {
+async function convertWithGemini(inputData: any, conversionMode: string = 'smart'): Promise<any> {
   let modeInstructions = '';
-  let tableInstructions = '';
   
   // Mode-specific instructions
   switch (conversionMode) {
     case 'strict':
       modeInstructions = `
 STRICT MODE: 
-- Only convert data for the EXACT tables specified in the input
-- Do NOT create any additional records or tables
-- Fail validation if foreign key references are missing
-- Apply minimal conversions, prefer exact input values`;
+- Only convert data that can be clearly mapped to existing table structures
+- Do NOT create any additional records or dependencies
+- Apply minimal conversions, prefer exact input values
+- Fail gracefully if foreign key references are missing`;
       break;
     case 'batch':
       modeInstructions = `
@@ -389,29 +388,29 @@ BATCH MODE:
 - Process multiple operations efficiently 
 - Ensure proper ordering (TREND_MASTER before KEYWORD_INTELLIGENCE, etc.)
 - Create missing foreign key records with intelligent defaults when needed
-- Optimize for bulk processing`;
+- Optimize for bulk processing and dependency resolution`;
       break;
     default: // smart mode
       modeInstructions = `
 SMART MODE (Default):
-- Intelligently analyze input data and create missing dependencies
+- Intelligently analyze input data and auto-detect target tables
 - Apply smart field mappings and conversions
 - Create TREND_MASTER records if KEYWORD_INTELLIGENCE references missing trend_id
-- Use contextual understanding to fill missing required fields`;
-  }
-  
-  // Table-specific instructions
-  if (targetTables && targetTables.length > 0) {
-    tableInstructions = `
-TARGET TABLES: Only convert data for these tables: ${targetTables.join(', ')}
-Do NOT create records for any other tables unless they are required foreign key dependencies.`;
+- Use contextual understanding to fill missing required fields
+- Generate missing dependencies automatically`;
   }
 
   const prompt = `You are an expert database schema converter with complete knowledge of all database schemas.
 
+ANALYSIS TASK: Examine the input data and automatically determine which database tables are needed.
+
 ${modeInstructions}
 
-${tableInstructions}
+AUTO-DETECTION INTELLIGENCE:
+- Analyze the input data structure and content to determine target tables
+- Look for keywords like "trend", "keyword", "competitor", "content", "performance" 
+- Detect data patterns that match specific table schemas
+- Create proper dependency chains (TREND_MASTER → KEYWORD_INTELLIGENCE → COMPETITOR_INTELLIGENCE, etc.)
 
 COMPLETE SCHEMA RULES:
 
@@ -419,15 +418,15 @@ COMPLETE SCHEMA RULES:
    - trend_id: string, max 100 chars, required, unique identifier
    - trend_topic: string, max 200 chars, required
    - discovery_time_period: enum ['morning', 'afternoon', 'evening'] (convert 'day'→'afternoon', 'night'→'evening')
-   - google_trends_score: integer 0-100 (convert 'Breakout'→100, 'viral'→100, 'trending'→95)
-   - trend_category: enum ['AI_DEVELOPMENT', 'NO_CODE', 'AUTOMATION', 'AI_BUSINESS']
+   - google_trends_score: integer 0-100 (convert 'Breakout'→100, 'viral'→100, 'trending'→95, '+250%'→100)
+   - trend_category: enum ['AI_DEVELOPMENT', 'NO_CODE', 'AUTOMATION', 'AI_BUSINESS'] 
+   - trend_sentiment: enum ['POSITIVE', 'NEGATIVE', 'NEUTRAL', 'MIXED']
    - All other fields optional with intelligent defaults
 
 2. KEYWORD_INTELLIGENCE (Depends on TREND_MASTER):
    - Foreign Key: trend_id → TREND_MASTER.trend_id
    - keyword_id: string, max 50 chars, required
    - primary_keyword: string, max 200 chars, required
-   - All score fields: integers 0-100
    - search_intent: enum ['INFORMATIONAL', 'COMMERCIAL', 'NAVIGATIONAL', 'TRANSACTIONAL', 'MIXED']
    - priority_level: enum ['HIGH', 'MEDIUM', 'LOW']
 
@@ -445,22 +444,30 @@ COMPLETE SCHEMA RULES:
    - Foreign Key: keyword_id → KEYWORD_INTELLIGENCE.keyword_id
    - tracking_id: string, max 50 chars, required
 
-FOREIGN KEY INTELLIGENCE:
-- If KEYWORD_INTELLIGENCE references a trend_id that doesn't exist, create the TREND_MASTER record
-- Use intelligent defaults and contextual clues from the keyword data to populate TREND_MASTER
-- Ensure proper dependency ordering in output
+SMART FEATURES:
+- Auto-generate trend_id, keyword_id, competitor_id, brief_id, tracking_id if missing
+- Create foreign key dependencies automatically
+- Convert text patterns to appropriate data types
+- Handle various input formats (plain text, JSON, CSV-like data)
+- Apply intelligent field mapping based on content context
 
-SMART CONVERSIONS:
-- String length truncation with "..." for overflow
-- Enum value mappings with intelligent defaults
-- Score normalization (percentages to 0-100 scale)
-- JSON field handling for arrays and objects
-- Timestamp standardization to ISO format
+PLAIN TEXT PROCESSING:
+- If input is plain text, analyze content to extract relevant information
+- Create structured data based on text analysis
+- Generate appropriate IDs and relationships
+- Map content to the most suitable table structure
 
 Input Data:
-${JSON.stringify(inputData, null, 2)}
+${typeof inputData === 'string' ? inputData : JSON.stringify(inputData, null, 2)}
 
-Return ONLY the corrected JSON array with proper operation structure, no explanation.`;
+Return ONLY a valid JSON array with proper operation structure. Each item must have:
+{
+  "operation": "insert",
+  "table": "TABLE_NAME", 
+  "data": { ...converted_data... }
+}
+
+Auto-detect the appropriate tables and create all necessary records with proper dependencies.`;
 
   try {
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`, {
@@ -569,22 +576,63 @@ serve(async (req) => {
   }
 
   try {
-    const { 
-      inputData, 
-      conversionMode = 'smart', 
-      targetTables,
-      enableValidationReport = false 
-    } = await req.json();
+    console.log('🔄 MCP Converter: Starting conversion...');
     
-    if (!inputData) {
-      return new Response(
-        JSON.stringify({ 
-          success: false,
-          error: 'No input data provided',
-          message: 'Please provide inputData in the request body'
-        }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    // Parse request with multiple strategies for robust input handling
+    let requestBody;
+    try {
+      const rawBody = await req.text();
+      console.log('📝 Raw request body:', rawBody.substring(0, 500) + '...');
+      
+      // Try to parse as JSON first
+      requestBody = JSON.parse(rawBody);
+    } catch (parseError) {
+      console.error('❌ JSON parsing failed:', parseError.message);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'Invalid JSON format in request body',
+        details: parseError.message,
+        example: { data: 'your raw data here', mode: 'smart' }
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Extract data with flexible field names and auto-detection
+    const rawData = requestBody.data || requestBody.input_data || requestBody.inputData;
+    const conversionMode = requestBody.mode || requestBody.conversion_mode || requestBody.conversionMode || 'smart';
+    const enableValidationReport = requestBody.enableValidationReport !== false;
+    
+    if (!rawData) {
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'Missing data field. Please provide data in "data" field.',
+        example: { data: 'your raw data here', mode: 'smart' },
+        accepted_fields: ['data', 'input_data', 'inputData']
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Parse input data with multiple fallback strategies
+    let inputData;
+    
+    if (typeof rawData === 'string') {
+      // Try parsing as JSON first
+      try {
+        inputData = JSON.parse(rawData);
+        console.log('✅ Successfully parsed string data as JSON');
+      } catch {
+        // If JSON parsing fails, treat as plain text for AI processing
+        inputData = rawData;
+        console.log('✅ Using raw text data for AI processing');
+      }
+    } else {
+      // Already an object/array
+      inputData = rawData;
+      console.log('✅ Using object data directly');
     }
 
     const startTime = Date.now();
@@ -601,7 +649,7 @@ serve(async (req) => {
       // Try Gemini conversion first (unless in strict mode with simple data)
       if (conversionMode !== 'strict' || (Array.isArray(inputData) && inputData.length > 5)) {
         console.log('🤖 Attempting Gemini AI conversion...');
-        convertedData = await convertWithGemini(inputData, conversionMode, targetTables);
+        convertedData = await convertWithGemini(inputData, conversionMode);
         conversionMethod = 'gemini';
         console.log('✅ Gemini conversion successful');
       } else {
@@ -632,7 +680,7 @@ serve(async (req) => {
           processingTimeMs: processingTime,
           conversionMode,
           itemsProcessed: Array.isArray(convertedData) ? convertedData.length : 1,
-          targetTables: targetTables || 'all'
+          autoDetectedTables: 'Gemini AI auto-detection enabled'
         },
         validationReport,
         message: `Data successfully converted using ${conversionMethod} conversion (${processingTime}ms)`

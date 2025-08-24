@@ -9,6 +9,9 @@
 
 ## MCP Converter API
 
+### Overview
+The MCP (Multi Content Processor) Converter intelligently converts raw data into structured database formats using AI-powered analysis. It supports plain text, JSON, and various data formats with automatic table detection.
+
 ### Endpoint
 **POST** `https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/mcp-converter`
 
@@ -20,12 +23,47 @@
 }
 ```
 
-### Request Format
+### New Simplified Request Format
 ```json
 {
-  "input_data": "YOUR_RAW_DATA_STRING_OR_JSON",
-  "conversion_mode": "smart|strict|batch",
-  "target_tables": ["TREND_MASTER", "KEYWORD_INTELLIGENCE", "COMPETITOR_INTELLIGENCE", "CONTENT_BRIEFS", "PERFORMANCE_TRACKING"]
+  "data": "YOUR_RAW_DATA_OR_TEXT",
+  "mode": "smart"
+}
+```
+
+### Request Parameters
+- **`data`** (required): Raw input data - can be plain text, JSON string, or structured object
+- **`mode`** (optional): Conversion mode - `smart` (default), `strict`, or `batch`
+- **`enableValidationReport`** (optional): Boolean to enable detailed validation report (default: true)
+
+### Supported Input Formats
+
+#### 1. Plain Text Input (NEW)
+```json
+{
+  "data": "AI trends show Perplexity integration with Chrome is gaining traction. Search volume for 'perplexity ai chrome' shows breakout status with 95% momentum score.",
+  "mode": "smart"
+}
+```
+
+#### 2. Raw JSON String
+```json
+{
+  "data": "[{\"operation\":\"insert\",\"table\":\"TREND_MASTER\",\"data\":{\"trend_id\":\"trend_123\",\"trend_topic\":\"AI Chrome Integration\"}}]",
+  "mode": "smart"
+}
+```
+
+#### 3. Structured Object/Array
+```json
+{
+  "data": {
+    "trend_topic": "AI-Powered Browser Extensions",
+    "trend_description": "Growing interest in AI browser integrations",
+    "google_trends_score": "breakout",
+    "trend_sentiment": "positive"
+  },
+  "mode": "smart"
 }
 ```
 
@@ -33,37 +71,122 @@
 ```json
 {
   "success": true,
-  "conversion_method": "gemini",
-  "processing_time": 2459,
-  "converted_data": [
+  "convertedData": [
     {
       "operation": "insert",
-      "table": "KEYWORD_INTELLIGENCE", 
-      "data": { /* converted data */ }
+      "table": "TREND_MASTER", 
+      "data": {
+        "trend_id": "trend_20250124_ai_chrome",
+        "trend_topic": "AI-Powered Browser Extensions",
+        "trend_description": "Growing interest in AI browser integrations",
+        "google_trends_score": 100,
+        "trend_sentiment": "POSITIVE",
+        "discovery_time_period": "afternoon",
+        "status": "ACTIVE"
+      }
     }
   ],
-  "validation_report": {
-    "total_records": 5,
-    "valid_records": 5,
-    "invalid_records": 0,
+  "metadata": {
+    "conversionMethod": "gemini",
+    "processingTimeMs": 1847,
+    "conversionMode": "smart",
+    "itemsProcessed": 1,
+    "autoDetectedTables": "Gemini AI auto-detection enabled"
+  },
+  "validationReport": {
+    "inputItemCount": 1,
+    "outputItemCount": 1,
+    "tablesProcessed": ["TREND_MASTER"],
     "warnings": []
   }
 }
 ```
 
 ### Conversion Modes
-- **smart**: AI-powered conversion with intelligent field mapping (default)
-- **strict**: Manual conversion with exact field matching
-- **batch**: Optimized for large datasets with dependency ordering
+
+#### Smart Mode (Default - Recommended)
+- **AI-powered analysis** with automatic table detection
+- **Intelligent field mapping** and data conversion
+- **Auto-generates missing dependencies** (e.g., creates TREND_MASTER if KEYWORD_INTELLIGENCE needs it)
+- **Plain text processing** - analyzes content and extracts structured data
+- **Contextual understanding** fills missing required fields
+
+#### Strict Mode
+- **Minimal conversion** with exact field matching only
+- **No automatic dependencies** - fails if foreign keys missing
+- **Faster processing** for well-structured data
+- **No AI processing** - uses manual conversion logic only
+
+#### Batch Mode  
+- **Optimized for large datasets** with dependency resolution
+- **Proper ordering** ensures TREND_MASTER → KEYWORD_INTELLIGENCE → etc.
+- **Bulk processing** with intelligent defaults for missing data
+- **Foreign key handling** creates missing references automatically
+
+### Auto-Detection Intelligence
+
+The MCP Converter now automatically detects target tables by analyzing:
+- **Content keywords**: "trend", "keyword", "competitor", "content", "performance"
+- **Data patterns**: Structure matching specific table schemas  
+- **Relationships**: Foreign key dependencies and proper ordering
+- **Context clues**: Semantic analysis of input content
+
+### Supported Database Tables
+
+1. **TREND_MASTER** - Primary trends data (no dependencies)
+2. **KEYWORD_INTELLIGENCE** - Keyword research data (depends on TREND_MASTER)
+3. **COMPETITOR_INTELLIGENCE** - Competitor analysis (depends on KEYWORD_INTELLIGENCE)  
+4. **CONTENT_BRIEFS** - Content planning (depends on both TREND_MASTER & KEYWORD_INTELLIGENCE)
+5. **PERFORMANCE_TRACKING** - Performance metrics (depends on KEYWORD_INTELLIGENCE)
 
 ### Example Usage
+
+#### Simple Plain Text Conversion
 ```bash
 curl -X POST \
   https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/mcp-converter \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer YOUR_SUPABASE_ANON_KEY' \
-  -d '{"input_data":"raw keyword data","conversion_mode":"smart","target_tables":["KEYWORD_INTELLIGENCE"]}'
+  -d '{"data":"YouTube AI age verification trending +250% with breakout status. High commercial intent for privacy-focused content.","mode":"smart"}'
 ```
+
+#### Batch Processing
+```bash
+curl -X POST \
+  https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/mcp-converter \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer YOUR_SUPABASE_ANON_KEY' \
+  -d '{"data":[{"trend_topic":"Mobile AI","keywords":["pixel ai","edge ai"]},{"trend_topic":"Enterprise LLMs","keywords":["claude enterprise","gpt-5 rollout"]}],"mode":"batch"}'
+```
+
+### Error Handling
+
+#### Invalid JSON Format
+```json
+{
+  "success": false,
+  "error": "Invalid JSON format in request body",
+  "details": "Unexpected token...",
+  "example": { "data": "your raw data here", "mode": "smart" }
+}
+```
+
+#### Missing Data Field  
+```json
+{
+  "success": false,
+  "error": "Missing data field. Please provide data in \"data\" field.",
+  "accepted_fields": ["data", "input_data", "inputData"]
+}
+```
+
+### Key Improvements
+- ✅ **Simplified API** - Just `data` and `mode` fields required
+- ✅ **Plain text support** - No need to structure data manually  
+- ✅ **Auto table detection** - AI determines target tables automatically
+- ✅ **Robust parsing** - Multiple fallback strategies for different input formats
+- ✅ **Enhanced error handling** - Clear error messages with examples
+- ✅ **Gemini AI processing** - Advanced content analysis and field mapping
 
 ---
 
