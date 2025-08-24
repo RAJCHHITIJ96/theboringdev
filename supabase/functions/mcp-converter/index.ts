@@ -384,17 +384,11 @@ STRICT MODE:
       break;
     case 'batch':
       modeInstructions = `
-ADVANCED BATCH MODE - PREMIUM PROCESSING:
-- **INTELLIGENT DEPENDENCY CHAIN ANALYSIS**: Automatically detect and resolve complex multi-table relationships
-- **SUPERIOR ORDERING ALGORITHM**: Process records in optimal dependency order (TREND_MASTER → KEYWORD_INTELLIGENCE → COMPETITOR_INTELLIGENCE → CONTENT_BRIEFS → PERFORMANCE_TRACKING)
-- **SMART FOREIGN KEY RESOLUTION**: Auto-create missing parent records with enriched data when child records reference non-existent keys
-- **BULK DATA ENRICHMENT**: Enhance input data with intelligent defaults, semantic analysis, and contextual improvements
-- **ADVANCED VALIDATION & CONSISTENCY**: Cross-reference data relationships and ensure referential integrity across all operations
-- **OPTIMIZED PERFORMANCE**: Process large datasets efficiently with minimal processing time
-- **ENHANCED VALUE GENERATION**: Add maximum business value by enriching sparse data with intelligent inferences
-- **RELATIONSHIP MAPPING**: Detect implicit relationships between records and create explicit database connections
-- **DATA QUALITY BOOST**: Improve data completeness, accuracy, and semantic richness during batch conversion
-- **DEPENDENCY RESOLUTION**: Handle complex scenarios where multiple tables depend on each other with circular references`;
+BATCH MODE:
+- Process multiple operations efficiently 
+- Ensure proper ordering (TREND_MASTER before KEYWORD_INTELLIGENCE, etc.)
+- Create missing foreign key records with intelligent defaults when needed
+- Optimize for bulk processing and dependency resolution`;
       break;
     default: // smart mode
       modeInstructions = `
@@ -663,7 +657,6 @@ serve(async (req) => {
     const rawData = requestBody.data || requestBody.input_data || requestBody.inputData;
     const conversionMode = requestBody.mode || requestBody.conversion_mode || requestBody.conversionMode || 'smart';
     const enableValidationReport = requestBody.enableValidationReport !== false;
-    const cleanResponse = requestBody.clean === true;
     
     if (!rawData) {
       return new Response(JSON.stringify({ 
@@ -732,18 +725,6 @@ serve(async (req) => {
     const processingTime = Date.now() - startTime;
     console.log(`⚡ Conversion completed in ${processingTime}ms using ${conversionMethod} method`);
 
-    // Return clean response (just the data array) or full response based on request
-    if (cleanResponse) {
-      console.log('🧹 Returning clean response format (data only)');
-      return new Response(
-        JSON.stringify(convertedData),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
-    }
-
-    // Default full response with metadata
     return new Response(
       JSON.stringify({
         success: true,
