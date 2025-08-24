@@ -59,12 +59,14 @@ const MCPConverter = () => {
         throw new Error(error.message || 'Conversion failed');
       }
 
-      setOutputJson(JSON.stringify(data.convertedData, null, 2));
-      setMetadata(data.metadata);
-      setValidationReport(data.validationReport);
+      // Handle new clean response format (data is now the array directly)
+      setOutputJson(JSON.stringify(data, null, 2));
+      setMetadata(null); // No metadata in clean format
+      setValidationReport(null); // No validation report in clean format
       setConversionStatus('success');
       
-      const successMsg = `✅ ${data.message}`;
+      const itemCount = Array.isArray(data) ? data.length : 1;
+      const successMsg = `✅ Successfully converted ${itemCount} item(s)`;
       toast.success(successMsg);
     } catch (error) {
       console.error('Conversion error:', error);
