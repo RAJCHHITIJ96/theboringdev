@@ -724,21 +724,11 @@ serve(async (req) => {
 
     const processingTime = Date.now() - startTime;
     console.log(`⚡ Conversion completed in ${processingTime}ms using ${conversionMethod} method`);
+    console.log('🧹 Returning clean response format (data only)');
 
+    // Return only the converted data array directly (clean format)
     return new Response(
-      JSON.stringify({
-        success: true,
-        convertedData,
-        metadata: {
-          conversionMethod,
-          processingTimeMs: processingTime,
-          conversionMode,
-          itemsProcessed: Array.isArray(convertedData) ? convertedData.length : 1,
-          autoDetectedTables: 'Gemini AI auto-detection enabled'
-        },
-        validationReport,
-        message: `Data successfully converted using ${conversionMethod} conversion (${processingTime}ms)`
-      }),
+      JSON.stringify(convertedData),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
