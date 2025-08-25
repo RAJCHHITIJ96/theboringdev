@@ -35,30 +35,6 @@ const TrendingOpportunities = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header Navigation */}
-      <header className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="font-semibold text-xl text-gray-900">
-              theboringdev
-            </div>
-            
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Intelligence</a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Validation</a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Trends</a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Analysis</a>
-            </nav>
-            
-            {/* CTA Button */}
-            <button className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
-              Start Reading
-            </button>
-          </div>
-        </div>
-      </header>
 
       {/* Hero Section */}
       <section className="bg-white">
@@ -94,13 +70,13 @@ const TrendingOpportunities = () => {
       {/* Blog Posts Grid */}
       <section className="bg-white">
         <div className="max-w-[1200px] mx-auto px-12 py-20">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogPosts.map((post, index) => (
               <article 
                 key={index}
-                className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer"
+                className="bg-white rounded-xl border border-[#f0f0f0] overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,0,0,0.1)] transition-all duration-200 cursor-pointer"
               >
-                <div className="aspect-video w-full">
+                <div className="w-full h-[200px]">
                   <img 
                     src={post.image}
                     alt={post.title}
@@ -108,10 +84,10 @@ const TrendingOpportunities = () => {
                   />
                 </div>
                 <div className="p-6">
-                  <h3 className="font-bold text-[#2d3748] text-lg mb-2 leading-tight">
+                  <h3 className="text-[18px] font-semibold text-[#2d3748] mb-2 leading-[1.4]">
                     {post.title}
                   </h3>
-                  <p className="text-[#718096] text-sm">
+                  <p className="text-[#718096] text-[14px] font-normal">
                     {post.date}
                   </p>
                 </div>
