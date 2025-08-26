@@ -12,6 +12,7 @@ import AIAutomation from "./pages/AIAutomation";
 import ToolComparisons from "./pages/ToolComparisons";
 import AINews from "./pages/AINews";
 import AIRealityCheck from "./pages/AIRealityCheck";
+import AIUGC from "./pages/AIUGC";
 import BuilderStories from "./pages/BuilderStories";
 import NotFound from "./pages/NotFound";
 import MCPConverter from "./pages/MCPConverter";
@@ -35,6 +36,7 @@ const App = () => (
               <Route path="/tool-comparisons" element={<ToolComparisons />} />
               <Route path="/ai-news" element={<AINews />} />
               <Route path="/ai-reality-check" element={<AIRealityCheck />} />
+              <Route path="/ai-ugc" element={<AIUGC />} />
               <Route path="/builder-stories" element={<BuilderStories />} />
               <Route path="/mcp-converter" element={<MCPConverter />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

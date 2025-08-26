@@ -76,7 +76,7 @@ export default {
 			},
 			fontFamily: {
 				// Premium Typography System
-				'serif': ['Crimson Text', 'Times New Roman', 'serif'],
+				'serif': ['Playfair Display', 'Crimson Text', 'Times New Roman', 'serif'],
 				'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
 				'mono': ['JetBrains Mono', 'Monaco', 'Consolas', 'monospace'],
 			},
