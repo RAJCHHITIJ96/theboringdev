@@ -1,19 +1,23 @@
+
 import React, { useState, useEffect } from 'react';
 
 const AIUGC = () => {
   const [activeSection, setActiveSection] = useState('');
 
   const tableOfContents = [
-    { id: 'what-if', title: 'What If I Told You There\'s a "Boring" Way to Generate 100K+ Visitors Every Month—And It Compounds?' },
-    { id: 'simple-idea', title: 'The Simple Idea Everyone\'s Missing (But Nobody Wants to Talk About)' },
-    { id: 'conservative-math', title: 'The Conservative Math That Changes Everything' },
-    { id: 'boring-method', title: 'The Boring Method Architecture (How It Actually Works)' },
-    { id: 'done-for-you-1', title: 'The Boring Method Done-For-You System' },
-    { id: 'architecture', title: 'The Make.com + Claude Architecture That Powers Everything' },
-    { id: 'why-most-people', title: 'Why Most People Will Never Build This' },
-    { id: 'done-for-you-2', title: 'Your Traffic Empire, Built For You' },
-    { id: 'next-move', title: 'Your Next Move: From Understanding to Implementation' },
-    { id: 'whats-your-move', title: 'What\'s Your Move?' }
+    { id: 'what-if', title: 'The AI UGC Factory That Generates 150+ Videos Daily for Under $12' },
+    { id: 'what-this-is', title: 'What This AI UGC Factory Actually Is (Dead Simple)' },
+    { id: 'conversion-math', title: 'The Conversion Math That Changes Everything' },
+    { id: 'cost-breakdown', title: 'The Real-World Cost Breakdown' },
+    { id: 'technical-implementation', title: 'The Technical Implementation (Simplified)' },
+    { id: 'performance-data', title: 'Performance Data: 47 Days of Real Results' },
+    { id: 'advanced-optimization', title: 'The Advanced Optimization System' },
+    { id: 'scaling-up', title: 'Scaling to 300+ Videos/Day (The Next Level)' },
+    { id: 'common-pitfalls', title: 'Common Pitfalls (And How to Avoid Them)' },
+    { id: 'why-most-people', title: 'Why 99% of Businesses Will Never Do This' },
+    { id: 'future-proofing', title: 'Future-Proofing Your System' },
+    { id: 'bottom-line', title: 'The Bottom Line: Your Content Revolution Starts Now' },
+    { id: 'faq', title: 'FAQ: Your Burning Questions Answered' }
   ];
 
   useEffect(() => {
@@ -42,7 +46,7 @@ const AIUGC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ backgroundColor: '#F6F8F6' }}>
       {/* Hero Image */}
       <div className="w-full h-[60vh] relative">
         <img 
@@ -50,15 +54,16 @@ const AIUGC = () => {
           alt="The AI UGC Revolution" 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 bg-black/10"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
+      {/* Main Content Container with proper top margin */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 mt-16 relative">
         <div className="flex gap-12">
           {/* Table of Contents - Desktop Only */}
           <aside className="hidden lg:block w-80 sticky top-8 self-start">
-            <div className="bg-muted/50 rounded-2xl p-6 border border-border/50 backdrop-blur-sm">
-              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-6">
+            <div className="rounded-2xl p-6 border shadow-sm" style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E5E5' }}>
+              <h3 className="text-sm font-medium uppercase tracking-wide mb-6" style={{ color: '#555555' }}>
                 TABLE OF CONTENTS
               </h3>
               <nav className="space-y-3">
@@ -66,11 +71,14 @@ const AIUGC = () => {
                   <button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className={`block w-full text-left text-sm leading-relaxed transition-all duration-200 hover:text-foreground ${
+                    className={`block w-full text-left text-sm leading-relaxed transition-all duration-200 hover:opacity-80 ${
                       activeSection === item.id 
-                        ? 'text-foreground font-medium' 
-                        : 'text-muted-foreground'
+                        ? 'font-medium' 
+                        : ''
                     }`}
+                    style={{ 
+                      color: activeSection === item.id ? '#1a1a1a' : '#555555'
+                    }}
                   >
                     {item.title}
                   </button>
@@ -79,414 +87,617 @@ const AIUGC = () => {
             </div>
           </aside>
 
-          {/* Main Content */}
-          <main className="flex-1 max-w-4xl">
+          {/* Main Content - Centered with wide margins */}
+          <main className="flex-1 max-w-4xl mx-auto">
             {/* Article Header */}
-            <header className="py-12 text-center border-b border-border/30">
+            <header className="py-12 text-center border-b" style={{ borderColor: '#E5E5E5' }}>
               <div className="mb-6">
-                <p className="text-sm text-muted-foreground mb-2">Published on</p>
-                <p className="text-sm font-medium">27 August 2025</p>
-                <p className="text-sm text-muted-foreground mt-2">15 min read</p>
+                <p className="text-sm mb-2" style={{ color: '#555555' }}>Published on</p>
+                <p className="text-sm font-medium" style={{ color: '#1a1a1a' }}>27 August 2025</p>
+                <p className="text-sm mt-2" style={{ color: '#555555' }}>15 min read</p>
               </div>
-              <div className="w-24 h-px bg-foreground/20 mx-auto"></div>
+              <div className="w-24 h-px mx-auto" style={{ backgroundColor: '#555555' }}></div>
             </header>
 
             {/* Article Content */}
             <article className="prose prose-lg max-w-none py-16">
-              <h1 className="font-serif text-4xl lg:text-5xl font-bold text-foreground mb-8 leading-tight">
-                The Boring Method of Generating 100K+ Visitors That Compounds Every Month (All With AI Systems)
+              <h1 className="font-serif text-4xl lg:text-5xl font-bold mb-4 leading-tight" style={{ color: '#1a1a1a' }}>
+                The AI UGC Factory That Generates 150+ Videos Daily for Under $12
               </h1>
 
+              <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                (While Your Competitors Burn $300+ for the Same Output)
+              </h2>
+
               <section id="what-if" className="mb-16">
-                <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                  What If I Told You There's a "Boring" Way to Generate 100K+ Visitors Every Month—And It Compounds?
+                <p className="text-lg leading-relaxed mb-6" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>What if I told you there's a machine that creates 150 professional videos every single day for less than the cost of two Starbucks coffees?</strong>
+                </p>
+                <p className="text-lg leading-relaxed mb-6" style={{ color: '#555555' }}>
+                  That's exactly what I built. And in the next 10 minutes, I'm going to show you the system that's about to make traditional UGC pricing look like highway robbery.
+                </p>
+                <p className="text-lg leading-relaxed" style={{ color: '#555555' }}>
+                  But first, let me explain what this thing actually does...
+                </p>
+
+                {/* AI Assembly Line Image */}
+                <div className="my-12">
+                  <img 
+                    src="https://ibb.co/206YcJ2n"
+                    alt="AI UGC automation workflow diagram showing 12 connected workers generating 150 videos daily for $11.47 cost breakdown"
+                    className="w-full rounded-xl shadow-sm"
+                  />
+                </div>
+              </section>
+
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
+
+              <section id="what-this-is" className="mb-16">
+                <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                  What This AI UGC Factory Actually Is (Dead Simple)
                 </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                  Everyone's doing AI content wrong. They're thinking in single posts. I'm thinking in traffic ecosystems that multiply themselves. While others celebrate their first viral post, I built a system that generates 100K visitors in month 2, 200K in month 3, and keeps compounding from there. Not through luck. Not through viral content. Through systematic AI-powered compound growth.
+                <p className="text-lg leading-relaxed mb-8" style={{ color: '#555555' }}>
+                  Think of this like having <strong style={{ color: '#1a1a1a' }}>12 AI employees working 24/7</strong> in your content department.
                 </p>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                  Here's the thing most people don't understand: AI content isn't about replacing human creativity—it's about amplifying human strategy at exponential scale. You gotta see this working to believe it. But once you do, you'll never go back to the old way of building traffic.
+                <p className="text-lg leading-relaxed mb-6" style={{ color: '#555555' }}>
+                  Here's the entire system in 30 seconds:
                 </p>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  This is what I call <strong className="text-foreground">The Boring Method</strong>. Not because it's boring—because it works so consistently, it becomes "boringly" predictable.
+
+                <div className="rounded-xl p-6 mb-8" style={{ backgroundColor: '#FEF3F8' }}>
+                  <h3 className="font-semibold text-lg mb-4" style={{ color: '#1a1a1a' }}>The Assembly Line:</h3>
+                  <ul className="space-y-3" style={{ color: '#555555' }}>
+                    <li><strong style={{ color: '#1a1a1a' }}>AI Worker #1</strong>: Finds trending topics across 15 platforms</li>
+                    <li><strong style={{ color: '#1a1a1a' }}>AI Worker #2</strong>: Writes viral-optimized scripts</li>
+                    <li><strong style={{ color: '#1a1a1a' }}>AI Worker #3</strong>: Creates natural-sounding voice audio</li>
+                    <li><strong style={{ color: '#1a1a1a' }}>AI Worker #4</strong>: Generates matching visuals and backgrounds</li>
+                    <li><strong style={{ color: '#1a1a1a' }}>AI Workers #5-8</strong>: Edit, optimize, and quality-check everything</li>
+                    <li><strong style={{ color: '#1a1a1a' }}>AI Workers #9-12</strong>: Distribute across platforms and track performance</li>
+                  </ul>
+                </div>
+
+                <p className="text-lg leading-relaxed mb-4" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>The Output:</strong> 150+ professional UGC videos daily<br/>
+                  <strong style={{ color: '#1a1a1a' }}>The Cost:</strong> $11.47 per day (that's $0.076 per video)<br/>
+                  <strong style={{ color: '#1a1a1a' }}>The Time:</strong> Fully automated after 2-week setup
+                </p>
+                <p className="text-lg leading-relaxed" style={{ color: '#555555' }}>
+                  You gotta see this working to believe it. But once you do, you'll never pay premium UGC prices again.
                 </p>
               </section>
 
-              <hr className="border-border/30 my-12" />
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
 
-              <section id="simple-idea" className="mb-16">
-                <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                  The Simple Idea Everyone's Missing (But Nobody Wants to Talk About)
+              <section id="conversion-math" className="mb-16">
+                <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                  The Conversion Math That Changes Everything
                 </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                  Let me break this down in the simplest terms possible: Most people think: <em>"AI can write blog posts now, cool!"</em> I thought: <em>"What if AI could build entire content empires that self-multiply?"</em> The difference? Scale thinking vs. single-post thinking.
+                <p className="text-lg leading-relaxed mb-8" style={{ color: '#555555' }}>
+                  Now let me show you why this matters for YOUR business with conservative 0.3-0.4% conversion rates:
+                </p>
+
+                {/* Revenue Multiplier Image */}
+                <div className="my-12">
+                  <img 
+                    src="https://ibb.co/QjfMVjQ2"
+                    alt="Business revenue multiplication spiral showing 150x to 477x growth potential with AI UGC automation"
+                    className="w-full rounded-xl shadow-sm"
+                  />
+                </div>
+
+                <div className="overflow-x-auto mb-8">
+                  <table className="w-full border-collapse rounded-xl border shadow-sm" style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E5E5' }}>
+                    <thead>
+                      <tr style={{ backgroundColor: '#F2F0E4' }}>
+                        <th className="border p-4 text-left font-semibold" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}>Business Model</th>
+                        <th className="border p-4 text-left font-semibold" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}>Current Monthly Views</th>
+                        <th className="border p-4 text-left font-semibold" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}>AI Factory Monthly Views</th>
+                        <th className="border p-4 text-left font-semibold" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}>Current Revenue</th>
+                        <th className="border p-4 text-left font-semibold" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}>AI Factory Revenue</th>
+                        <th className="border p-4 text-left font-semibold" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}>Revenue Multiplier</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}><strong>Info Products</strong></td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>16,000</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>3,811,500</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$9,456</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$2,252,695</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}><strong>238x</strong></td></tr>
+                      <tr><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}><strong>Ecommerce</strong></td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>25,000</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>3,811,500</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$4,700</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$716,562</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}><strong>152x</strong></td></tr>
+                      <tr><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}><strong>Agencies</strong></td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>8,000</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>3,811,500</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$14,000</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$6,671,000</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}><strong>477x</strong></td></tr>
+                      <tr><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}><strong>SaaS</strong></td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>12,000</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>3,811,500</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$2,095 MRR</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$739,431 MRR</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}><strong>353x</strong></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <p className="text-lg leading-relaxed" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>These numbers use CONSERVATIVE conversion rates. With UGC optimization, expect 29-275% higher conversions.</strong>
+                </p>
+              </section>
+
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
+
+              <section id="cost-breakdown" className="mb-16">
+                <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                  The Real-World Cost Breakdown
+                </h2>
+                <p className="text-lg leading-relaxed mb-8" style={{ color: '#555555' }}>
+                  I used to think you needed massive budgets to scale content. I was completely wrong.
                 </p>
 
                 <div className="grid md:grid-cols-2 gap-8 mb-8">
-                  <div className="bg-muted/30 rounded-xl p-6 border border-border/30">
-                    <h3 className="font-serif text-xl font-semibold text-foreground mb-4">Traditional Content Strategy:</h3>
-                    <ul className="space-y-2 text-muted-foreground">
-                      <li>• Write 1 great post per week</li>
-                      <li>• Hope it performs well</li>
-                      <li>• Pray for consistent traffic</li>
-                      <li>• Scale linearly (maybe)</li>
+                  <div className="rounded-xl p-6 border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E5E5' }}>
+                    <h3 className="font-semibold text-lg mb-4" style={{ color: '#1a1a1a' }}>My System Cost (Per Video):</h3>
+                    <ul className="space-y-2" style={{ color: '#555555' }}>
+                      <li>OpenAI API: $0.008</li>
+                      <li>ElevenLabs Voice: $0.022</li>
+                      <li>Video Generation: $0.035</li>
+                      <li>N8N Automation: $0.001</li>
+                      <li>Storage/Bandwidth: $0.010</li>
+                      <li><strong style={{ color: '#1a1a1a' }}>Total: $0.076 per video</strong></li>
                     </ul>
                   </div>
 
-                  <div className="bg-primary/5 rounded-xl p-6 border border-primary/20">
-                    <h3 className="font-serif text-xl font-semibold text-foreground mb-4">The Boring Method:</h3>
-                    <ul className="space-y-2 text-muted-foreground">
-                      <li>• Generate 17 optimized posts daily</li>
-                      <li>• Each post targets different keyword clusters</li>
-                      <li>• 510+ posts create domain authority compound effect</li>
-                      <li>• Traffic scales geometrically, not linearly</li>
+                  <div className="rounded-xl p-6 border" style={{ backgroundColor: '#FEF3F8', borderColor: '#E5E5E5' }}>
+                    <h3 className="font-semibold text-lg mb-4" style={{ color: '#1a1a1a' }}>Industry "Budget" Tools:</h3>
+                    <ul className="space-y-2" style={{ color: '#555555' }}>
+                      <li>Synthesia: $1.67 per video</li>
+                      <li>Pictory: $2.50 per video</li>
+                      <li>InVideo: $1.25 per video</li>
+                      <li>Premium UGC platforms: $5-30 per video</li>
                     </ul>
                   </div>
                 </div>
 
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  I used to think quality meant writing one perfect post per week. Then I realized: Why not both quality <strong className="text-foreground">AND</strong> quantity at massive scale?
+                <p className="text-lg leading-relaxed mb-6" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>At 150 videos/day, the difference is staggering:</strong><br/>
+                  - My system: $11.40/day = $4,161/year<br/>
+                  - Cheapest competitor: $187.50/day = $68,437/year<br/><br/>
+                  That's a <strong style={{ color: '#1a1a1a' }}>$64,276 annual savings</strong> for the same output.
                 </p>
+
+                {/* Cost Savings Image */}
+                <div className="my-12">
+                  <img 
+                    src="https://ibb.co/PvPcSY7s"
+                    alt="Cost comparison visualization: traditional UGC $68K yearly vs AI automation $4K yearly savings infographic"
+                    className="w-full rounded-xl shadow-sm"
+                  />
+                </div>
               </section>
 
-              <hr className="border-border/30 my-12" />
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
 
-              <section id="conservative-math" className="mb-16">
-                <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                  The Conservative Math That Changes Everything
+              <section id="technical-implementation" className="mb-16">
+                <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                  The Technical Implementation (Simplified)
                 </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                  Here's where it gets interesting. Let me show you the actual numbers—not the hopeful projections, but the conservative reality of compound traffic growth.
+                <p className="text-lg leading-relaxed mb-8" style={{ color: '#555555' }}>
+                  A few months ago, I was paying premium prices like everyone else. Here's the system that changed everything:
                 </p>
 
-                <div className="overflow-x-auto mb-8">
-                  <table className="w-full border-collapse bg-background rounded-xl border border-border/30">
-                    <thead>
-                      <tr className="bg-muted/30">
-                        <th className="border border-border/30 p-4 text-left font-semibold">Month</th>
-                        <th className="border border-border/30 p-4 text-left font-semibold">Content Pieces</th>
-                        <th className="border border-border/30 p-4 text-left font-semibold">Monthly Visitors</th>
-                        <th className="border border-border/30 p-4 text-left font-semibold">Domain Authority</th>
-                        <th className="border border-border/30 p-4 text-left font-semibold">Compound Factor</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr><td className="border border-border/30 p-4">Month 1</td><td className="border border-border/30 p-4">510</td><td className="border border-border/30 p-4">45,000</td><td className="border border-border/30 p-4">Building</td><td className="border border-border/30 p-4">1x</td></tr>
-                      <tr><td className="border border-border/30 p-4">Month 2</td><td className="border border-border/30 p-4">1,020</td><td className="border border-border/30 p-4">100,000</td><td className="border border-border/30 p-4">Moderate</td><td className="border border-border/30 p-4">2.2x</td></tr>
-                      <tr><td className="border border-border/30 p-4">Month 3</td><td className="border border-border/30 p-4">1,530</td><td className="border border-border/30 p-4">200,000</td><td className="border border-border/30 p-4">Strong</td><td className="border border-border/30 p-4">4.4x</td></tr>
-                      <tr><td className="border border-border/30 p-4">Month 4</td><td className="border border-border/30 p-4">2,040</td><td className="border border-border/30 p-4">350,000</td><td className="border border-border/30 p-4">High</td><td className="border border-border/30 p-4">7.8x</td></tr>
-                      <tr><td className="border border-border/30 p-4">Month 6</td><td className="border border-border/30 p-4">3,060</td><td className="border border-border/30 p-4">600,000</td><td className="border border-border/30 p-4">Authority</td><td className="border border-border/30 p-4">13.3x</td></tr>
-                    </tbody>
-                  </table>
-                </div>
+                <h3 className="font-serif text-2xl font-semibold mb-6" style={{ color: '#1a1a1a' }}>Phase 1: The Foundation Setup</h3>
 
-                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                  Now here's the business impact. No matter what you sell—info products, e-commerce, agency services, SaaS—the conversion math is universal.
-                </p>
-
-                <div className="overflow-x-auto mb-8">
-                  <table className="w-full border-collapse bg-background rounded-xl border border-border/30">
-                    <thead>
-                      <tr className="bg-primary/5">
-                        <th className="border border-border/30 p-4 text-left font-semibold">Month</th>
-                        <th className="border border-border/30 p-4 text-left font-semibold">Visitors</th>
-                        <th className="border border-border/30 p-4 text-left font-semibold">Info Products ($200 AOV)</th>
-                        <th className="border border-border/30 p-4 text-left font-semibold">E-commerce ($75 AOV)</th>
-                        <th className="border border-border/30 p-4 text-left font-semibold">Agency (10% to leads)</th>
-                        <th className="border border-border/30 p-4 text-left font-semibold">SaaS ($49 MRR)</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr><td className="border border-border/30 p-4">Month 2</td><td className="border border-border/30 p-4">100,000</td><td className="border border-border/30 p-4">$60,000</td><td className="border border-border/30 p-4">$22,500</td><td className="border border-border/30 p-4">10,000 leads</td><td className="border border-border/30 p-4">$14,700 MRR</td></tr>
-                      <tr><td className="border border-border/30 p-4">Month 3</td><td className="border border-border/30 p-4">200,000</td><td className="border border-border/30 p-4">$120,000</td><td className="border border-border/30 p-4">$45,000</td><td className="border border-border/30 p-4">20,000 leads</td><td className="border border-border/30 p-4">$29,400 MRR</td></tr>
-                      <tr><td className="border border-border/30 p-4">Month 4</td><td className="border border-border/30 p-4">350,000</td><td className="border border-border/30 p-4">$210,000</td><td className="border border-border/30 p-4">$78,750</td><td className="border border-border/30 p-4">35,000 leads</td><td className="border border-border/30 p-4">$51,450 MRR</td></tr>
-                      <tr><td className="border border-border/30 p-4">Month 6</td><td className="border border-border/30 p-4">600,000</td><td className="border border-border/30 p-4">$360,000</td><td className="border border-border/30 p-4">$135,000</td><td className="border border-border/30 p-4">60,000 leads</td><td className="border border-border/30 p-4">$88,200 MRR</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  I want you to understand something: These aren't best-case scenarios. This is conservative math based on actual implementation data.
-                </p>
-              </section>
-
-              <hr className="border-border/30 my-12" />
-
-              <section id="boring-method" className="mb-16">
-                <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                  The Boring Method Architecture (How It Actually Works)
-                </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                  This isn't your typical "AI writes blog posts" setup. Most AI content systems optimize for volume. I optimized for compound domain authority that creates exponential traffic multiplication.
-                </p>
-
-                <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">The Three-Layer System:</h3>
-
-                <div className="space-y-8">
-                  <div className="bg-muted/30 rounded-xl p-6 border border-border/30">
-                    <h4 className="font-semibold text-lg text-foreground mb-4">Layer 1: Content Intelligence Engine</h4>
-                    <ul className="space-y-2 text-muted-foreground">
-                      <li>• Claude AI with custom prompt engineering</li>
-                      <li>• 17 unique, high-quality posts daily</li>
-                      <li>• Each targeting specific keyword clusters</li>
-                      <li>• Quality scoring algorithm ensures 85+ rating before publication</li>
-                    </ul>
-                  </div>
-
-                  <div className="bg-muted/30 rounded-xl p-6 border border-border/30">
-                    <h4 className="font-semibold text-lg text-foreground mb-4">Layer 2: Compound Authority Builder</h4>
-                    <ul className="space-y-2 text-muted-foreground">
-                      <li>• Content pieces interlink strategically</li>
-                      <li>• Creates topical authority clusters</li>
-                      <li>• Builds domain-wide SEO momentum</li>
-                      <li>• Each new post strengthens the entire ecosystem</li>
-                    </ul>
-                  </div>
-
-                  <div className="bg-muted/30 rounded-xl p-6 border border-border/30">
-                    <h4 className="font-semibold text-lg text-foreground mb-4">Layer 3: Traffic Multiplication Framework</h4>
-                    <ul className="space-y-2 text-muted-foreground">
-                      <li>• Search rankings compound across all content</li>
-                      <li>• Social sharing amplifies through content clusters</li>
-                      <li>• Email list growth accelerates with more entry points</li>
-                      <li>• Authority-driven traffic becomes increasingly organic</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <p className="text-lg text-muted-foreground leading-relaxed mt-8">
-                  A few months ago, I was thinking about individual post performance. Now I think about traffic ecosystem performance. The magic happens when you stop optimizing for single posts and start optimizing for compound domain authority.
-                </p>
-              </section>
-
-              <hr className="border-border/30 my-12" />
-
-              <section id="done-for-you-1" className="mb-16">
-                <div className="bg-primary/5 rounded-2xl p-8 border border-primary/20">
-                  <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                    👉 The Boring Method Done-For-You System
-                  </h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                    You've just seen the architecture, the math, and why this compounds. But here's the truth: building this yourself would take months of painful trial and error. That's exactly why I created the <strong className="text-foreground">Done-For-You Boring Method System</strong>. My team and I set up the <strong className="text-foreground">entire ecosystem</strong> for you:
-                  </p>
-                  <ul className="space-y-3 text-muted-foreground mb-6">
-                    <li>• Keyword intelligence pipelines</li>
-                    <li>• Claude AI content generation (with quality scoring built in)</li>
-                    <li>• Next.js publishing architecture</li>
-                    <li>• Automated interlinking & authority building</li>
-                    <li>• Traffic + revenue attribution</li>
+                <div className="rounded-xl p-6 mb-8" style={{ backgroundColor: '#F2F0E4' }}>
+                  <h4 className="font-semibold text-lg mb-4" style={{ color: '#1a1a1a' }}>Required Tools:</h4>
+                  <ul className="space-y-2" style={{ color: '#555555' }}>
+                    <li>N8N (free tier: 5,000 executions/month)</li>
+                    <li>ElevenLabs (Starter: $5/month)</li>
+                    <li>OpenAI API ($5-10/month)</li>
+                    <li>Video API like Veo 3 ($2-5/month)</li>
                   </ul>
-                  <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                    You get a <strong className="text-foreground">ready-to-run compound traffic engine</strong> without wasting months figuring it out alone.
-                  </p>
-                  <p className="text-lg font-medium text-foreground">
-                    ⚡ Only a limited number of implementation slots open monthly. If you want us to build this for you, <a href="#" className="text-primary underline hover:no-underline">click here now and secure your spot</a>.
-                  </p>
                 </div>
-              </section>
 
-              <hr className="border-border/30 my-12" />
+                <p className="text-lg font-medium mb-4" style={{ color: '#1a1a1a' }}>The Core Workflow:</p>
 
-              <section id="architecture" className="mb-16">
-                <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                  The Make.com + Claude Architecture That Powers Everything
-                </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                  Want to see exactly how this works under the hood? I would not recommend trying to build this with basic tools. The compound effect requires enterprise-level automation that most people don't even know exists.
-                </p>
-
-                <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">The Technical Stack:</h3>
-
-                <div className="bg-gray-900 rounded-xl p-6 overflow-x-auto mb-8">
-                  <pre className="text-sm text-green-400 font-mono">
+                <div className="rounded-xl p-6 overflow-x-auto mb-8" style={{ backgroundColor: '#1a1a1a' }}>
+                  <pre className="text-sm font-mono" style={{ color: '#00ff00' }}>
 {`{
-  "content_engine": {
-    "trigger": "Daily 6AM keyword research scan",
-    "generation": "Claude with custom theboring prompts", 
-    "quality_check": "Automated scoring algorithm",
-    "publishing": "Next.js dynamic deployment",
-    "optimization": "Real-time SEO metadata generation"
-  },
-  "compound_multiplier": {
-    "interlinking": "Automated cluster connections",
-    "authority_building": "Strategic pillar content",
-    "social_amplification": "Multi-platform distribution",
-    "email_integration": "Automated list building"
+  "workflow": {
+    "name": "AI_UGC_Factory_v3",
+    "trigger": "Every 2 hours",
+    "steps": [
+      "Analyze trending topics",
+      "Generate viral scripts", 
+      "Create voice audio",
+      "Generate video visuals",
+      "Combine and optimize",
+      "Distribute to platforms"
+    ]
   }
 }`}
                   </pre>
                 </div>
+
+                <h3 className="font-serif text-2xl font-semibold mb-6" style={{ color: '#1a1a1a' }}>Phase 2: The Multiplier System</h3>
+                <p className="text-lg leading-relaxed mb-6" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>The Secret:</strong> Instead of one workflow, I run 5 parallel content streams:
+                </p>
+                <ul className="space-y-2 mb-8" style={{ color: '#555555' }}>
+                  <li><strong style={{ color: '#1a1a1a' }}>Educational Content</strong>: 30 videos/day</li>
+                  <li><strong style={{ color: '#1a1a1a' }}>Entertainment</strong>: 40 videos/day</li>
+                  <li><strong style={{ color: '#1a1a1a' }}>Product Showcases</strong>: 25 videos/day</li>
+                  <li><strong style={{ color: '#1a1a1a' }}>Trending Topics</strong>: 35 videos/day</li>
+                  <li><strong style={{ color: '#1a1a1a' }}>Evergreen Content</strong>: 20 videos/day</li>
+                </ul>
+                <p className="text-lg leading-relaxed" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>Total Output: 150 videos/day across all content types</strong>
+                </p>
               </section>
 
-              <hr className="border-border/30 my-12" />
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
+
+              <section id="performance-data" className="mb-16">
+                <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                  Performance Data: 47 Days of Real Results
+                </h2>
+                <p className="text-lg leading-relaxed mb-8" style={{ color: '#555555' }}>
+                  I've been tracking every metric since day one. Here's what actually happened:
+                </p>
+
+                {/* Performance Data Image */}
+                <div className="my-12">
+                  <img 
+                    src="https://ibb.co/xSTbJDnp"
+                    alt="AI UGC performance metrics chart showing 8.3% viral rate and 238x revenue multiplier growth trajectory"
+                    className="w-full rounded-xl shadow-sm"
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-6 mb-8">
+                  <div className="rounded-xl p-6 border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E5E5' }}>
+                    <h4 className="font-semibold text-lg mb-4" style={{ color: '#1a1a1a' }}>Content Performance:</h4>
+                    <ul className="space-y-2 text-sm" style={{ color: '#555555' }}>
+                      <li>Total Videos Generated: 7,050</li>
+                      <li>Average Daily Output: 150 videos</li>
+                      <li>System Uptime: 98.3%</li>
+                      <li>Failed Generations: 1.2%</li>
+                    </ul>
+                  </div>
+
+                  <div className="rounded-xl p-6 border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E5E5' }}>
+                    <h4 className="font-semibold text-lg mb-4" style={{ color: '#1a1a1a' }}>Engagement Results:</h4>
+                    <ul className="space-y-2 text-sm" style={{ color: '#555555' }}>
+                      <li>Average Views Per Video: 847</li>
+                      <li>Viral Rate (>10K views): 8.3%</li>
+                      <li>Platform Approval Rate: 96.7%</li>
+                      <li>Best Performing Video: 2.3M views</li>
+                    </ul>
+                  </div>
+
+                  <div className="rounded-xl p-6 border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E5E5' }}>
+                    <h4 className="font-semibold text-lg mb-4" style={{ color: '#1a1a1a' }}>Quality Metrics:</h4>
+                    <ul className="space-y-2 text-sm" style={{ color: '#555555' }}>
+                      <li>AI Detection Rate: Only 3.1%</li>
+                      <li>Human Authenticity Score: 7.8/10</li>
+                      <li>Cost Per View: $0.000089</li>
+                      <li>ROI vs Traditional UGC: 3,920%</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <p className="text-lg leading-relaxed" style={{ color: '#555555' }}>
+                  I want you to understand this shift: <strong style={{ color: '#1a1a1a' }}>These aren't projections. This is what's happening right now.</strong>
+                </p>
+              </section>
+
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
+
+              <section id="advanced-optimization" className="mb-16">
+                <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                  The Advanced Optimization System
+                </h2>
+                <p className="text-lg leading-relaxed mb-8" style={{ color: '#555555' }}>
+                  Most people stop at basic implementation. Here's where the real exponential gains come from:
+                </p>
+
+                <h3 className="font-serif text-2xl font-semibold mb-6" style={{ color: '#1a1a1a' }}>Parallel Processing Architecture</h3>
+                <p className="text-lg font-medium mb-4" style={{ color: '#1a1a1a' }}>The 5X Multiplier:</p>
+
+                <div className="rounded-xl p-6 overflow-x-auto mb-8" style={{ backgroundColor: '#1a1a1a' }}>
+                  <pre className="text-sm font-mono" style={{ color: '#00ff00' }}>
+{`async def generate_video_batch(scripts_batch):
+    """Process multiple videos simultaneously"""
+    
+    async with aiohttp.ClientSession() as session:
+        tasks = []
+        for script in scripts_batch:
+            task = asyncio.create_task(
+                process_single_video(session, script)
+            )
+            tasks.append(task)
+        
+        return await asyncio.gather(*tasks)`}
+                  </pre>
+                </div>
+
+                <h3 className="font-serif text-2xl font-semibold mb-6" style={{ color: '#1a1a1a' }}>The Quality Enhancement Filter</h3>
+                <p className="text-lg font-medium mb-4" style={{ color: '#1a1a1a' }}>AI Quality Scorer:</p>
+
+                <div className="rounded-xl p-6 overflow-x-auto mb-8" style={{ backgroundColor: '#1a1a1a' }}>
+                  <pre className="text-sm font-mono" style={{ color: '#00ff00' }}>
+{`def quality_score_video(video_path):
+    scores = {
+        "audio_clarity": analyze_audio_quality(video_path),
+        "visual_consistency": check_visual_flow(video_path),
+        "engagement_potential": predict_engagement(video_path),
+        "authenticity": measure_human_likeness(video_path)
+    }
+    
+    overall_score = sum(scores.values()) / len(scores)
+    
+    if overall_score < 7.0:
+        return regenerate_video(video_path)
+    
+    return video_path`}
+                  </pre>
+                </div>
+
+                <p className="text-lg leading-relaxed" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>Only videos scoring 7.0+ make it to distribution.</strong> This filtering improved our viral rate from 3.1% to 8.3%.
+                </p>
+              </section>
+
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
+
+              <section id="scaling-up" className="mb-16">
+                <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                  Scaling to 300+ Videos/Day (The Next Level)
+                </h2>
+
+                <div className="overflow-x-auto mb-8">
+                  <table className="w-full border-collapse rounded-xl border shadow-sm" style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E5E5' }}>
+                    <thead>
+                      <tr style={{ backgroundColor: '#F2F0E4' }}>
+                        <th className="border p-4 text-left font-semibold" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}>Daily Output</th>
+                        <th className="border p-4 text-left font-semibold" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}>Monthly Cost</th>
+                        <th className="border p-4 text-left font-semibold" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}>Expected Views</th>
+                        <th className="border p-4 text-left font-semibold" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}>Revenue Potential</th>
+                        <th className="border p-4 text-left font-semibold" style={{ borderColor: '#E5E5E5', color: '#1a1a1a' }}>ROI</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>150 videos</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$344</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>2.1M views</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$2,100-4,200</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>610%</td></tr>
+                      <tr><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>300 videos</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$687</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>4.8M views</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$4,800-9,600</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>1,395%</td></tr>
+                      <tr><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>500 videos</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$1,145</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>8.5M views</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>$8,500-17,000</td><td className="border p-4" style={{ borderColor: '#E5E5E5', color: '#555555' }}>1,485%</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <p className="text-lg leading-relaxed" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>The Exponential Effect:</strong><br/>
+                  Doubling input doesn't double output—it creates exponential growth because:
+                </p>
+                <ul className="mt-4 space-y-2" style={{ color: '#555555' }}>
+                  <li>- More content = higher chance of viral hits</li>
+                  <li>- Platform algorithms favor active creators</li>
+                  <li>- Audience compound growth across multiple videos</li>
+                  <li>- Cross-platform momentum amplification</li>
+                </ul>
+              </section>
+
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
+
+              <section id="common-pitfalls" className="mb-16">
+                <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                  Common Pitfalls (And How to Avoid Them)
+                </h2>
+                <p className="text-lg leading-relaxed mb-8" style={{ color: '#555555' }}>
+                  Let me save you weeks of debugging:
+                </p>
+
+                <h3 className="font-serif text-2xl font-semibold mb-6" style={{ color: '#1a1a1a' }}>Pitfall #1: API Rate Limiting</h3>
+                <p className="text-lg leading-relaxed mb-4" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>The Problem</strong>: Hit ElevenLabs limits at 47 videos/day.
+                </p>
+                <p className="text-lg leading-relaxed mb-4" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>The Solution</strong>: Intelligent queuing system:
+                </p>
+
+                <div className="rounded-xl p-6 overflow-x-auto mb-8" style={{ backgroundColor: '#1a1a1a' }}>
+                  <pre className="text-sm font-mono" style={{ color: '#00ff00' }}>
+{`class APIRateLimiter:
+    def __init__(self, max_requests=100, time_window=3600):
+        self.max_requests = max_requests
+        self.time_window = time_window
+        self.requests = []
+    
+    def wait_if_needed(self):
+        if not self.can_make_request():
+            sleep_time = self.time_until_next_slot()
+            time.sleep(sleep_time)`}
+                  </pre>
+                </div>
+
+                <h3 className="font-serif text-2xl font-semibold mb-6" style={{ color: '#1a1a1a' }}>Pitfall #2: Platform Detection</h3>
+                <p className="text-lg leading-relaxed mb-4" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>The Problem</strong>: TikTok flagged 23% of videos as "AI-generated."
+                </p>
+                <p className="text-lg leading-relaxed mb-4" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>The Solution</strong>: Advanced humanization:
+                </p>
+
+                <div className="rounded-xl p-6 overflow-x-auto mb-8" style={{ backgroundColor: '#1a1a1a' }}>
+                  <pre className="text-sm font-mono" style={{ color: '#00ff00' }}>
+{`def humanize_video(video_config):
+    randomizations = {
+        "voice_variation": random.uniform(0.95, 1.05),
+        "pause_injection": random.choice([True, False]),
+        "background_shift": random.uniform(-2, 2),
+        "audio_compression": random.choice([128, 192, 256])
+    }
+    
+    return apply_humanization(video_config, randomizations)`}
+                  </pre>
+                </div>
+
+                <p className="text-lg leading-relaxed mb-8" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>This dropped detection rate to 3.1%.</strong>
+                </p>
+
+                {/* AI Detection Improvement Image */}
+                <div className="my-12">
+                  <img 
+                    src="https://ibb.co/845HvfDX"
+                    alt="AI detection rate comparison: before and after humanization showing improvement from 23% to 3.1% detection"
+                    className="w-full rounded-xl shadow-sm"
+                  />
+                </div>
+              </section>
+
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
+
+              {/* Entrepreneur Liberation Image */}
+              <div className="my-12">
+                <img 
+                  src="https://ibb.co/7dkFBXw1"
+                  alt="Entrepreneur transformation visualization from UGC stress chaos to automated content creation freedom"
+                  className="w-full rounded-xl shadow-sm"
+                />
+              </div>
 
               <section id="why-most-people" className="mb-16">
-                <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                  Why Most People Will Never Build This
+                <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                  Why 99% of Businesses Will Never Do This
                 </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                  Here's the uncomfortable truth: The Boring Method requires thinking in systems, not posts. Most content creators are still thinking like bloggers, not like traffic engineers.
+                <p className="text-lg leading-relaxed mb-8" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>The Hard Truth:</strong> Most people will read this, get excited, then do nothing.
                 </p>
-
-                <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">Common Mistakes I See:</h3>
-
-                <div className="space-y-6">
-                  <div className="bg-red-50 rounded-xl p-6 border border-red-200">
-                    <h4 className="font-semibold text-lg text-red-900 mb-2">Single-Post Optimization Obsession</h4>
-                    <p className="text-red-800">Spending weeks perfecting one post instead of building systematic content generation</p>
-                  </div>
-
-                  <div className="bg-red-50 rounded-xl p-6 border border-red-200">
-                    <h4 className="font-semibold text-lg text-red-900 mb-2">Quality Perfectionism</h4>
-                    <p className="text-red-800">Waiting for "perfect" content instead of shipping "excellent" content at scale</p>
-                  </div>
-
-                  <div className="bg-red-50 rounded-xl p-6 border border-red-200">
-                    <h4 className="font-semibold text-lg text-red-900 mb-2">Manual Process Addiction</h4>
-                    <p className="text-red-800">Trying to hand-craft everything instead of engineering automated excellence</p>
-                  </div>
-
-                  <div className="bg-red-50 rounded-xl p-6 border border-red-200">
-                    <h4 className="font-semibold text-lg text-red-900 mb-2">Short-Term Thinking</h4>
-                    <p className="text-red-800">Measuring success in days/weeks instead of compound monthly growth</p>
-                  </div>
-                </div>
-
-                <p className="text-lg text-muted-foreground leading-relaxed mt-8">
-                  I want you to think differently. This isn't about creating content—it's about engineering traffic empires.
+                <p className="text-lg leading-relaxed mb-6" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>Why?</strong>
+                </p>
+                <ul className="space-y-2 mb-8" style={{ color: '#555555' }}>
+                  <li><strong style={{ color: '#1a1a1a' }}>Technical overwhelm</strong> ("This looks complicated")</li>
+                  <li><strong style={{ color: '#1a1a1a' }}>Analysis paralysis</strong> ("Maybe I should wait")</li>
+                  <li><strong style={{ color: '#1a1a1a' }}>Perfectionism</strong> ("Let me plan this perfectly first")</li>
+                  <li><strong style={{ color: '#1a1a1a' }}>Resource excuses</strong> ("I don't have time to learn this")</li>
+                </ul>
+                <p className="text-lg leading-relaxed" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>Meanwhile, the 1% who take action capture the entire market advantage.</strong>
+                </p>
+                <p className="text-lg leading-relaxed" style={{ color: '#555555' }}>
+                  I would not recommend waiting. Once this becomes mainstream (12-18 months), the competitive advantage disappears.
                 </p>
               </section>
 
-              <hr className="border-border/30 my-12" />
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
 
-              <section id="done-for-you-2" className="mb-16">
-                <div className="bg-gradient-to-br from-primary/10 to-blue-50 rounded-2xl p-8 border border-primary/20">
-                  <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                    👉 Your Traffic Empire, Built For You
-                  </h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                    Right now, you've seen the <strong className="text-foreground">entire blueprint</strong>—the architecture, the math, the implementation reality. And if you're feeling both excited <strong className="text-foreground">and</strong> overwhelmed… that's exactly where most people realize they can't do this alone.
-                  </p>
-                  <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                    That's why I created the <strong className="text-foreground">Done-For-You Boring Method Implementation</strong>. We don't just give you the plan—we build the entire system:
-                  </p>
-                  <div className="grid md:grid-cols-2 gap-4 mb-6">
-                    <div className="flex items-center space-x-3">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>17+ posts/day pipeline fully automated</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>Authority-building interlinking strategy</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>Next.js publishing & optimization stack</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>Revenue attribution wired in from day one</span>
-                    </div>
-                  </div>
-                  <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                    Instead of trying (and failing) to duct-tape tools together, you'll wake up to a system already working and compounding.
-                  </p>
-                  <p className="text-lg font-medium text-foreground">
-                    Spots are extremely limited (because we run the builds in-house). If you're serious about scaling traffic predictably, <a href="#" className="text-primary underline hover:no-underline">click here now to apply</a>.
-                  </p>
+              <section id="future-proofing" className="mb-16">
+                <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                  Future-Proofing Your System
+                </h2>
+                <p className="text-lg leading-relaxed mb-8" style={{ color: '#555555' }}>
+                  The AI UGC landscape evolves fast. Here's how to stay ahead:
+                </p>
+
+                <h3 className="font-serif text-2xl font-semibold mb-4" style={{ color: '#1a1a1a' }}>Trend #1: Real-Time Generation</h3>
+                <p className="text-lg leading-relaxed mb-6" style={{ color: '#555555' }}>
+                  Video generation dropping from 2-3 minutes to 15-30 seconds.
+                </p>
+
+                <h3 className="font-serif text-2xl font-semibold mb-4" style={{ color: '#1a1a1a' }}>Trend #2: Advanced Personalization</h3>
+                <p className="text-lg leading-relaxed mb-6" style={{ color: '#555555' }}>
+                  AI systems adapting content style based on viewer preferences.
+                </p>
+
+                <h3 className="font-serif text-2xl font-semibold mb-4" style={{ color: '#1a1a1a' }}>Trend #3: Multi-Modal Integration</h3>
+                <p className="text-lg leading-relaxed mb-6" style={{ color: '#555555' }}>
+                  Systems combining text, voice, video, and interactive elements seamlessly.
+                </p>
+                <p className="text-lg leading-relaxed" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>Start building the infrastructure now. Don't wait for these changes.</strong>
+                </p>
+
+                {/* Future Advantage Window Image */}
+                <div className="my-12">
+                  <img 
+                    src="https://ibb.co/C5bv4G77"
+                    alt="First-mover advantage timeline 2025-2026 showing AI UGC market opportunity window closing"
+                    className="w-full rounded-xl shadow-sm"
+                  />
                 </div>
               </section>
 
-              <hr className="border-border/30 my-12" />
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
 
-              <section id="next-move" className="mb-16">
-                <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                  Your Next Move: From Understanding to Implementation
+              <section id="bottom-line" className="mb-16">
+                <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                  The Bottom Line: Your Content Revolution Starts Now
                 </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                  The compound traffic revolution is happening with or without you. I've given you the complete blueprint. The architecture, the math, the real-world implementation data—everything you need to understand why The Boring Method generates 100K+ visitors that compound monthly. But understanding and implementing are two different games.
+                <p className="text-lg leading-relaxed mb-6" style={{ color: '#555555' }}>
+                  Here's what we've covered:
                 </p>
+                <ul className="space-y-2 mb-8" style={{ color: '#555555' }}>
+                  <li>✅ <strong style={{ color: '#1a1a1a' }}>Simple System</strong>: 12 AI workers generating 150+ videos daily for $11.47</li>
+                  <li>✅ <strong style={{ color: '#1a1a1a' }}>Conversion Math</strong>: 150-477x revenue multiplier across all business models</li>
+                  <li>✅ <strong style={{ color: '#1a1a1a' }}>Real Results</strong>: 47 days of verified data showing 8.3% viral rate</li>
+                  <li>✅ <strong style={{ color: '#1a1a1a' }}>Technical Guide</strong>: Complete implementation blueprint</li>
+                  <li>✅ <strong style={{ color: '#1a1a1a' }}>Advanced Scaling</strong>: Path to 300+ videos/day</li>
+                  <li>✅ <strong style={{ color: '#1a1a1a' }}>Future-Proofing</strong>: 2025+ trends and preparation</li>
+                </ul>
+                
+                <p className="text-lg leading-relaxed mb-6" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>The Reality Check:</strong><br/>
+                  - Traditional UGC: $300-1,000/month for limited content<br/>
+                  - My system: $12/day for unlimited professional videos<br/>
+                  - The math isn't close. It's exponential.
+                </p>
+                
+                <p className="text-lg leading-relaxed mb-6" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>Your Three Paths Forward:</strong>
+                </p>
+                <ul className="space-y-2 mb-8" style={{ color: '#555555' }}>
+                  <li><strong style={{ color: '#1a1a1a' }}>Keep paying premium prices</strong> and watch competitors scale past you</li>
+                  <li><strong style={{ color: '#1a1a1a' }}>Build this system yourself</strong> using this guide (2-3 weeks implementation)</li>
+                  <li><strong style={{ color: '#1a1a1a' }}>Get the complete ready-to-deploy system</strong> with templates and support</li>
+                </ul>
+                
+                <p className="text-lg leading-relaxed" style={{ color: '#555555' }}>
+                  The UGC industry's pricing bubble is deflating. Fast.
+                </p>
+                <p className="text-lg leading-relaxed" style={{ color: '#555555' }}>
+                  <strong style={{ color: '#1a1a1a' }}>The question isn't whether this will disrupt the market—it's whether you'll be positioned to benefit from it.</strong>
+                </p>
+              </section>
 
-                <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
-                  Here's what separates successful implementations from abandoned projects:
-                </h3>
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
 
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-start space-x-3">
-                    <span className="text-green-600 font-bold text-lg">✓</span>
-                    <div>
-                      <strong className="text-foreground">Systems Thinking:</strong> <span className="text-muted-foreground">Optimizing for compound growth, not individual posts</span>
-                    </div>
+              <section id="faq" className="mb-16">
+                <h2 className="font-serif text-3xl font-bold mb-6" style={{ color: '#1a1a1a' }}>
+                  FAQ: Your Burning Questions Answered
+                </h2>
+                <div className="space-y-6" style={{ color: '#555555' }}>
+                  <div>
+                    <p className="text-lg font-medium mb-2" style={{ color: '#1a1a1a' }}>Q: How much does it actually cost to run 150 videos daily?</p>
+                    <p className="leading-relaxed">A: $11.47/day total. Breakdown: OpenAI ($1.20), ElevenLabs ($3.30), Video API ($5.25), N8N ($0.15), Storage ($1.57). That's $0.076 per video vs industry standard $1-30.</p>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="text-green-600 font-bold text-lg">✓</span>
-                    <div>
-                      <strong className="text-foreground">Technical Excellence:</strong> <span className="text-muted-foreground">Enterprise-level automation that actually works at scale</span>
-                    </div>
+                  
+                  <div>
+                    <p className="text-lg font-medium mb-2" style={{ color: '#1a1a1a' }}>Q: What if I'm not technical - can I still build this?</p>
+                    <p className="leading-relaxed">A: The learning curve is steep but manageable. Expect 2-3 weeks for full implementation following my guide. Most components are drag-and-drop in N8N.</p>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="text-green-600 font-bold text-lg">✓</span>
-                    <div>
-                      <strong className="text-foreground">Quality at Speed:</strong> <span className="text-muted-foreground">85+ content quality scores at 17 posts daily</span>
-                    </div>
+                  
+                  <div>
+                    <p className="text-lg font-medium mb-2" style={{ color: '#1a1a1a' }}>Q: Will TikTok ban AI-generated content?</p>
+                    <p className="leading-relaxed">A: With proper humanization techniques, detection rate stays under 5%. My system uses advanced randomization to mimic human creation patterns.</p>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="text-green-600 font-bold text-lg">✓</span>
-                    <div>
-                      <strong className="text-foreground">Authority Building:</strong> <span className="text-muted-foreground">Strategic content clusters that multiply domain authority</span>
-                    </div>
+                  
+                  <div>
+                    <p className="text-lg font-medium mb-2" style={{ color: '#1a1a1a' }}>Q: Can this work for B2B businesses?</p>
+                    <p className="leading-relaxed">A: Absolutely. The conversion math works across all business models. B2B typically sees lower volume but higher value conversions.</p>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="text-green-600 font-bold text-lg">✓</span>
-                    <div>
-                      <strong className="text-foreground">Patience for Compound Growth:</strong> <span className="text-muted-foreground">Waiting for the exponential curve to kick in</span>
-                    </div>
+                  
+                  <div>
+                    <p className="text-lg font-medium mb-2" style={{ color: '#1a1a1a' }}>Q: How long before everyone is doing this?</p>
+                    <p className="leading-relaxed">A: 12-18 months until mainstream adoption. The first-mover advantage window is closing fast.</p>
                   </div>
                 </div>
-
-                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                  You gotta see this working to believe it. But once you experience compound traffic growth, you'll never go back to linear content strategies.
-                </p>
-
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  The choice is simple: Keep creating content the old way and hope for viral hits, or start engineering traffic systems that compound predictably. The traffic empire belongs to those who understand that consistency at scale beats perfection at small scale every single time.
-                </p>
               </section>
 
-              <hr className="border-border/30 my-12" />
+              <hr className="my-12" style={{ borderColor: '#E5E5E5' }} />
 
-              <section id="whats-your-move" className="mb-16">
-                <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                  What's Your Move?
-                </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  Have you tried building automated content systems before? What's been your biggest challenge with scaling content creation? Drop a comment below—I read every response and often share additional insights personally.
-                </p>
-              </section>
+              <p className="text-lg leading-relaxed text-center" style={{ color: '#555555' }}>
+                <strong style={{ color: '#1a1a1a' }}>What's stopping you from building your content empire? Drop a comment and let's solve it together.</strong>
+              </p>
+              <p className="text-lg leading-relaxed text-center" style={{ color: '#555555' }}>
+                The future belongs to those who automate intelligently. Your move.
+              </p>
             </article>
-
-            {/* Trending Opportunities Card */}
-            <div className="mt-16 pt-16 border-t border-border/30">
-              <h2 className="font-serif text-2xl font-bold text-foreground mb-8 text-center">
-                Trending AI Opportunities
-              </h2>
-              <div className="max-w-md mx-auto">
-                <div className="bg-background rounded-xl border border-border/50 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 group cursor-pointer">
-                  <div className="w-full h-48">
-                    <img 
-                      src="https://i.ibb.co/xSCbB1XD/ai-ugc-revolution.png"
-                      alt="The AI UGC Factory"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="font-serif text-lg font-semibold text-foreground leading-tight">
-                      The AI UGC Factory That Generates 150+ Videos Daily for Under $12
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            </div>
           </main>
         </div>
       </div>
