@@ -354,7 +354,7 @@ const AIUGC = () => {
                     <h4 className="font-semibold text-lg mb-4" style={{ color: '#1a1a1a' }}>Engagement Results:</h4>
                     <ul className="space-y-2 text-sm" style={{ color: '#555555' }}>
                       <li>Average Views Per Video: 847</li>
-                      <li>Viral Rate (>10K views): 8.3%</li>
+                      <li>Viral Rate (&gt;10K views): 8.3%</li>
                       <li>Platform Approval Rate: 96.7%</li>
                       <li>Best Performing Video: 2.3M views</li>
                     </ul>
