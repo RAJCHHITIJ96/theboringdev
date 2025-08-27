@@ -4,7 +4,7 @@ const AIUGC = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Image */}
-      <div className="blog-image-container" style={{ marginTop: '80px' }}>
+      <div className="blog-image-container">
         <img 
           src="https://i.ibb.co/xSCbB1XD/ai-ugc-revolution.png"
           alt="The AI UGC Revolution" 
