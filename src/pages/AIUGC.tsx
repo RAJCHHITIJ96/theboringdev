@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const AIUGC = () => {
@@ -55,7 +54,7 @@ const AIUGC = () => {
               marginBottom: '32px',
               color: '#374151'
             }}>
-              What if I told you there's a machine that creates 150 professional videos every single day for less than the cost of two Starbucks coffees?
+              <strong>What if I told you there's a machine that creates 150 professional videos every single day for less than the cost of two Starbucks coffees?</strong>
             </p>
             <p style={{
               fontFamily: "'Inter', -apple-system, sans-serif",
@@ -109,7 +108,7 @@ const AIUGC = () => {
                 marginBottom: '32px',
                 color: '#374151'
               }}>
-                Think of this like having 12 AI employees working 24/7 in your content department.
+                Think of this like having <strong>12 AI employees working 24/7</strong> in your content department.
               </p>
               
               <p style={{
@@ -139,7 +138,7 @@ const AIUGC = () => {
                       fontSize: '19px',
                       lineHeight: '1.7',
                       color: '#6B7280'
-                    }}>AI Worker #1: Finds trending topics across 15 platforms</span>
+                    }}><strong>AI Worker #1</strong>: Finds trending topics across 15 platforms</span>
                   </li>
                   <li className="flex items-start" style={{ marginBottom: '16px', paddingLeft: '0' }}>
                     <span className="inline-block w-8 h-8 bg-black text-white text-sm rounded-full flex items-center justify-center mr-4 mt-1" style={{ fontFamily: "'Inter', sans-serif" }}>2</span>
@@ -148,7 +147,7 @@ const AIUGC = () => {
                       fontSize: '19px',
                       lineHeight: '1.7',
                       color: '#6B7280'
-                    }}>AI Worker #2: Writes viral-optimized scripts</span>
+                    }}><strong>AI Worker #2</strong>: Writes viral-optimized scripts</span>
                   </li>
                   <li className="flex items-start" style={{ marginBottom: '16px', paddingLeft: '0' }}>
                     <span className="inline-block w-8 h-8 bg-black text-white text-sm rounded-full flex items-center justify-center mr-4 mt-1" style={{ fontFamily: "'Inter', sans-serif" }}>3</span>
@@ -157,7 +156,7 @@ const AIUGC = () => {
                       fontSize: '19px',
                       lineHeight: '1.7',
                       color: '#6B7280'
-                    }}>AI Worker #3: Creates natural-sounding voice audio</span>
+                    }}><strong>AI Worker #3</strong>: Creates natural-sounding voice audio</span>
                   </li>
                   <li className="flex items-start" style={{ marginBottom: '16px', paddingLeft: '0' }}>
                     <span className="inline-block w-8 h-8 bg-black text-white text-sm rounded-full flex items-center justify-center mr-4 mt-1" style={{ fontFamily: "'Inter', sans-serif" }}>4</span>
@@ -166,7 +165,7 @@ const AIUGC = () => {
                       fontSize: '19px',
                       lineHeight: '1.7',
                       color: '#6B7280'
-                    }}>AI Worker #4: Generates matching visuals and backgrounds</span>
+                    }}><strong>AI Worker #4</strong>: Generates matching visuals and backgrounds</span>
                   </li>
                   <li className="flex items-start" style={{ marginBottom: '16px', paddingLeft: '0' }}>
                     <span className="inline-block w-10 h-8 bg-black text-white text-xs rounded-full flex items-center justify-center mr-3 mt-1" style={{ fontFamily: "'Inter', sans-serif" }}>5-8</span>
@@ -175,7 +174,7 @@ const AIUGC = () => {
                       fontSize: '19px',
                       lineHeight: '1.7',
                       color: '#6B7280'
-                    }}>AI Workers #5-8: Edit, optimize, and quality-check everything</span>
+                    }}><strong>AI Workers #5-8</strong>: Edit, optimize, and quality-check everything</span>
                   </li>
                   <li className="flex items-start" style={{ marginBottom: '16px', paddingLeft: '0' }}>
                     <span className="inline-block w-12 h-8 bg-black text-white text-xs rounded-full flex items-center justify-center mr-2 mt-1" style={{ fontFamily: "'Inter', sans-serif" }}>9-12</span>
@@ -184,7 +183,7 @@ const AIUGC = () => {
                       fontSize: '19px',
                       lineHeight: '1.7',
                       color: '#6B7280'
-                    }}>AI Workers #9-12: Distribute across platforms and track performance</span>
+                    }}><strong>AI Workers #9-12</strong>: Distribute across platforms and track performance</span>
                   </li>
                 </ul>
               </div>
@@ -200,9 +199,16 @@ const AIUGC = () => {
                   }}>150+</div>
                   <div style={{
                     fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    marginBottom: '8px',
+                    color: '#000'
+                  }}>The Output:</div>
+                  <div style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
                     fontSize: '14px',
                     color: '#6B7280'
-                  }}>Professional UGC videos daily</div>
+                  }}>professional UGC videos daily</div>
                 </div>
                 <div className="text-center p-8 rounded-2xl bg-white border border-gray-100 shadow-sm">
                   <div style={{
@@ -214,9 +220,16 @@ const AIUGC = () => {
                   }}>$11.47</div>
                   <div style={{
                     fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    marginBottom: '8px',
+                    color: '#000'
+                  }}>The Cost:</div>
+                  <div style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
                     fontSize: '14px',
                     color: '#6B7280'
-                  }}>Per day ($0.076 per video)</div>
+                  }}>per day (that's $0.076 per video)</div>
                 </div>
                 <div className="text-center p-8 rounded-2xl bg-white border border-gray-100 shadow-sm">
                   <div style={{
@@ -225,12 +238,19 @@ const AIUGC = () => {
                     fontWeight: '700',
                     marginBottom: '12px',
                     color: '#000'
-                  }}>2 weeks</div>
+                  }}>Fully automated</div>
+                  <div style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    marginBottom: '8px',
+                    color: '#000'
+                  }}>The Time:</div>
                   <div style={{
                     fontFamily: "'Inter', -apple-system, sans-serif",
                     fontSize: '14px',
                     color: '#6B7280'
-                  }}>Fully automated after setup</div>
+                  }}>after 2-week setup</div>
                 </div>
               </div>
 
@@ -290,6 +310,7 @@ const AIUGC = () => {
                       <th className="p-6 text-left text-sm font-medium text-black" style={{ fontFamily: "'Inter', sans-serif" }}>Business Model</th>
                       <th className="p-6 text-left text-sm font-medium text-black" style={{ fontFamily: "'Inter', sans-serif" }}>Current Monthly Views</th>
                       <th className="p-6 text-left text-sm font-medium text-black" style={{ fontFamily: "'Inter', sans-serif" }}>AI Factory Monthly Views</th>
+                      <th className="p-6 text-left text-sm font-medium text-black" style={{ fontFamily: "'Inter', sans-serif" }}>Conversion Rate</th>
                       <th className="p-6 text-left text-sm font-medium text-black" style={{ fontFamily: "'Inter', sans-serif" }}>Current Revenue</th>
                       <th className="p-6 text-left text-sm font-medium text-black" style={{ fontFamily: "'Inter', sans-serif" }}>AI Factory Revenue</th>
                       <th className="p-6 text-left text-sm font-medium text-black" style={{ fontFamily: "'Inter', sans-serif" }}>Revenue Multiplier</th>
@@ -297,36 +318,40 @@ const AIUGC = () => {
                   </thead>
                   <tbody>
                     <tr className="border-t border-gray-100">
-                      <td className="p-6 font-medium text-sm text-black" style={{ fontFamily: "'Inter', sans-serif" }}>Info Products</td>
+                      <td className="p-6 font-medium text-sm text-black" style={{ fontFamily: "'Inter', sans-serif" }}><strong>Info Products</strong></td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>16,000</td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>3,811,500</td>
+                      <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>0.3%</td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>$9,456</td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>$2,252,695</td>
-                      <td className="p-6 font-bold text-lg text-black" style={{ fontFamily: "'Inter', sans-serif" }}>238x</td>
+                      <td className="p-6 font-bold text-lg text-black" style={{ fontFamily: "'Inter', sans-serif" }}><strong>238x</strong></td>
                     </tr>
                     <tr className="border-t border-gray-100">
-                      <td className="p-6 font-medium text-sm text-black" style={{ fontFamily: "'Inter', sans-serif" }}>Ecommerce</td>
+                      <td className="p-6 font-medium text-sm text-black" style={{ fontFamily: "'Inter', sans-serif" }}><strong>Ecommerce</strong></td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>25,000</td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>3,811,500</td>
+                      <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>0.4%</td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>$4,700</td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>$716,562</td>
-                      <td className="p-6 font-bold text-lg text-black" style={{ fontFamily: "'Inter', sans-serif" }}>152x</td>
+                      <td className="p-6 font-bold text-lg text-black" style={{ fontFamily: "'Inter', sans-serif" }}><strong>152x</strong></td>
                     </tr>
                     <tr className="border-t border-gray-100">
-                      <td className="p-6 font-medium text-sm text-black" style={{ fontFamily: "'Inter', sans-serif" }}>Agencies</td>
+                      <td className="p-6 font-medium text-sm text-black" style={{ fontFamily: "'Inter', sans-serif" }}><strong>Agencies</strong></td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>8,000</td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>3,811,500</td>
+                      <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>0.2%</td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>$14,000</td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>$6,671,000</td>
-                      <td className="p-6 font-bold text-lg text-black" style={{ fontFamily: "'Inter', sans-serif" }}>477x</td>
+                      <td className="p-6 font-bold text-lg text-black" style={{ fontFamily: "'Inter', sans-serif" }}><strong>477x</strong></td>
                     </tr>
                     <tr className="border-t border-gray-100">
-                      <td className="p-6 font-medium text-sm text-black" style={{ fontFamily: "'Inter', sans-serif" }}>SaaS</td>
+                      <td className="p-6 font-medium text-sm text-black" style={{ fontFamily: "'Inter', sans-serif" }}><strong>SaaS</strong></td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>12,000</td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>3,811,500</td>
+                      <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>0.2%</td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>$2,095 MRR</td>
                       <td className="p-6 text-sm text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>$739,431 MRR</td>
-                      <td className="p-6 font-bold text-lg text-black" style={{ fontFamily: "'Inter', sans-serif" }}>353x</td>
+                      <td className="p-6 font-bold text-lg text-black" style={{ fontFamily: "'Inter', sans-serif" }}><strong>353x</strong></td>
                     </tr>
                   </tbody>
                 </table>
@@ -339,7 +364,7 @@ const AIUGC = () => {
                   fontWeight: '500',
                   color: '#111827'
                 }}>
-                  These numbers use CONSERVATIVE conversion rates. With UGC optimization, expect 29-275% higher conversions.
+                  <strong>These numbers use CONSERVATIVE conversion rates. With UGC optimization, expect 29-275% higher conversions.</strong>
                 </p>
               </div>
             </section>
@@ -368,89 +393,140 @@ const AIUGC = () => {
                 fontFamily: "'Inter', -apple-system, sans-serif",
                 fontSize: '21px',
                 lineHeight: '1.7',
-                marginBottom: '48px',
-                color: '#6B7280'
+                marginBottom: '32px',
+                color: '#374151'
               }}>
                 I used to think you needed massive budgets to scale content. I was completely wrong.
               </p>
 
               <div className="grid md:grid-cols-2 gap-8 mb-12" style={{ margin: '48px 0' }}>
-                <div className="rounded-2xl p-8 bg-white border border-gray-100 shadow-sm">
+                <div className="rounded-2xl p-8 bg-green-50 border border-green-100">
                   <h3 style={{
                     fontFamily: "'Inter', -apple-system, sans-serif",
                     fontSize: '19px',
                     fontWeight: '600',
                     marginBottom: '24px',
-                    color: '#111827'
-                  }}>My System Cost (Per Video):</h3>
-                  <ul className="space-y-4 text-sm text-gray-600">
-                    <li className="flex justify-between" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      <span>OpenAI API:</span><span className="font-bold">$0.008</span>
-                    </li>
-                    <li className="flex justify-between" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      <span>ElevenLabs Voice:</span><span className="font-bold">$0.022</span>
-                    </li>
-                    <li className="flex justify-between" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      <span>Video Generation:</span><span className="font-bold">$0.035</span>
-                    </li>
-                    <li className="flex justify-between" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      <span>N8N Automation:</span><span className="font-bold">$0.001</span>
-                    </li>
-                    <li className="flex justify-between" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      <span>Storage/Bandwidth:</span><span className="font-bold">$0.010</span>
-                    </li>
-                    <li className="flex justify-between pt-4 border-t border-gray-200 font-bold text-base text-black" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      <span>Total:</span><span>$0.076</span>
-                    </li>
+                    color: '#065f46'
+                  }}><strong>My System Cost (Per Video):</strong></h3>
+                  
+                  <ul className="space-y-3">
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#047857'
+                    }}>OpenAI API: $0.008</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#047857'
+                    }}>ElevenLabs Voice: $0.022</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#047857'
+                    }}>Video Generation: $0.035</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#047857'
+                    }}>N8N Automation: $0.001</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#047857'
+                    }}>Storage/Bandwidth: $0.010</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '18px',
+                      fontWeight: '600',
+                      lineHeight: '1.6',
+                      color: '#064e3b',
+                      borderTop: '1px solid #a7f3d0',
+                      paddingTop: '8px',
+                      marginTop: '16px'
+                    }}><strong>Total: $0.076 per video</strong></li>
                   </ul>
                 </div>
 
-                <div className="rounded-2xl p-8 bg-gray-50 border border-gray-100">
+                <div className="rounded-2xl p-8 bg-red-50 border border-red-100">
                   <h3 style={{
                     fontFamily: "'Inter', -apple-system, sans-serif",
                     fontSize: '19px',
                     fontWeight: '600',
                     marginBottom: '24px',
-                    color: '#111827'
-                  }}>Industry "Budget" Tools:</h3>
-                  <ul className="space-y-4 text-sm text-gray-600">
-                    <li className="flex justify-between" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      <span>Synthesia:</span><span className="font-bold">$1.67</span>
-                    </li>
-                    <li className="flex justify-between" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      <span>Pictory:</span><span className="font-bold">$2.50</span>
-                    </li>
-                    <li className="flex justify-between" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      <span>InVideo:</span><span className="font-bold">$1.25</span>
-                    </li>
-                    <li className="flex justify-between" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      <span>Premium UGC platforms:</span><span className="font-bold">$5-30</span>
-                    </li>
+                    color: '#991b1b'
+                  }}><strong>Industry "Budget" Tools:</strong></h3>
+                  
+                  <ul className="space-y-3">
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#dc2626'
+                    }}>Synthesia: $1.67 per video</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#dc2626'
+                    }}>Pictory: $2.50 per video</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#dc2626'
+                    }}>InVideo: $1.25 per video</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#dc2626'
+                    }}>Premium UGC platforms: $5-30 per video</li>
                   </ul>
                 </div>
               </div>
 
-              <div className="text-center p-12 rounded-2xl bg-gray-50 border border-gray-100" style={{ margin: '48px 0' }}>
-                <h3 style={{
+              <div className="text-center p-8 rounded-2xl bg-gray-50 border border-gray-100" style={{ margin: '48px 0' }}>
+                <p style={{
                   fontFamily: "'Inter', -apple-system, sans-serif",
-                  fontSize: '24px',
+                  fontSize: '21px',
                   fontWeight: '600',
-                  marginBottom: '24px',
+                  marginBottom: '16px',
                   color: '#111827'
-                }}>At 150 videos/day, the difference is staggering:</h3>
-                <div className="grid md:grid-cols-2 gap-8 text-base">
-                  <div>
-                    <div className="font-medium mb-2 text-black" style={{ fontFamily: "'Inter', sans-serif" }}>My system:</div>
-                    <div className="text-black font-bold text-xl" style={{ fontFamily: "'Inter', sans-serif" }}>$11.40/day = $4,161/year</div>
-                  </div>
-                  <div>
-                    <div className="font-medium mb-2 text-black" style={{ fontFamily: "'Inter', sans-serif" }}>Cheapest competitor:</div>
-                    <div className="text-black font-bold text-xl" style={{ fontFamily: "'Inter', sans-serif" }}>$187.50/day = $68,437/year</div>
-                  </div>
-                </div>
-                <div className="text-2xl font-bold mt-8 text-black" style={{ fontFamily: "'Inter', sans-serif" }}>
-                  That's a $64,276 annual savings for the same output.
-                </div>
+                }}>
+                  <strong>At 150 videos/day, the difference is staggering:</strong>
+                </p>
+                <p style={{
+                  fontFamily: "'Inter', -apple-system, sans-serif",
+                  fontSize: '19px',
+                  lineHeight: '1.7',
+                  color: '#047857',
+                  marginBottom: '8px'
+                }}>
+                  - My system: $11.40/day = $4,161/year
+                </p>
+                <p style={{
+                  fontFamily: "'Inter', -apple-system, sans-serif",
+                  fontSize: '19px',
+                  lineHeight: '1.7',
+                  color: '#dc2626',
+                  marginBottom: '16px'
+                }}>
+                  - Cheapest competitor: $187.50/day = $68,437/year
+                </p>
+                <p style={{
+                  fontFamily: "'Inter', -apple-system, sans-serif",
+                  fontSize: '21px',
+                  fontWeight: '600',
+                  color: '#111827'
+                }}>
+                  That's a <strong>$64,276 annual savings</strong> for the same output.
+                </p>
               </div>
 
               {/* Cost Savings Image */}
@@ -462,21 +538,543 @@ const AIUGC = () => {
               </div>
             </section>
 
-            {/* Performance Data Image */}
-            <div className="blog-image-container">
-              <img 
-                src="https://i.ibb.co/jvXYgTCc/AI-UGC-Performance-Results-Dashboard.png"
-                alt="AI UGC performance metrics chart showing 8.3% viral rate and 238x revenue multiplier growth trajectory"
-              />
-            </div>
+            <hr className="my-16 border-gray-100" style={{ 
+              width: '100%', 
+              height: '1px', 
+              background: '#E5E7EB', 
+              margin: '80px 0', 
+              border: 'none' 
+            }} />
 
-            {/* AI Detection Improvement Image */}
-            <div className="blog-image-container">
-              <img 
-                src="https://i.ibb.co/gFTxqfM6/AI-Content-Humanization-Results.png"
-                alt="AI detection rate comparison: before and after humanization showing improvement from 23% to 3.1% detection"
-              />
-            </div>
+            <section>
+              <h2 style={{
+                fontFamily: "'Playfair Display', 'Crimson Text', serif",
+                fontSize: 'clamp(28px, 5vw, 40px)',
+                fontWeight: '500',
+                lineHeight: '1.2',
+                marginBottom: '32px',
+                marginTop: '96px'
+              }} className="text-black">
+                The Technical Implementation (Simplified)
+              </h2>
+              
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                A few months ago, I was paying premium prices like everyone else. Here's the system that changed everything:
+              </p>
+
+              <h3 style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '24px',
+                fontWeight: '600',
+                marginBottom: '24px',
+                color: '#111827'
+              }}>Phase 1: The Foundation Setup</h3>
+
+              <div className="rounded-2xl p-8 mb-12 border-l-4 border-blue-500 bg-blue-50" style={{ margin: '48px 0' }}>
+                <h4 style={{
+                  fontFamily: "'Inter', -apple-system, sans-serif",
+                  fontSize: '19px',
+                  fontWeight: '600',
+                  marginBottom: '24px',
+                  color: '#1e40af'
+                }}><strong>Required Tools:</strong></h4>
+                
+                <ul className="space-y-3">
+                  <li style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '16px',
+                    lineHeight: '1.6',
+                    color: '#1e40af'
+                  }}>N8N (free tier: 5,000 executions/month)</li>
+                  <li style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '16px',
+                    lineHeight: '1.6',
+                    color: '#1e40af'
+                  }}>ElevenLabs (Starter: $5/month)</li>
+                  <li style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '16px',
+                    lineHeight: '1.6',
+                    color: '#1e40af'
+                  }}>OpenAI API ($5-10/month)</li>
+                  <li style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '16px',
+                    lineHeight: '1.6',
+                    color: '#1e40af'
+                  }}>Video API like Veo 3 ($2-5/month)</li>
+                </ul>
+              </div>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                <strong>The Core Workflow:</strong>
+              </p>
+
+              <div className="bg-gray-900 rounded-lg p-6 mb-8 overflow-x-auto">
+                <pre style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '14px',
+                  lineHeight: '1.6',
+                  color: '#e5e7eb',
+                  margin: '0'
+                }}>
+{`{
+  "workflow": {
+    "name": "AI_UGC_Factory_v3",
+    "trigger": "Every 2 hours",
+    "steps": [
+      "Analyze trending topics",
+      "Generate viral scripts", 
+      "Create voice audio",
+      "Generate video visuals",
+      "Combine and optimize",
+      "Distribute to platforms"
+    ]
+  }
+}`}
+                </pre>
+              </div>
+
+              <h3 style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '24px',
+                fontWeight: '600',
+                marginBottom: '24px',
+                color: '#111827'
+              }}>Phase 2: The Multiplier System</h3>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                <strong>The Secret:</strong> Instead of one workflow, I run 5 parallel content streams:
+              </p>
+
+              <div className="grid md:grid-cols-2 gap-6 mb-12" style={{ margin: '48px 0' }}>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
+                    <span style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      fontWeight: '500',
+                      color: '#111827'
+                    }}><strong>Educational Content</strong></span>
+                    <span style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      color: '#6366f1'
+                    }}>30 videos/day</span>
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
+                    <span style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      fontWeight: '500',
+                      color: '#111827'
+                    }}><strong>Entertainment</strong></span>
+                    <span style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      color: '#6366f1'
+                    }}>40 videos/day</span>
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
+                    <span style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      fontWeight: '500',
+                      color: '#111827'
+                    }}><strong>Product Showcases</strong></span>
+                    <span style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      color: '#6366f1'
+                    }}>25 videos/day</span>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
+                    <span style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      fontWeight: '500',
+                      color: '#111827'
+                    }}><strong>Trending Topics</strong></span>
+                    <span style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      color: '#6366f1'
+                    }}>35 videos/day</span>
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
+                    <span style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      fontWeight: '500',
+                      color: '#111827'
+                    }}><strong>Evergreen Content</strong></span>
+                    <span style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      color: '#6366f1'
+                    }}>20 videos/day</span>
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg">
+                    <span style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '18px',
+                      fontWeight: '600',
+                      color: '#7c3aed'
+                    }}><strong>Total Output</strong></span>
+                    <span style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '18px',
+                      fontWeight: '700',
+                      color: '#7c3aed'
+                    }}>150 videos/day</span>
+                  </div>
+                </div>
+              </div>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                <strong>Total Output: 150 videos/day across all content types</strong>
+              </p>
+            </section>
+
+            <hr className="my-16 border-gray-100" style={{ 
+              width: '100%', 
+              height: '1px', 
+              background: '#E5E7EB', 
+              margin: '80px 0', 
+              border: 'none' 
+            }} />
+
+            <section>
+              <h2 style={{
+                fontFamily: "'Playfair Display', 'Crimson Text', serif",
+                fontSize: 'clamp(28px, 5vw, 40px)',
+                fontWeight: '500',
+                lineHeight: '1.2',
+                marginBottom: '32px',
+                marginTop: '96px'
+              }} className="text-black">
+                Performance Data: 47 Days of Real Results
+              </h2>
+              
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                I've been tracking every metric since day one. Here's what actually happened:
+              </p>
+
+              <div className="grid md:grid-cols-3 gap-8 mb-12" style={{ margin: '48px 0' }}>
+                <div className="rounded-2xl p-8 bg-blue-50 border border-blue-100">
+                  <h4 style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '19px',
+                    fontWeight: '600',
+                    marginBottom: '24px',
+                    color: '#1e40af'
+                  }}><strong>Content Performance:</strong></h4>
+                  
+                  <ul className="space-y-3">
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#1e40af'
+                    }}>Total Videos Generated: 7,050</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#1e40af'
+                    }}>Average Daily Output: 150 videos</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#1e40af'
+                    }}>System Uptime: 98.3%</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#1e40af'
+                    }}>Failed Generations: 1.2%</li>
+                  </ul>
+                </div>
+
+                <div className="rounded-2xl p-8 bg-green-50 border border-green-100">
+                  <h4 style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '19px',
+                    fontWeight: '600',
+                    marginBottom: '24px',
+                    color: '#065f46'
+                  }}><strong>Engagement Results:</strong></h4>
+                  
+                  <ul className="space-y-3">
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#065f46'
+                    }}>Average Views Per Video: 847</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#065f46'
+                    }}>Viral Rate (&gt;10K views): 8.3%</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#065f46'
+                    }}>Platform Approval Rate: 96.7%</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#065f46'
+                    }}>Best Performing Video: 2.3M views</li>
+                  </ul>
+                </div>
+
+                <div className="rounded-2xl p-8 bg-purple-50 border border-purple-100">
+                  <h4 style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '19px',
+                    fontWeight: '600',
+                    marginBottom: '24px',
+                    color: '#7c2d12'
+                  }}><strong>Quality Metrics:</strong></h4>
+                  
+                  <ul className="space-y-3">
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#7c2d12'
+                    }}>AI Detection Rate: Only 3.1%</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#7c2d12'
+                    }}>Human Authenticity Score: 7.8/10</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#7c2d12'
+                    }}>Cost Per View: $0.000089</li>
+                    <li style={{
+                      fontFamily: "'Inter', -apple-system, sans-serif",
+                      fontSize: '16px',
+                      lineHeight: '1.6',
+                      color: '#7c2d12'
+                    }}>ROI vs Traditional UGC: 3,920%</li>
+                  </ul>
+                </div>
+              </div>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                I want you to understand this shift: <strong>These aren't projections. This is what's happening right now.</strong>
+              </p>
+
+              {/* Performance Data Image */}
+              <div className="blog-image-container">
+                <img 
+                  src="https://i.ibb.co/jvXYgTCc/AI-UGC-Performance-Results-Dashboard.png"
+                  alt="AI UGC performance metrics chart showing 8.3% viral rate and 238x revenue multiplier growth trajectory"
+                />
+              </div>
+            </section>
+
+            <hr className="my-16 border-gray-100" style={{ 
+              width: '100%', 
+              height: '1px', 
+              background: '#E5E7EB', 
+              margin: '80px 0', 
+              border: 'none' 
+            }} />
+
+            <section>
+              <h2 style={{
+                fontFamily: "'Playfair Display', 'Crimson Text', serif",
+                fontSize: 'clamp(28px, 5vw, 40px)',
+                fontWeight: '500',
+                lineHeight: '1.2',
+                marginBottom: '32px',
+                marginTop: '96px'
+              }} className="text-black">
+                Common Pitfalls (And How to Avoid Them)
+              </h2>
+              
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                Let me save you weeks of debugging:
+              </p>
+
+              <h3 style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '24px',
+                fontWeight: '600',
+                marginBottom: '24px',
+                color: '#111827'
+              }}>Pitfall #1: API Rate Limiting</h3>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '19px',
+                lineHeight: '1.7',
+                marginBottom: '16px',
+                color: '#374151'
+              }}>
+                <strong>The Problem</strong>: Hit ElevenLabs limits at 47 videos/day.
+              </p>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '19px',
+                lineHeight: '1.7',
+                marginBottom: '24px',
+                color: '#374151'
+              }}>
+                <strong>The Solution</strong>: Intelligent queuing system:
+              </p>
+
+              <div className="bg-gray-900 rounded-lg p-6 mb-8 overflow-x-auto">
+                <pre style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '14px',
+                  lineHeight: '1.6',
+                  color: '#e5e7eb',
+                  margin: '0'
+                }}>
+{`class APIRateLimiter:
+    def __init__(self, max_requests=100, time_window=3600):
+        self.max_requests = max_requests
+        self.time_window = time_window
+        self.requests = []
+    
+    def wait_if_needed(self):
+        if not self.can_make_request():
+            sleep_time = self.time_until_next_slot()
+            time.sleep(sleep_time)`}
+                </pre>
+              </div>
+
+              <h3 style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '24px',
+                fontWeight: '600',
+                marginBottom: '24px',
+                color: '#111827'
+              }}>Pitfall #2: Platform Detection</h3>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '19px',
+                lineHeight: '1.7',
+                marginBottom: '16px',
+                color: '#374151'
+              }}>
+                <strong>The Problem</strong>: TikTok flagged 23% of videos as "AI-generated."
+              </p>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '19px',
+                lineHeight: '1.7',
+                marginBottom: '24px',
+                color: '#374151'
+              }}>
+                <strong>The Solution</strong>: Advanced humanization:
+              </p>
+
+              <div className="bg-gray-900 rounded-lg p-6 mb-8 overflow-x-auto">
+                <pre style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '14px',
+                  lineHeight: '1.6',
+                  color: '#e5e7eb',
+                  margin: '0'
+                }}>
+{`def humanize_video(video_config):
+    randomizations = {
+        "voice_variation": random.uniform(0.95, 1.05),
+        "pause_injection": random.choice([True, False]),
+        "background_shift": random.uniform(-2, 2),
+        "audio_compression": random.choice([128, 192, 256])
+    }
+    
+    return apply_humanization(video_config, randomizations)`}
+                </pre>
+              </div>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '19px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                <strong>This dropped detection rate to 3.1%.</strong>
+              </p>
+
+              {/* AI Detection Improvement Image */}
+              <div className="blog-image-container">
+                <img 
+                  src="https://i.ibb.co/gFTxqfM6/AI-Content-Humanization-Results.png"
+                  alt="AI detection rate comparison: before and after humanization showing improvement from 23% to 3.1% detection"
+                />
+              </div>
+            </section>
 
             {/* Entrepreneur Liberation Image */}
             <div className="blog-image-container">
@@ -486,13 +1084,208 @@ const AIUGC = () => {
               />
             </div>
 
-            {/* Future Advantage Window Image */}
-            <div className="blog-image-container">
-              <img 
-                src="https://i.ibb.co/99b2B5TT/AI-UGC-Market-Timing-Opportunity.png"
-                alt="First-mover advantage timeline 2025-2026 showing AI UGC market opportunity window closing"
-              />
-            </div>
+            <section>
+              <h2 style={{
+                fontFamily: "'Playfair Display', 'Crimson Text', serif",
+                fontSize: 'clamp(28px, 5vw, 40px)',
+                fontWeight: '500',
+                lineHeight: '1.2',
+                marginBottom: '32px',
+                marginTop: '96px'
+              }} className="text-black">
+                Why 99% of Businesses Will Never Do This
+              </h2>
+              
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                <strong>The Hard Truth:</strong> Most people will read this, get excited, then do nothing.
+              </p>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '24px',
+                color: '#374151'
+              }}>
+                <strong>Why?</strong>
+              </p>
+
+              <div className="space-y-4 mb-12">
+                <div className="flex items-start p-4 bg-red-50 border border-red-100 rounded-lg">
+                  <span className="inline-block w-6 h-6 bg-red-500 text-white text-xs rounded-full flex items-center justify-center mr-4 mt-1">1</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.7',
+                    color: '#dc2626'
+                  }}><strong>Technical overwhelm</strong> ("This looks complicated")</span>
+                </div>
+                <div className="flex items-start p-4 bg-red-50 border border-red-100 rounded-lg">
+                  <span className="inline-block w-6 h-6 bg-red-500 text-white text-xs rounded-full flex items-center justify-center mr-4 mt-1">2</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.7',
+                    color: '#dc2626'
+                  }}><strong>Analysis paralysis</strong> ("Maybe I should wait")</span>
+                </div>
+                <div className="flex items-start p-4 bg-red-50 border border-red-100 rounded-lg">
+                  <span className="inline-block w-6 h-6 bg-red-500 text-white text-xs rounded-full flex items-center justify-center mr-4 mt-1">3</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.7',
+                    color: '#dc2626'
+                  }}><strong>Perfectionism</strong> ("Let me plan this perfectly first")</span>
+                </div>
+                <div className="flex items-start p-4 bg-red-50 border border-red-100 rounded-lg">
+                  <span className="inline-block w-6 h-6 bg-red-500 text-white text-xs rounded-full flex items-center justify-center mr-4 mt-1">4</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.7',
+                    color: '#dc2626'
+                  }}><strong>Resource excuses</strong> ("I don't have time to learn this")</span>
+                </div>
+              </div>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '24px',
+                color: '#374151'
+              }}>
+                <strong>Meanwhile, the 1% who take action capture the entire market advantage.</strong>
+              </p>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                I would not recommend waiting. Once this becomes mainstream (12-18 months), the competitive advantage disappears.
+              </p>
+            </section>
+
+            <hr className="my-16 border-gray-100" style={{ 
+              width: '100%', 
+              height: '1px', 
+              background: '#E5E7EB', 
+              margin: '80px 0', 
+              border: 'none' 
+            }} />
+
+            <section>
+              <h2 style={{
+                fontFamily: "'Playfair Display', 'Crimson Text', serif",
+                fontSize: 'clamp(28px, 5vw, 40px)',
+                fontWeight: '500',
+                lineHeight: '1.2',
+                marginBottom: '32px',
+                marginTop: '96px'
+              }} className="text-black">
+                Future-Proofing Your System
+              </h2>
+              
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                The AI UGC landscape evolves fast. Here's how to stay ahead:
+              </p>
+
+              <h3 style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '20px',
+                fontWeight: '600',
+                marginBottom: '16px',
+                color: '#111827'
+              }}>Trend #1: Real-Time Generation</h3>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '19px',
+                lineHeight: '1.7',
+                marginBottom: '24px',
+                color: '#6B7280'
+              }}>
+                Video generation dropping from 2-3 minutes to 15-30 seconds.
+              </p>
+
+              <h3 style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '20px',
+                fontWeight: '600',
+                marginBottom: '16px',
+                color: '#111827'
+              }}>Trend #2: Advanced Personalization</h3>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '19px',
+                lineHeight: '1.7',
+                marginBottom: '24px',
+                color: '#6B7280'
+              }}>
+                AI systems adapting content style based on viewer preferences.
+              </p>
+
+              <h3 style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '20px',
+                fontWeight: '600',
+                marginBottom: '16px',
+                color: '#111827'
+              }}>Trend #3: Multi-Modal Integration</h3>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '19px',
+                lineHeight: '1.7',
+                marginBottom: '24px',
+                color: '#6B7280'
+              }}>
+                Systems combining text, voice, video, and interactive elements seamlessly.
+              </p>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                <strong>Start building the infrastructure now. Don't wait for these changes.</strong>
+              </p>
+
+              {/* Future Advantage Window Image */}
+              <div className="blog-image-container">
+                <img 
+                  src="https://i.ibb.co/99b2B5TT/AI-UGC-Market-Timing-Opportunity.png"
+                  alt="First-mover advantage timeline 2025-2026 showing AI UGC market opportunity window closing"
+                />
+              </div>
+            </section>
+
+            <hr className="my-16 border-gray-100" style={{ 
+              width: '100%', 
+              height: '1px', 
+              background: '#E5E7EB', 
+              margin: '80px 0', 
+              border: 'none' 
+            }} />
 
             <section>
               <h2 style={{
@@ -511,109 +1304,355 @@ const AIUGC = () => {
                 fontSize: '21px',
                 lineHeight: '1.7',
                 marginBottom: '32px',
-                color: '#6B7280'
+                color: '#374151'
               }}>
                 Here's what we've covered:
               </p>
 
-              <div className="grid md:grid-cols-2 gap-8 mb-12" style={{ margin: '48px 0' }}>
-                {[
-                  { icon: '✓', title: 'Simple System', desc: '12 AI workers generating 150+ videos daily for $11.47' },
-                  { icon: '✓', title: 'Conversion Math', desc: '150-477x revenue multiplier across all business models' },
-                  { icon: '✓', title: 'Real Results', desc: '47 days of verified data showing 8.3% viral rate' },
-                  { icon: '✓', title: 'Technical Guide', desc: 'Complete implementation blueprint' },
-                  { icon: '✓', title: 'Advanced Scaling', desc: 'Path to 300+ videos/day' },
-                  { icon: '✓', title: 'Future-Proofing', desc: '2025+ trends and preparation' }
-                ].map((item, index) => (
-                  <div key={index} className="flex items-start p-8 rounded-2xl bg-white border border-gray-100 shadow-sm">
-                    <span className="text-2xl mr-4" style={{ fontFamily: "'Inter', sans-serif" }}>{item.icon}</span>
-                    <div>
-                      <h4 style={{
-                        fontFamily: "'Inter', -apple-system, sans-serif",
-                        fontSize: '19px',
-                        fontWeight: '600',
-                        marginBottom: '8px',
-                        color: '#111827'
-                      }}>{item.title}</h4>
-                      <p style={{
-                        fontFamily: "'Inter', -apple-system, sans-serif",
-                        fontSize: '16px',
-                        color: '#6B7280'
-                      }}>{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="rounded-2xl p-12 mb-12 bg-gray-50 border border-gray-100" style={{ margin: '48px 0' }}>
-                <h3 style={{
-                  fontFamily: "'Inter', -apple-system, sans-serif",
-                  fontSize: '24px',
-                  fontWeight: '600',
-                  marginBottom: '24px',
-                  color: '#111827'
-                }}>The Reality Check:</h3>
-                <div className="grid md:grid-cols-2 gap-8 text-base">
-                  <div>
-                    <p className="mb-2 text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>Traditional UGC:</p>
-                    <p className="font-medium text-black text-xl" style={{ fontFamily: "'Inter', sans-serif" }}>$300-1,000/month for limited content</p>
-                  </div>
-                  <div>
-                    <p className="mb-2 text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>My system:</p>
-                    <p className="font-medium text-black text-xl" style={{ fontFamily: "'Inter', sans-serif" }}>$12/day for unlimited professional videos</p>
-                  </div>
+              <div className="space-y-4 mb-12">
+                <div className="flex items-start p-4 bg-green-50 border border-green-100 rounded-lg">
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    marginRight: '12px',
+                    color: '#059669'
+                  }}>✅</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.6',
+                    color: '#065f46'
+                  }}><strong>Simple System</strong>: 12 AI workers generating 150+ videos daily for $11.47</span>
                 </div>
+                <div className="flex items-start p-4 bg-green-50 border border-green-100 rounded-lg">
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    marginRight: '12px',
+                    color: '#059669'
+                  }}>✅</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.6',
+                    color: '#065f46'
+                  }}><strong>Conversion Math</strong>: 150-477x revenue multiplier across all business models</span>
+                </div>
+                <div className="flex items-start p-4 bg-green-50 border border-green-100 rounded-lg">
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    marginRight: '12px',
+                    color: '#059669'
+                  }}>✅</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.6',
+                    color: '#065f46'
+                  }}><strong>Real Results</strong>: 47 days of verified data showing 8.3% viral rate</span>
+                </div>
+                <div className="flex items-start p-4 bg-green-50 border border-green-100 rounded-lg">
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    marginRight: '12px',
+                    color: '#059669'
+                  }}>✅</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.6',
+                    color: '#065f46'
+                  }}><strong>Technical Guide</strong>: Complete implementation blueprint</span>
+                </div>
+                <div className="flex items-start p-4 bg-green-50 border border-green-100 rounded-lg">
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    marginRight: '12px',
+                    color: '#059669'
+                  }}>✅</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.6',
+                    color: '#065f46'
+                  }}><strong>Advanced Scaling</strong>: Path to 300+ videos/day</span>
+                </div>
+                <div className="flex items-start p-4 bg-green-50 border border-green-100 rounded-lg">
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    marginRight: '12px',
+                    color: '#059669'
+                  }}>✅</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.6',
+                    color: '#065f46'
+                  }}><strong>Future-Proofing</strong>: 2025+ trends and preparation</span>
+                </div>
+              </div>
+
+              <div className="text-center p-8 rounded-2xl bg-gray-50 border border-gray-100" style={{ margin: '48px 0' }}>
+                <p style={{
+                  fontFamily: "'Inter', -apple-system, sans-serif",
+                  fontSize: '21px',
+                  fontWeight: '600',
+                  marginBottom: '16px',
+                  color: '#111827'
+                }}>
+                  <strong>The Reality Check:</strong>
+                </p>
                 <p style={{
                   fontFamily: "'Inter', -apple-system, sans-serif",
                   fontSize: '19px',
+                  lineHeight: '1.7',
+                  color: '#dc2626',
+                  marginBottom: '8px'
+                }}>
+                  - Traditional UGC: $300-1,000/month for limited content
+                </p>
+                <p style={{
+                  fontFamily: "'Inter', -apple-system, sans-serif",
+                  fontSize: '19px',
+                  lineHeight: '1.7',
+                  color: '#047857',
+                  marginBottom: '16px'
+                }}>
+                  - My system: $12/day for unlimited professional videos
+                </p>
+                <p style={{
+                  fontFamily: "'Inter', -apple-system, sans-serif",
+                  fontSize: '21px',
                   fontWeight: '600',
-                  textAlign: 'center',
-                  marginTop: '24px',
                   color: '#111827'
                 }}>
                   The math isn't close. It's exponential.
                 </p>
               </div>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '24px',
+                color: '#374151'
+              }}>
+                <strong>Your Three Paths Forward:</strong>
+              </p>
+
+              <div className="space-y-4 mb-12">
+                <div className="flex items-start p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <span className="inline-block w-6 h-6 bg-red-500 text-white text-xs rounded-full flex items-center justify-center mr-4 mt-1">1</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.7',
+                    color: '#dc2626'
+                  }}><strong>Keep paying premium prices</strong> and watch competitors scale past you</span>
+                </div>
+                <div className="flex items-start p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <span className="inline-block w-6 h-6 bg-yellow-500 text-white text-xs rounded-full flex items-center justify-center mr-4 mt-1">2</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.7',
+                    color: '#d97706'
+                  }}><strong>Build this system yourself</strong> using this guide (2-3 weeks implementation)</span>
+                </div>
+                <div className="flex items-start p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <span className="inline-block w-6 h-6 bg-green-500 text-white text-xs rounded-full flex items-center justify-center mr-4 mt-1">3</span>
+                  <span style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.7',
+                    color: '#047857'
+                  }}><strong>Get the complete ready-to-deploy system</strong> with templates and support</span>
+                </div>
+              </div>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '24px',
+                color: '#374151'
+              }}>
+                The UGC industry's pricing bubble is deflating. Fast.
+              </p>
+
+              <p style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '32px',
+                color: '#374151'
+              }}>
+                <strong>The question isn't whether this will disrupt the market—it's whether you'll be positioned to benefit from it.</strong>
+              </p>
+            </section>
+
+            <hr className="my-16 border-gray-100" style={{ 
+              width: '100%', 
+              height: '1px', 
+              background: '#E5E7EB', 
+              margin: '80px 0', 
+              border: 'none' 
+            }} />
+
+            <section>
+              <h2 style={{
+                fontFamily: "'Playfair Display', 'Crimson Text', serif",
+                fontSize: 'clamp(28px, 5vw, 40px)',
+                fontWeight: '500',
+                lineHeight: '1.2',
+                marginBottom: '32px',
+                marginTop: '96px'
+              }} className="text-black">
+                FAQ: Your Burning Questions Answered
+              </h2>
               
-              <div className="text-center p-12 rounded-2xl bg-gray-50 border border-gray-100" style={{ margin: '48px 0' }}>
-                <p style={{
-                  fontFamily: "'Inter', -apple-system, sans-serif",
-                  fontSize: '19px',
-                  lineHeight: '1.7',
-                  marginBottom: '16px',
-                  color: '#6B7280'
-                }}>
-                  The UGC industry's pricing bubble is deflating. Fast.
-                </p>
-                <p style={{
-                  fontFamily: "'Inter', -apple-system, sans-serif",
-                  fontSize: '24px',
-                  fontWeight: '600',
-                  color: '#111827'
-                }}>
-                  The question isn't whether this will disrupt the market—it's whether you'll be positioned to benefit from it.
-                </p>
+              <div className="space-y-8">
+                <div className="border-l-4 border-blue-500 pl-6 py-4">
+                  <p style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '19px',
+                    fontWeight: '600',
+                    marginBottom: '12px',
+                    color: '#1e40af'
+                  }}>
+                    <strong>Q: How much does it actually cost to run 150 videos daily?</strong>
+                  </p>
+                  <p style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.7',
+                    color: '#374151'
+                  }}>
+                    A: $11.47/day total. Breakdown: OpenAI ($1.20), ElevenLabs ($3.30), Video API ($5.25), N8N ($0.15), Storage ($1.57). That's $0.076 per video vs industry standard $1-30.
+                  </p>
+                </div>
+
+                <div className="border-l-4 border-green-500 pl-6 py-4">
+                  <p style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '19px',
+                    fontWeight: '600',
+                    marginBottom: '12px',
+                    color: '#065f46'
+                  }}>
+                    <strong>Q: What if I'm not technical - can I still build this?</strong>
+                  </p>
+                  <p style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.7',
+                    color: '#374151'
+                  }}>
+                    A: The learning curve is steep but manageable. Expect 2-3 weeks for full implementation following my guide. Most components are drag-and-drop in N8N.
+                  </p>
+                </div>
+
+                <div className="border-l-4 border-purple-500 pl-6 py-4">
+                  <p style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '19px',
+                    fontWeight: '600',
+                    marginBottom: '12px',
+                    color: '#7c2d12'
+                  }}>
+                    <strong>Q: Will TikTok ban AI-generated content?</strong>
+                  </p>
+                  <p style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.7',
+                    color: '#374151'
+                  }}>
+                    A: With proper humanization techniques, detection rate stays under 5%. My system uses advanced randomization to mimic human creation patterns.
+                  </p>
+                </div>
+
+                <div className="border-l-4 border-orange-500 pl-6 py-4">
+                  <p style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '19px',
+                    fontWeight: '600',
+                    marginBottom: '12px',
+                    color: '#c2410c'
+                  }}>
+                    <strong>Q: Can this work for B2B businesses?</strong>
+                  </p>
+                  <p style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.7',
+                    color: '#374151'
+                  }}>
+                    A: Absolutely. The conversion math works across all business models. B2B typically sees lower volume but higher value conversions.
+                  </p>
+                </div>
+
+                <div className="border-l-4 border-red-500 pl-6 py-4">
+                  <p style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '19px',
+                    fontWeight: '600',
+                    marginBottom: '12px',
+                    color: '#dc2626'
+                  }}>
+                    <strong>Q: How long before everyone is doing this?</strong>
+                  </p>
+                  <p style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: '18px',
+                    lineHeight: '1.7',
+                    color: '#374151'
+                  }}>
+                    A: 12-18 months until mainstream adoption. The first-mover advantage window is closing fast.
+                  </p>
+                </div>
               </div>
             </section>
 
-            <div className="text-center p-16 rounded-2xl bg-gray-50 border border-gray-100" style={{ margin: '80px 0' }}>
+            <hr className="my-16 border-gray-100" style={{ 
+              width: '100%', 
+              height: '1px', 
+              background: '#E5E7EB', 
+              margin: '80px 0', 
+              border: 'none' 
+            }} />
+
+            <section className="text-center">
               <p style={{
                 fontFamily: "'Inter', -apple-system, sans-serif",
-                fontSize: '28px',
-                fontWeight: '600',
-                marginBottom: '16px',
-                color: '#111827'
+                fontSize: '21px',
+                lineHeight: '1.7',
+                marginBottom: '24px',
+                color: '#374151'
               }}>
-                What's stopping you from building your content empire? 
+                <strong>What's stopping you from building your content empire? Drop a comment and let's solve it together.</strong>
               </p>
+              
               <p style={{
                 fontFamily: "'Inter', -apple-system, sans-serif",
-                fontSize: '19px',
-                color: '#6B7280'
+                fontSize: '21px',
+                lineHeight: '1.7',
+                color: '#374151'
               }}>
                 The future belongs to those who automate intelligently. Your move.
               </p>
-            </div>
+            </section>
+
           </article>
         </main>
       </div>
