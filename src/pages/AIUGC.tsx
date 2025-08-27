@@ -1,6 +1,8 @@
 import React from 'react';
+
 const AIUGC = () => {
-  return <div className="min-h-screen bg-white">
+  return (
+    <div className="min-h-screen bg-white">
       {/* Hero Image */}
       <div className="blog-image-container">
         <img src="https://i.ibb.co/xSCbB1XD/ai-ugc-revolution.png" alt="The AI UGC Revolution" />
@@ -113,101 +115,102 @@ const AIUGC = () => {
                 Here's the entire system in 30 seconds:
               </p>
 
-              <div className="rounded-2xl p-8 mb-12 border-l-4 border-black bg-gray-50" style={{
-              margin: '48px 0'
+              <div className="rounded-lg p-6 mb-12 bg-white border border-slate-200" style={{
+              margin: '48px 0',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
             }}>
                 <h3 style={{
                 fontFamily: "'Inter', -apple-system, sans-serif",
                 fontSize: '19px',
                 fontWeight: '600',
                 marginBottom: '24px',
-                color: '#111827'
+                color: '#1e293b'
               }}>The Assembly Line:</h3>
                 
-                <ul className="space-y-6 text-base text-gray-600">
+                <ul className="space-y-6 text-base">
                   <li className="flex items-start" style={{
                   marginBottom: '16px',
                   paddingLeft: '0'
                 }}>
-                    <span className="inline-block w-8 h-8 bg-black text-white text-sm rounded-full flex items-center justify-center mr-4 mt-1" style={{
+                    <span className="inline-block w-8 h-8 bg-slate-600 text-white text-sm rounded-full flex items-center justify-center mr-4 mt-1" style={{
                     fontFamily: "'Inter', sans-serif"
                   }}>1</span>
                     <span style={{
                     fontFamily: "'Inter', -apple-system, sans-serif",
                     fontSize: '19px',
-                    lineHeight: '1.7',
-                    color: '#6B7280'
-                  }}><strong>AI Worker #1</strong>: Finds trending topics across 15 platforms</span>
+                    lineHeight: '1.6',
+                    color: '#64748b'
+                  }}><strong style={{color: '#1e293b'}}>AI Worker #1</strong>: Finds trending topics across 15 platforms</span>
                   </li>
                   <li className="flex items-start" style={{
                   marginBottom: '16px',
                   paddingLeft: '0'
                 }}>
-                    <span className="inline-block w-8 h-8 bg-black text-white text-sm rounded-full flex items-center justify-center mr-4 mt-1" style={{
+                    <span className="inline-block w-8 h-8 bg-slate-600 text-white text-sm rounded-full flex items-center justify-center mr-4 mt-1" style={{
                     fontFamily: "'Inter', sans-serif"
                   }}>2</span>
                     <span style={{
                     fontFamily: "'Inter', -apple-system, sans-serif",
                     fontSize: '19px',
-                    lineHeight: '1.7',
-                    color: '#6B7280'
-                  }}><strong>AI Worker #2</strong>: Writes viral-optimized scripts</span>
+                    lineHeight: '1.6',
+                    color: '#64748b'
+                  }}><strong style={{color: '#1e293b'}}>AI Worker #2</strong>: Writes viral-optimized scripts</span>
                   </li>
                   <li className="flex items-start" style={{
                   marginBottom: '16px',
                   paddingLeft: '0'
                 }}>
-                    <span className="inline-block w-8 h-8 bg-black text-white text-sm rounded-full flex items-center justify-center mr-4 mt-1" style={{
+                    <span className="inline-block w-8 h-8 bg-slate-600 text-white text-sm rounded-full flex items-center justify-center mr-4 mt-1" style={{
                     fontFamily: "'Inter', sans-serif"
                   }}>3</span>
                     <span style={{
                     fontFamily: "'Inter', -apple-system, sans-serif",
                     fontSize: '19px',
-                    lineHeight: '1.7',
-                    color: '#6B7280'
-                  }}><strong>AI Worker #3</strong>: Creates natural-sounding voice audio</span>
+                    lineHeight: '1.6',
+                    color: '#64748b'
+                  }}><strong style={{color: '#1e293b'}}>AI Worker #3</strong>: Creates natural-sounding voice audio</span>
                   </li>
                   <li className="flex items-start" style={{
                   marginBottom: '16px',
                   paddingLeft: '0'
                 }}>
-                    <span className="inline-block w-8 h-8 bg-black text-white text-sm rounded-full flex items-center justify-center mr-4 mt-1" style={{
+                    <span className="inline-block w-8 h-8 bg-slate-600 text-white text-sm rounded-full flex items-center justify-center mr-4 mt-1" style={{
                     fontFamily: "'Inter', sans-serif"
                   }}>4</span>
                     <span style={{
                     fontFamily: "'Inter', -apple-system, sans-serif",
                     fontSize: '19px',
-                    lineHeight: '1.7',
-                    color: '#6B7280'
-                  }}><strong>AI Worker #4</strong>: Generates matching visuals and backgrounds</span>
+                    lineHeight: '1.6',
+                    color: '#64748b'
+                  }}><strong style={{color: '#1e293b'}}>AI Worker #4</strong>: Generates matching visuals and backgrounds</span>
                   </li>
                   <li className="flex items-start" style={{
                   marginBottom: '16px',
                   paddingLeft: '0'
                 }}>
-                    <span className="inline-block w-10 h-8 bg-black text-white text-xs rounded-full flex items-center justify-center mr-3 mt-1" style={{
+                    <span className="inline-block w-10 h-8 bg-slate-600 text-white text-xs rounded-full flex items-center justify-center mr-3 mt-1" style={{
                     fontFamily: "'Inter', sans-serif"
                   }}>5-8</span>
                     <span style={{
                     fontFamily: "'Inter', -apple-system, sans-serif",
                     fontSize: '19px',
-                    lineHeight: '1.7',
-                    color: '#6B7280'
-                  }}><strong>AI Workers #5-8</strong>: Edit, optimize, and quality-check everything</span>
+                    lineHeight: '1.6',
+                    color: '#64748b'
+                  }}><strong style={{color: '#1e293b'}}>AI Workers #5-8</strong>: Edit, optimize, and quality-check everything</span>
                   </li>
                   <li className="flex items-start" style={{
                   marginBottom: '16px',
                   paddingLeft: '0'
                 }}>
-                    <span className="inline-block w-12 h-8 bg-black text-white text-xs rounded-full flex items-center justify-center mr-2 mt-1" style={{
+                    <span className="inline-block w-12 h-8 bg-slate-600 text-white text-xs rounded-full flex items-center justify-center mr-2 mt-1" style={{
                     fontFamily: "'Inter', sans-serif"
                   }}>9-12</span>
                     <span style={{
                     fontFamily: "'Inter', -apple-system, sans-serif",
                     fontSize: '19px',
-                    lineHeight: '1.7',
-                    color: '#6B7280'
-                  }}><strong>AI Workers #9-12</strong>: Distribute across platforms and track performance</span>
+                    lineHeight: '1.6',
+                    color: '#64748b'
+                  }}><strong style={{color: '#1e293b'}}>AI Workers #9-12</strong>: Distribute across platforms and track performance</span>
                   </li>
                 </ul>
               </div>
@@ -215,67 +218,73 @@ const AIUGC = () => {
               <div className="grid md:grid-cols-3 gap-6 mb-12" style={{
               margin: '48px 0'
             }}>
-                <div className="text-center p-8 rounded-2xl bg-white border border-gray-100 shadow-sm">
+                <div className="text-center p-4 rounded-lg bg-white border border-slate-200" style={{
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                }}>
                   <div style={{
                   fontFamily: "'Inter', -apple-system, sans-serif",
                   fontSize: '48px',
-                  fontWeight: '700',
+                  fontWeight: '500',
                   marginBottom: '12px',
-                  color: '#000'
+                  color: '#1e293b'
                 }}>150+</div>
                   <div style={{
                   fontFamily: "'Inter', -apple-system, sans-serif",
                   fontSize: '16px',
                   fontWeight: '600',
                   marginBottom: '8px',
-                  color: '#000'
+                  color: '#1e293b'
                 }}>The Output:</div>
                   <div style={{
                   fontFamily: "'Inter', -apple-system, sans-serif",
                   fontSize: '14px',
-                  color: '#6B7280'
+                  color: '#64748b'
                 }}>professional UGC videos daily</div>
                 </div>
-                <div className="text-center p-8 rounded-2xl bg-white border border-gray-100 shadow-sm">
+                <div className="text-center p-4 rounded-lg bg-white border border-slate-200" style={{
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                }}>
                   <div style={{
                   fontFamily: "'Inter', -apple-system, sans-serif",
                   fontSize: '48px',
-                  fontWeight: '700',
+                  fontWeight: '500',
                   marginBottom: '12px',
-                  color: '#000'
+                  color: '#1e293b'
                 }}>$11.47</div>
                   <div style={{
                   fontFamily: "'Inter', -apple-system, sans-serif",
                   fontSize: '16px',
                   fontWeight: '600',
                   marginBottom: '8px',
-                  color: '#000'
+                  color: '#1e293b'
                 }}>The Cost:</div>
                   <div style={{
                   fontFamily: "'Inter', -apple-system, sans-serif",
                   fontSize: '14px',
-                  color: '#6B7280'
+                  color: '#64748b'
                 }}>per day (that's $0.076 per video)</div>
                 </div>
-                <div className="text-center p-8 rounded-2xl bg-white border border-gray-100 shadow-sm">
+                <div className="text-center p-4 rounded-lg bg-white border border-slate-200" style={{
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                }}>
                   <div style={{
                   fontFamily: "'Inter', -apple-system, sans-serif",
-                  fontSize: '48px',
-                  fontWeight: '700',
+                  fontSize: '42px',
+                  fontWeight: '500',
                   marginBottom: '12px',
-                  color: '#000'
+                  color: '#1e293b'
                 }}>Fully automated</div>
                   <div style={{
                   fontFamily: "'Inter', -apple-system, sans-serif",
                   fontSize: '16px',
                   fontWeight: '600',
                   marginBottom: '8px',
-                  color: '#000'
+                  color: '#1e293b'
                 }}>The Time:</div>
                   <div style={{
                   fontFamily: "'Inter', -apple-system, sans-serif",
                   fontSize: '14px',
-                  color: '#6B7280'
+                  color: '#64748b'
                 }}>after 2-week setup</div>
                 </div>
               </div>
@@ -326,126 +335,177 @@ const AIUGC = () => {
                 <img src="https://i.ibb.co/qFgWRGfc/Exponential-Business-Mathematics.png" alt="Business revenue multiplication spiral showing 150x to 477x growth potential with AI UGC automation" />
               </div>
 
-              <div className="overflow-x-auto mb-12 rounded-2xl bg-white border border-gray-100 shadow-sm" style={{
-              margin: '48px 0'
+              <div className="overflow-x-auto mb-12 rounded-lg bg-white border border-slate-200" style={{
+              margin: '48px 0',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
             }}>
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-gray-50">
-                      <th className="p-6 text-left text-sm font-medium text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                    <tr style={{backgroundColor: '#f8fafc'}}>
+                      <th className="p-4 text-left text-sm font-semibold border-b border-slate-200" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '600',
+                      color: '#1e293b'
                     }}>Business Model</th>
-                      <th className="p-6 text-left text-sm font-medium text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <th className="p-4 text-left text-sm font-semibold border-b border-slate-200" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '600',
+                      color: '#1e293b'
                     }}>Current Monthly Views</th>
-                      <th className="p-6 text-left text-sm font-medium text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <th className="p-4 text-left text-sm font-semibold border-b border-slate-200" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '600',
+                      color: '#1e293b'
                     }}>AI Factory Monthly Views</th>
-                      <th className="p-6 text-left text-sm font-medium text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <th className="p-4 text-left text-sm font-semibold border-b border-slate-200" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '600',
+                      color: '#1e293b'
                     }}>Conversion Rate</th>
-                      <th className="p-6 text-left text-sm font-medium text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <th className="p-4 text-left text-sm font-semibold border-b border-slate-200" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '600',
+                      color: '#1e293b'
                     }}>Current Revenue</th>
-                      <th className="p-6 text-left text-sm font-medium text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <th className="p-4 text-left text-sm font-semibold border-b border-slate-200" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '600',
+                      color: '#1e293b'
                     }}>AI Factory Revenue</th>
-                      <th className="p-6 text-left text-sm font-medium text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <th className="p-4 text-left text-sm font-semibold border-b border-slate-200" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '600',
+                      color: '#1e293b'
                     }}>Revenue Multiplier</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-t border-gray-100">
-                      <td className="p-6 font-medium text-sm text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                    <tr style={{borderTop: '1px solid #e2e8f0'}}>
+                      <td className="p-4 font-medium text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '500',
+                      color: '#1e293b'
                     }}><strong>Info Products</strong></td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>16,000</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>3,811,500</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>0.3%</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>$9,456</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>$2,252,695</td>
-                      <td className="p-6 font-bold text-lg text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 font-medium text-lg" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '500',
+                      color: '#1e293b'
                     }}><strong>238x</strong></td>
                     </tr>
-                    <tr className="border-t border-gray-100">
-                      <td className="p-6 font-medium text-sm text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                    <tr style={{borderTop: '1px solid #e2e8f0'}}>
+                      <td className="p-4 font-medium text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '500',
+                      color: '#1e293b'
                     }}><strong>Ecommerce</strong></td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>25,000</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>3,811,500</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>0.4%</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>$4,700</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>$716,562</td>
-                      <td className="p-6 font-bold text-lg text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 font-medium text-lg" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '500',
+                      color: '#1e293b'
                     }}><strong>152x</strong></td>
                     </tr>
-                    <tr className="border-t border-gray-100">
-                      <td className="p-6 font-medium text-sm text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                    <tr style={{borderTop: '1px solid #e2e8f0'}}>
+                      <td className="p-4 font-medium text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '500',
+                      color: '#1e293b'
                     }}><strong>Agencies</strong></td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>8,000</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>3,811,500</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>0.2%</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>$14,000</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>$6,671,000</td>
-                      <td className="p-6 font-bold text-lg text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 font-medium text-lg" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '500',
+                      color: '#1e293b'
                     }}><strong>477x</strong></td>
                     </tr>
-                    <tr className="border-t border-gray-100">
-                      <td className="p-6 font-medium text-sm text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                    <tr style={{borderTop: '1px solid #e2e8f0'}}>
+                      <td className="p-4 font-medium text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '500',
+                      color: '#1e293b'
                     }}><strong>SaaS</strong></td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>12,000</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>3,811,500</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>0.2%</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>$2,095 MRR</td>
-                      <td className="p-6 text-sm text-gray-600" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 text-sm" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: '#64748b'
                     }}>$739,431 MRR</td>
-                      <td className="p-6 font-bold text-lg text-black" style={{
-                      fontFamily: "'Inter', sans-serif"
+                      <td className="p-4 font-medium text-lg" style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '500',
+                      color: '#1e293b'
                     }}><strong>353x</strong></td>
                     </tr>
                   </tbody>
@@ -590,22 +650,23 @@ const AIUGC = () => {
                 </div>
               </div>
 
-              <div className="text-center p-8 rounded-2xl bg-gray-50 border border-gray-100" style={{
-              margin: '48px 0'
+              <div className="text-center p-6 rounded-lg bg-white border border-slate-200" style={{
+              margin: '48px 0',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
             }}>
                 <p style={{
                 fontFamily: "'Inter', -apple-system, sans-serif",
                 fontSize: '21px',
                 fontWeight: '600',
                 marginBottom: '16px',
-                color: '#111827'
+                color: '#1e293b'
               }}>
                   <strong>At 150 videos/day, the difference is staggering:</strong>
                 </p>
                 <p style={{
                 fontFamily: "'Inter', -apple-system, sans-serif",
                 fontSize: '19px',
-                lineHeight: '1.7',
+                lineHeight: '1.6',
                 color: '#047857',
                 marginBottom: '8px'
               }}>
@@ -614,7 +675,7 @@ const AIUGC = () => {
                 <p style={{
                 fontFamily: "'Inter', -apple-system, sans-serif",
                 fontSize: '19px',
-                lineHeight: '1.7',
+                lineHeight: '1.6',
                 color: '#dc2626',
                 marginBottom: '16px'
               }}>
@@ -624,7 +685,7 @@ const AIUGC = () => {
                 fontFamily: "'Inter', -apple-system, sans-serif",
                 fontSize: '21px',
                 fontWeight: '600',
-                color: '#111827'
+                color: '#1e293b'
               }}>
                   That's a <strong>$64,276 annual savings</strong> for the same output.
                 </p>
@@ -1750,6 +1811,8 @@ const AIUGC = () => {
           </article>
         </main>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default AIUGC;
