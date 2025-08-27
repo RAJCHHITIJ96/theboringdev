@@ -74,7 +74,7 @@ const AIUGC = () => {
 
         {/* AI Assembly Line Image */}
         <div className="blog-image-container">
-          <img src="https://i.ibb.co/qLnFm6Gy/AI-UGC-Factory-Assembly-Line-System.png" alt="AI UGC automation workflow diagram showing 12 connected workers generating 150 videos daily for $11.47 cost breakdown" />
+          <img src="https://i.ibb.co/SwdgZR8R/The-AI-Assembly-Line-Revolution.png" alt="AI UGC automation workflow diagram showing 12 connected workers generating 150 videos daily for $11.47 cost breakdown" />
         </div>
 
         {/* Main Content Container - Ultra-Clean Single Column */}
@@ -323,7 +323,7 @@ const AIUGC = () => {
 
               {/* Revenue Multiplier Image */}
               <div className="blog-image-container">
-                <img src="https://i.ibb.co/BKtBJK3X/AI-UGC-Revenue-Multiplier-Visualization.png" alt="Business revenue multiplication spiral showing 150x to 477x growth potential with AI UGC automation" />
+                <img src="https://i.ibb.co/qFgWRGfc/Exponential-Business-Mathematics.png" alt="Business revenue multiplication spiral showing 150x to 477x growth potential with AI UGC automation" />
               </div>
 
               <div className="overflow-x-auto mb-12 rounded-2xl bg-white border border-gray-100 shadow-sm" style={{
@@ -632,7 +632,7 @@ const AIUGC = () => {
 
               {/* Cost Savings Image */}
               <div className="blog-image-container">
-                <img src="https://i.ibb.co/tTvqdh7w/UGC-Cost-Savings-Comparison-Chart.png" alt="Cost comparison visualization: traditional UGC $68K yearly vs AI automation $4K yearly savings infographic" />
+                <img src="https://i.ibb.co/qFRZCJ6s/The-Great-Financial-Liberation.png" alt="Cost comparison visualization: traditional UGC $68K yearly vs AI automation $4K yearly savings infographic" />
               </div>
             </section>
 
@@ -1027,7 +1027,7 @@ const AIUGC = () => {
 
               {/* Performance Data Image */}
               <div className="blog-image-container">
-                <img src="https://i.ibb.co/jvXYgTCc/AI-UGC-Performance-Results-Dashboard.png" alt="AI UGC performance metrics chart showing 8.3% viral rate and 238x revenue multiplier growth trajectory" />
+                <img src="https://i.ibb.co/ZRSR4XXW/Performance-Poetry-in-Data.png" alt="AI UGC performance metrics chart showing 8.3% viral rate and 238x revenue multiplier growth trajectory" />
               </div>
             </section>
 
@@ -1170,13 +1170,13 @@ const AIUGC = () => {
 
               {/* AI Detection Improvement Image */}
               <div className="blog-image-container">
-                <img src="https://i.ibb.co/gFTxqfM6/AI-Content-Humanization-Results.png" alt="AI detection rate comparison: before and after humanization showing improvement from 23% to 3.1% detection" />
+                <img src="https://i.ibb.co/sJVNh78W/The-Authenticity-Revolution.png" alt="AI detection rate comparison: before and after humanization showing improvement from 23% to 3.1% detection" />
               </div>
             </section>
 
             {/* Entrepreneur Liberation Image */}
             <div className="blog-image-container">
-              <img src="https://i.ibb.co/yc4JKXwQ/Content-Creation-Stress-vs-Automation-Freedom.png" alt="Entrepreneur transformation visualization from UGC stress chaos to automated content creation freedom" />
+              <img src="https://i.ibb.co/sd1b8YTL/The-Entrepreneur-s-Liberation-Moment.png" alt="Entrepreneur transformation visualization from UGC stress chaos to automated content creation freedom" />
             </div>
 
             <section>
@@ -1367,7 +1367,7 @@ const AIUGC = () => {
 
               {/* Future Advantage Window Image */}
               <div className="blog-image-container">
-                <img src="https://i.ibb.co/99b2B5TT/AI-UGC-Market-Timing-Opportunity.png" alt="First-mover advantage timeline 2025-2026 showing AI UGC market opportunity window closing" />
+                <img src="https://i.ibb.co/G4Cctz5w/The-Future-Advantage-Window.png" alt="First-mover advantage timeline 2025-2026 showing AI UGC market opportunity window closing" />
               </div>
             </section>
 

@@ -310,20 +310,17 @@
   padding: 0 !important;
   display: block !important;
   width: 100% !important;
-  /* CRITICAL: Control the height container */
-  min-height: 320px !important;
-  max-height: 400px !important;
-  overflow: hidden !important;
 }
 
 .blog-image-container img {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 580px !important;
+  max-width: 100% !important;         /* Constraint, not forced size */
+  max-height: 100% !important;        /* Constraint, not forced size */
+  width: auto !important;             /* Natural width */
+  height: auto !important;            /* Natural height */
   border-radius: 14px !important;
   box-shadow: 0 4px 20px rgba(0,0,0,0.07) !important;
   display: block !important;
-  object-fit: cover !important;
+  object-fit: contain !important;     /* Show full image */
   object-position: center !important;
   margin: 0 auto !important;
 }
@@ -334,17 +331,11 @@
     max-width: 90vw !important;
     margin: 40px auto !important;
     padding: 0 20px !important;
-    min-height: 240px !important;
-    max-height: 300px !important;
   }
   
   .blog-image-container img {
-    width: 100% !important;
     max-width: 100% !important;
+    width: auto !important;
+    height: auto !important;
   }
-}
-
-/* Debugging helper - remove after confirming styles work */
-.blog-image-container {
-  border: 2px solid red !important;
 }
