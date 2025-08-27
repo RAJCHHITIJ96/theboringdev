@@ -5,13 +5,11 @@ const AIUGC = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Image */}
-      <div className="w-full h-[60vh] relative">
+      <div className="blog-image-container" style={{ marginTop: '80px' }}>
         <img 
           src="https://i.ibb.co/xSCbB1XD/ai-ugc-revolution.png"
           alt="The AI UGC Revolution" 
-          className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/10"></div>
       </div>
 
       {/* Ultra-Minimalist Blog Content */}
