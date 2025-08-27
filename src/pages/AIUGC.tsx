@@ -81,12 +81,10 @@ const AIUGC = () => {
         </div>
 
         {/* AI Assembly Line Image */}
-        <div className="max-w-[680px] mx-auto my-20 px-10">
+        <div className="blog-image-container">
           <img 
             src="https://i.ibb.co/qLnFm6Gy/AI-UGC-Factory-Assembly-Line-System.png"
             alt="AI UGC automation workflow diagram showing 12 connected workers generating 150 videos daily for $11.47 cost breakdown"
-            className="w-full rounded-2xl shadow-lg"
-            style={{ margin: '64px 0' }}
           />
         </div>
 
@@ -280,12 +278,10 @@ const AIUGC = () => {
               </p>
 
               {/* Revenue Multiplier Image */}
-              <div className="my-16">
+              <div className="blog-image-container">
                 <img 
                   src="https://i.ibb.co/BKtBJK3X/AI-UGC-Revenue-Multiplier-Visualization.png"
                   alt="Business revenue multiplication spiral showing 150x to 477x growth potential with AI UGC automation"
-                  className="w-full rounded-2xl shadow-lg"
-                  style={{ margin: '64px 0' }}
                 />
               </div>
 
@@ -460,53 +456,43 @@ const AIUGC = () => {
               </div>
 
               {/* Cost Savings Image */}
-              <div className="my-16">
+              <div className="blog-image-container">
                 <img 
                   src="https://i.ibb.co/tTvqdh7w/UGC-Cost-Savings-Comparison-Chart.png"
                   alt="Cost comparison visualization: traditional UGC $68K yearly vs AI automation $4K yearly savings infographic"
-                  className="w-full rounded-2xl shadow-lg"
-                  style={{ margin: '64px 0' }}
                 />
               </div>
             </section>
 
             {/* Performance Data Image */}
-            <div className="my-20">
+            <div className="blog-image-container">
               <img 
                 src="https://i.ibb.co/jvXYgTCc/AI-UGC-Performance-Results-Dashboard.png"
                 alt="AI UGC performance metrics chart showing 8.3% viral rate and 238x revenue multiplier growth trajectory"
-                className="w-full rounded-2xl shadow-lg"
-                style={{ margin: '64px 0' }}
               />
             </div>
 
             {/* AI Detection Improvement Image */}
-            <div className="my-20">
+            <div className="blog-image-container">
               <img 
                 src="https://i.ibb.co/gFTxqfM6/AI-Content-Humanization-Results.png"
                 alt="AI detection rate comparison: before and after humanization showing improvement from 23% to 3.1% detection"
-                className="w-full rounded-2xl shadow-lg"
-                style={{ margin: '64px 0' }}
               />
             </div>
 
             {/* Entrepreneur Liberation Image */}
-            <div className="my-20">
+            <div className="blog-image-container">
               <img 
                 src="https://i.ibb.co/yc4JKXwQ/Content-Creation-Stress-vs-Automation-Freedom.png"
                 alt="Entrepreneur transformation visualization from UGC stress chaos to automated content creation freedom"
-                className="w-full rounded-2xl shadow-lg"
-                style={{ margin: '64px 0' }}
               />
             </div>
 
             {/* Future Advantage Window Image */}
-            <div className="my-20">
+            <div className="blog-image-container">
               <img 
                 src="https://i.ibb.co/99b2B5TT/AI-UGC-Market-Timing-Opportunity.png"
                 alt="First-mover advantage timeline 2025-2026 showing AI UGC market opportunity window closing"
-                className="w-full rounded-2xl shadow-lg"
-                style={{ margin: '64px 0' }}
               />
             </div>
 

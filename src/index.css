@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
@@ -258,6 +257,43 @@
   /* Theme Transitions */
   .theme-transition {
     transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+  }
+
+  /* MANDATORY IMAGE CONTAINER - NO EXCEPTIONS */
+  .blog-image-container {
+    max-width: 580px !important;      /* NEVER allow full screen width */
+    margin: 64px auto !important;     /* Centered with breathing room */
+    text-align: center;
+    padding: 0;
+    display: block;
+  }
+
+  .blog-image-container img {
+    width: 100% !important;           /* Fill container only, NOT screen */
+    max-width: 580px !important;      /* Hard limit on size */
+    height: auto !important;          /* Maintain aspect ratio */
+    border-radius: 14px;              /* Premium rounded corners */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07); /* Subtle shadow */
+    display: block;
+    object-fit: cover;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .blog-image-container {
+      max-width: 90vw !important;
+      margin: 40px auto !important;
+      padding: 0 20px;
+    }
+  }
+
+  /* Override ANY existing image styles */
+  img:not(.logo):not(.icon) {
+    max-width: 580px !important;
+    margin: 64px auto !important;
+    display: block !important;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07) !important;
   }
 }
 
