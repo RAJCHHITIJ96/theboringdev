@@ -132,7 +132,7 @@ export default function ZuhuDashboard() {
     const { data, error } = await supabase
       .from('zuhu_content_processing')
       .select('*')
-      .in('status', ['received', 'analyzing', 'classified', 'design_processing', 'design_approved', 'asset_processing', 'assets_validated', 'completed'])
+      .in('status', ['received', 'processing', 'analyzing', 'generating', 'quality_checking', 'classified', 'design_approved', 'assets_validated'])
       .order('created_at', { ascending: false });
 
     if (!error && data) {
@@ -223,8 +223,8 @@ export default function ZuhuDashboard() {
 
       if (insertError) throw insertError;
 
-      // Call the unified processor (handles entire pipeline automatically)
-      const { data, error } = await supabase.functions.invoke('zuhu-unified-processor', {
+      // Call the content classifier
+      const { data, error } = await supabase.functions.invoke('zuhu-content-classifier', {
         body: {
           content_id: contentId,
           raw_content: parsedContent
@@ -233,7 +233,7 @@ export default function ZuhuDashboard() {
 
       if (error) throw error;
 
-      toast.success('Content submitted to unified pipeline!');
+      toast.success('Content submitted successfully!');
       setRawContent('');
       setContentId('');
       fetchActiveProcessing();
@@ -449,13 +449,29 @@ export default function ZuhuDashboard() {
                            Started {new Date(item.processing_start).toLocaleTimeString()}
                          </p>
                        </div>
-                         <Badge className={`${getStatusColor(item.status)} ${
-                           item.status === 'completed' ? 'animate-pulse' : ''
-                         }`}>
-                           {item.status === 'design_processing' ? 'Design Processing' :
-                            item.status === 'asset_processing' ? 'Asset Processing' :
-                            item.status}
+                       <div className="flex items-center gap-2">
+                         <Badge className={getStatusColor(item.status)}>
+                           {item.status}
                          </Badge>
+                         {item.status === 'classified' && (
+                           <button
+                             onClick={() => triggerDesignProcessing(item.content_id)}
+                             className="inline-flex items-center px-2 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600"
+                           >
+                             <Play className="h-3 w-3 mr-1" />
+                             Design
+                           </button>
+                         )}
+                         {item.status === 'design_approved' && (
+                           <button
+                             onClick={() => triggerAssetProcessing(item.content_id)}
+                             className="inline-flex items-center px-2 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600"
+                           >
+                             <Play className="h-3 w-3 mr-1" />
+                             Assets
+                           </button>
+                         )}
+                       </div>
                      </div>
                     
                     <div className="grid grid-cols-4 gap-2">
