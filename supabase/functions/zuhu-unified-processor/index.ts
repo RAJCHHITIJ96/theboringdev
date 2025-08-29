@@ -45,6 +45,12 @@ const PIPELINE_STAGES = [
     function: 'zuhu-seo-synthesizer',
     description: 'SEO & Design Synthesis Engine',
     expectedStatus: 'seo_optimized'
+  },
+  {
+    name: 'quality_fortress',
+    function: 'quality-fortress',
+    description: 'Quality Fortress - Comprehensive Content Audit',
+    expectedStatus: 'quality_approved'
   }
 ];
 
@@ -205,12 +211,36 @@ async function executeZuhuPipeline(contentId: string, rawContent: any) {
           completed_at: new Date().toISOString()
         };
 
+        // Handle Quality Fortress results with threshold logic
+        if (stage.name === 'quality_fortress') {
+          const qualityScore = stageResult.quality_score || 0;
+          let finalStatus = 'quality_approved';
+          
+          if (qualityScore < 80) {
+            finalStatus = 'requires_manual_review';
+            console.log(`[${contentId}] Quality score ${qualityScore} below threshold, requiring manual review`);
+          } else {
+            finalStatus = 'approved_for_publishing';
+            console.log(`[${contentId}] Quality score ${qualityScore} passed, approved for publishing`);
+          }
+
+          // Update content processing status based on quality score
+          await updateProcessingStatus(contentId, finalStatus, {
+            quality_audit_id: stageResult.audit_id,
+            quality_metrics: {
+              quality_score: qualityScore,
+              audit_summary: stageResult.audit_summary
+            }
+          });
+        }
+
         // Update stage completion
         await updateProcessingStage(contentId, stage.name, 'completed', null, {
           processing_time_ms: Date.now() - stageStart,
           result_summary: {
             success: true,
-            data_size: JSON.stringify(stageResult).length
+            data_size: JSON.stringify(stageResult).length,
+            quality_score: stageResult.quality_score
           }
         });
 

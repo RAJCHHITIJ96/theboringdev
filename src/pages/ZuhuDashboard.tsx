@@ -24,7 +24,11 @@ import {
   RotateCcw,
   Palette,
   Image,
-  TrendingUp
+  TrendingUp,
+  Shield,
+  ExternalLink,
+  GitCommit,
+  Globe
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -59,6 +63,28 @@ interface SystemMetrics {
   error_breakdown: Record<string, number>;
 }
 
+interface QualityAudit {
+  id: string;
+  content_id: string;
+  quality_score: number;
+  audit_results: any;
+  issues_found: any[];
+  recommendations: any[];
+  status: string;
+  created_at: string;
+}
+
+interface DeploymentBatch {
+  id: string;
+  batch_id: string;
+  content_ids: string[];
+  batch_status: string;
+  github_commit_sha?: string;
+  published_urls: string[];
+  created_at: string;
+  deployment_completed_at?: string;
+}
+
 const PROCESSING_STAGES = [
   { key: 'analysis', label: 'Analysis', icon: Target },
   { key: 'generation', label: 'Generation', icon: Zap },
@@ -84,6 +110,8 @@ export default function ZuhuDashboard() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [designDirectives, setDesignDirectives] = useState<any[]>([]);
   const [assetData, setAssetData] = useState<any[]>([]);
+  const [qualityAudits, setQualityAudits] = useState<QualityAudit[]>([]);
+  const [deploymentBatches, setDeploymentBatches] = useState<DeploymentBatch[]>([]);
 
   // Fetch real-time data
   useEffect(() => {
@@ -112,9 +140,33 @@ export default function ZuhuDashboard() {
       })
       .subscribe();
 
+    const qualityChannel = supabase
+      .channel('quality-audits')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'quality_audits'
+      }, () => {
+        fetchQualityAudits();
+      })
+      .subscribe();
+
+    const deploymentChannel = supabase
+      .channel('deployment-batches')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'deployment_batches'
+      }, () => {
+        fetchDeploymentBatches();
+      })
+      .subscribe();
+
     return () => {
       supabase.removeChannel(contentChannel);
       supabase.removeChannel(stagesChannel);
+      supabase.removeChannel(qualityChannel);
+      supabase.removeChannel(deploymentChannel);
     };
   }, []);
 
@@ -124,7 +176,9 @@ export default function ZuhuDashboard() {
       fetchRecentStages(),
       fetchMetrics(),
       fetchDesignDirectives(),
-      fetchAssetData()
+      fetchAssetData(),
+      fetchQualityAudits(),
+      fetchDeploymentBatches()
     ]);
   };
 
@@ -132,7 +186,7 @@ export default function ZuhuDashboard() {
     const { data, error } = await supabase
       .from('zuhu_content_processing')
       .select('*')
-      .in('status', ['received', 'processing', 'analyzing', 'generating', 'quality_checking', 'classified', 'design_approved', 'assets_validated'])
+      .in('status', ['received', 'processing', 'classified', 'design_approved', 'assets_processed', 'assets_validated', 'page_created', 'seo_optimized', 'quality_approved', 'requires_manual_review', 'approved_for_publishing'])
       .order('created_at', { ascending: false });
 
     if (!error && data) {
@@ -191,6 +245,38 @@ export default function ZuhuDashboard() {
 
     if (!error && data) {
       setAssetData(data);
+    }
+  };
+
+  const fetchQualityAudits = async () => {
+    const { data, error } = await supabase
+      .from('quality_audits')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (!error && data) {
+      setQualityAudits(data.map(audit => ({
+        ...audit,
+        issues_found: Array.isArray(audit.issues_found) ? audit.issues_found : [],
+        recommendations: Array.isArray(audit.recommendations) ? audit.recommendations : []
+      })));
+    }
+  };
+
+  const fetchDeploymentBatches = async () => {
+    const { data, error } = await supabase
+      .from('deployment_batches')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (!error && data) {
+      setDeploymentBatches(data.map(batch => ({
+        ...batch,
+        content_ids: (Array.isArray(batch.content_ids) ? batch.content_ids : []) as string[],
+        published_urls: (Array.isArray(batch.published_urls) ? batch.published_urls : []) as string[]
+      })));
     }
   };
 
@@ -266,6 +352,38 @@ export default function ZuhuDashboard() {
     }
   };
 
+  // Trigger quality audit for content
+  const triggerQualityAudit = async (contentId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('quality-fortress', {
+        body: { content_id: contentId }
+      });
+
+      if (error) throw error;
+
+      toast.success('Quality audit triggered!');
+      fetchDashboardData();
+    } catch (error: any) {
+      toast.error(`Failed to trigger quality audit: ${error.message}`);
+    }
+  };
+
+  // Trigger autonomous publishing
+  const triggerAutonomousPublishing = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('autonomous-publishing-engine', {
+        body: {}
+      });
+
+      if (error) throw error;
+
+      toast.success('Autonomous publishing triggered!');
+      fetchDashboardData();
+    } catch (error: any) {
+      toast.error(`Failed to trigger publishing: ${error.message}`);
+    }
+  };
+
   const getStageStatus = (contentId: string, stageName: string) => {
     const stage = recentStages.find(s => s.content_id === contentId && s.stage === stageName);
     return stage?.status || 'pending';
@@ -274,10 +392,21 @@ export default function ZuhuDashboard() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed': return 'text-green-600 bg-green-50 border-green-200';
+      case 'live': return 'text-green-600 bg-green-50 border-green-200';
+      case 'approved_for_publishing': return 'text-emerald-600 bg-emerald-50 border-emerald-200';
+      case 'quality_approved': return 'text-cyan-600 bg-cyan-50 border-cyan-200';
+      case 'requires_manual_review': return 'text-orange-600 bg-orange-50 border-orange-200';
       case 'processing': return 'text-blue-600 bg-blue-50 border-blue-200';
       case 'failed': return 'text-red-600 bg-red-50 border-red-200';
       default: return 'text-gray-600 bg-gray-50 border-gray-200';
     }
+  };
+
+  const getQualityScoreColor = (score: number) => {
+    if (score >= 90) return 'text-green-600';
+    if (score >= 80) return 'text-yellow-600';
+    if (score >= 70) return 'text-orange-600';
+    return 'text-red-600';
   };
 
   return (
@@ -351,6 +480,133 @@ export default function ZuhuDashboard() {
           <CardContent>
             <div className="text-3xl font-bold text-yellow-400">{activeProcessing.length}</div>
             <p className="text-xs text-gray-500 mt-1">In pipeline</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quality Audits & Deployment Status */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center justify-between">
+              <div className="flex items-center">
+                <Shield className="w-5 h-5 mr-2" />
+                Quality Fortress
+              </div>
+              <Button 
+                onClick={() => fetchQualityAudits()}
+                variant="outline" 
+                size="sm"
+              >
+                <RotateCcw className="w-4 h-4" />
+              </Button>
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              Latest quality audit results
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {qualityAudits.length === 0 ? (
+                <div className="text-center py-4 text-gray-500">
+                  No quality audits found
+                </div>
+              ) : (
+                qualityAudits.slice(0, 5).map((audit) => (
+                  <div key={audit.id} className="bg-gray-900 rounded-lg p-3 border border-gray-600">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="font-medium text-white text-sm">{audit.content_id}</h4>
+                        <p className="text-xs text-gray-400">
+                          {new Date(audit.created_at).toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className={`text-lg font-bold ${getQualityScoreColor(audit.quality_score)}`}>
+                          {audit.quality_score}
+                        </div>
+                        <Badge className={getStatusColor(audit.status)} variant="outline">
+                          {audit.status}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {audit.issues_found?.length || 0} issues • {audit.recommendations?.length || 0} recommendations
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center justify-between">
+              <div className="flex items-center">
+                <GitCommit className="w-5 h-5 mr-2" />
+                Autonomous Publishing
+              </div>
+              <Button 
+                onClick={triggerAutonomousPublishing}
+                variant="outline" 
+                size="sm"
+                className="bg-green-600 hover:bg-green-700 text-white border-green-600"
+              >
+                <Play className="w-4 h-4 mr-1" />
+                Publish Now
+              </Button>
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              Deployment batch status & live URLs
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {deploymentBatches.length === 0 ? (
+                <div className="text-center py-4 text-gray-500">
+                  No deployment batches found
+                </div>
+              ) : (
+                deploymentBatches.slice(0, 3).map((batch) => (
+                  <div key={batch.id} className="bg-gray-900 rounded-lg p-3 border border-gray-600">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="font-medium text-white text-sm">{batch.batch_id}</h4>
+                        <p className="text-xs text-gray-400">
+                          {batch.content_ids.length} articles • {new Date(batch.created_at).toLocaleString()}
+                        </p>
+                      </div>
+                      <Badge className={getStatusColor(batch.batch_status)} variant="outline">
+                        {batch.batch_status}
+                      </Badge>
+                    </div>
+                    {batch.published_urls.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {batch.published_urls.slice(0, 2).map((url, idx) => (
+                          <a
+                            key={idx}
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
+                          >
+                            <Globe className="w-3 h-3 mr-1" />
+                            Live
+                            <ExternalLink className="w-3 h-3 ml-1" />
+                          </a>
+                        ))}
+                        {batch.published_urls.length > 2 && (
+                          <span className="text-xs text-gray-400 px-2 py-1">
+                            +{batch.published_urls.length - 2} more
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -442,24 +698,43 @@ export default function ZuhuDashboard() {
                          <Badge className={getStatusColor(item.status)}>
                            {item.status}
                          </Badge>
-                         {item.status === 'classified' && (
-                           <button
-                             onClick={() => triggerDesignProcessing(item.content_id)}
-                             className="inline-flex items-center px-2 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600"
-                           >
-                             <Play className="h-3 w-3 mr-1" />
-                             Design
-                           </button>
-                         )}
-                         {item.status === 'design_approved' && (
-                           <button
-                             onClick={() => triggerAssetProcessing(item.content_id)}
-                             className="inline-flex items-center px-2 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600"
-                           >
-                             <Play className="h-3 w-3 mr-1" />
-                             Assets
-                           </button>
-                         )}
+                          {item.status === 'classified' && (
+                            <button
+                              onClick={() => triggerDesignProcessing(item.content_id)}
+                              className="inline-flex items-center px-2 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600"
+                            >
+                              <Play className="h-3 w-3 mr-1" />
+                              Design
+                            </button>
+                          )}
+                          {item.status === 'design_approved' && (
+                            <button
+                              onClick={() => triggerAssetProcessing(item.content_id)}
+                              className="inline-flex items-center px-2 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600"
+                            >
+                              <Play className="h-3 w-3 mr-1" />
+                              Assets
+                            </button>
+                          )}
+                          {item.status === 'seo_optimized' && (
+                            <button
+                              onClick={() => triggerQualityAudit(item.content_id)}
+                              className="inline-flex items-center px-2 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600"
+                            >
+                              <Shield className="h-3 w-3 mr-1" />
+                              Quality
+                            </button>
+                          )}
+                          {item.status === 'approved_for_publishing' && (
+                            <Badge className="bg-emerald-600 text-white">
+                              Ready for Publishing
+                            </Badge>
+                          )}
+                          {item.status === 'requires_manual_review' && (
+                            <Badge className="bg-orange-600 text-white">
+                              Needs Review
+                            </Badge>
+                          )}
                        </div>
                      </div>
                     

@@ -247,6 +247,51 @@ export type Database = {
           },
         ]
       }
+      deployment_batches: {
+        Row: {
+          batch_id: string
+          batch_status: string
+          content_ids: Json
+          created_at: string
+          deployment_completed_at: string | null
+          deployment_started_at: string | null
+          error_logs: Json | null
+          github_commit_sha: string | null
+          id: string
+          netlify_deploy_id: string | null
+          published_urls: Json | null
+          updated_at: string
+        }
+        Insert: {
+          batch_id: string
+          batch_status?: string
+          content_ids?: Json
+          created_at?: string
+          deployment_completed_at?: string | null
+          deployment_started_at?: string | null
+          error_logs?: Json | null
+          github_commit_sha?: string | null
+          id?: string
+          netlify_deploy_id?: string | null
+          published_urls?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          batch_id?: string
+          batch_status?: string
+          content_ids?: Json
+          created_at?: string
+          deployment_completed_at?: string | null
+          deployment_started_at?: string | null
+          error_logs?: Json | null
+          github_commit_sha?: string | null
+          id?: string
+          netlify_deploy_id?: string | null
+          published_urls?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       design_directives: {
         Row: {
           category: string | null
@@ -749,6 +794,7 @@ export type Database = {
           processed_content: Json | null
           processing_end: string | null
           processing_start: string | null
+          quality_audit_id: string | null
           quality_metrics: Json | null
           raw_content: Json
           seo_elements: Json | null
@@ -766,8 +812,9 @@ export type Database = {
           processed_content?: Json | null
           processing_end?: string | null
           processing_start?: string | null
+          quality_audit_id?: string | null
           quality_metrics?: Json | null
-          raw_content: Json
+          raw_content?: Json
           seo_elements?: Json | null
           status?: string
           updated_at?: string
@@ -783,13 +830,22 @@ export type Database = {
           processed_content?: Json | null
           processing_end?: string | null
           processing_start?: string | null
+          quality_audit_id?: string | null
           quality_metrics?: Json | null
           raw_content?: Json
           seo_elements?: Json | null
           status?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "zuhu_content_processing_new_quality_audit_id_fkey"
+            columns: ["quality_audit_id"]
+            isOneToOne: false
+            referencedRelation: "quality_audits"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       zuhu_processing_stages: {
         Row: {
