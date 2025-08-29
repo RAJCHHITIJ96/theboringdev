@@ -491,6 +491,168 @@ export type Database = {
         }
         Relationships: []
       }
+      zuhu_api_config: {
+        Row: {
+          auth_config: Json | null
+          created_at: string
+          endpoint_name: string
+          endpoint_url: string
+          id: string
+          is_active: boolean | null
+          rate_limit: number | null
+          timeout_seconds: number | null
+          updated_at: string
+        }
+        Insert: {
+          auth_config?: Json | null
+          created_at?: string
+          endpoint_name: string
+          endpoint_url: string
+          id?: string
+          is_active?: boolean | null
+          rate_limit?: number | null
+          timeout_seconds?: number | null
+          updated_at?: string
+        }
+        Update: {
+          auth_config?: Json | null
+          created_at?: string
+          endpoint_name?: string
+          endpoint_url?: string
+          id?: string
+          is_active?: boolean | null
+          rate_limit?: number | null
+          timeout_seconds?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      zuhu_content_processing: {
+        Row: {
+          category: string | null
+          confidence_score: number | null
+          content_id: string
+          content_intelligence: Json | null
+          created_at: string
+          error_logs: Json | null
+          id: string
+          processed_content: Json | null
+          processing_end: string | null
+          processing_start: string | null
+          quality_metrics: Json | null
+          raw_content: Json
+          seo_elements: Json | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          confidence_score?: number | null
+          content_id: string
+          content_intelligence?: Json | null
+          created_at?: string
+          error_logs?: Json | null
+          id?: string
+          processed_content?: Json | null
+          processing_end?: string | null
+          processing_start?: string | null
+          quality_metrics?: Json | null
+          raw_content: Json
+          seo_elements?: Json | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          confidence_score?: number | null
+          content_id?: string
+          content_intelligence?: Json | null
+          created_at?: string
+          error_logs?: Json | null
+          id?: string
+          processed_content?: Json | null
+          processing_end?: string | null
+          processing_start?: string | null
+          quality_metrics?: Json | null
+          raw_content?: Json
+          seo_elements?: Json | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      zuhu_processing_stages: {
+        Row: {
+          completed_at: string | null
+          content_id: string
+          created_at: string
+          error_message: string | null
+          id: string
+          stage: string
+          stage_data: Json | null
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          content_id: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          stage: string
+          stage_data?: Json | null
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          content_id?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          stage?: string
+          stage_data?: Json | null
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      zuhu_system_metrics: {
+        Row: {
+          avg_processing_time: number | null
+          category_breakdown: Json | null
+          created_at: string
+          date: string
+          error_breakdown: Json | null
+          id: string
+          success_rate: number | null
+          total_processed: number | null
+          updated_at: string
+        }
+        Insert: {
+          avg_processing_time?: number | null
+          category_breakdown?: Json | null
+          created_at?: string
+          date?: string
+          error_breakdown?: Json | null
+          id?: string
+          success_rate?: number | null
+          total_processed?: number | null
+          updated_at?: string
+        }
+        Update: {
+          avg_processing_time?: number | null
+          category_breakdown?: Json | null
+          created_at?: string
+          date?: string
+          error_breakdown?: Json | null
+          id?: string
+          success_rate?: number | null
+          total_processed?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       batch_content_selection: {
