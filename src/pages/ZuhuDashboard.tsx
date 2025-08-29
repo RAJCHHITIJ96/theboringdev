@@ -317,13 +317,16 @@ export default function ZuhuDashboard() {
             </div>
             
             <div>
-              <label className="text-sm font-medium text-gray-300 mb-2 block">Raw Content (JSON)</label>
+              <label className="text-sm font-medium text-gray-300 mb-2 block">Raw Content (theboringdev format)</label>
               <Textarea 
-                placeholder='{"title": "Article Title", "content": "Article content...", "metadata": {}}'
+                placeholder='[{"shipped_content": "# Your Article Title\\n\\nYour content...","image_seo_details": [{"url": "https://example.com/image.png","alt_text": "Image description","theme": "AI Development","style": "Minimalist","brand": "theboringdev"}],"seo_details_of_content": {"brief_id": "brief_example","keyword_id": "kw_example","trend_id": "trend_example","content_angle": "Example Angle","target_word_count": 2500,"status": "DRAFT"}}]'
                 value={rawContent}
                 onChange={(e) => setRawContent(e.target.value)}
-                className="min-h-[200px] bg-gray-900 border-gray-600 text-white"
+                className="min-h-[300px] bg-gray-900 border-gray-600 text-white font-mono text-xs"
               />
+              <p className="text-xs text-gray-500 mt-2">
+                Expected format: Array with shipped_content (markdown), image_seo_details, and seo_details_of_content
+              </p>
             </div>
             
             <Button 

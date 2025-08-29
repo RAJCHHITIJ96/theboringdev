@@ -24,8 +24,19 @@ SYSTEM IDENTITY:
 - Brand: theboringdev (Chhitij's AI authority platform)
 - Mission: Transform raw content into strategically classified, SEO-optimized intelligence
 
-INPUT CONTENT TO ANALYZE:
+INPUT CONTENT STRUCTURE TO ANALYZE:
 {{rawContent}}
+
+CONTENT STRUCTURE UNDERSTANDING:
+The input contains:
+1. "shipped_content": Full markdown content with images, tables, charts
+2. "image_seo_details": Array of image metadata with URLs, alt text, themes, styles
+3. "seo_details_of_content": Comprehensive SEO and content metadata
+
+ANALYSIS FOCUS:
+- Primary analysis on "shipped_content" (the main content)
+- Cross-reference with existing "seo_details_of_content" for validation
+- Validate image integration using "image_seo_details"
 
 CLASSIFICATION CATEGORIES (with Advanced Intelligence Matching):
 

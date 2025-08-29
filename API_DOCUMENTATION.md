@@ -1,4 +1,132 @@
-# AI Intelligence & MCP Converter API Documentation
+# ZUHU Publishing System - API Documentation
+
+## ZUHU Content Intelligence Engine API
+
+### Overview
+The ZUHU Content Intelligence Engine analyzes and classifies content for theboringdev platform using Claude AI for intelligent categorization and SEO optimization.
+
+### Endpoint
+**POST** `https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/zuhu-content-classifier`
+
+### Content Structure Support
+The API is designed to handle theboringdev's specific content structure:
+- **shipped_content**: Full markdown content with images, tables, charts
+- **image_seo_details**: Array of image metadata with URLs, alt text, themes
+- **seo_details_of_content**: Comprehensive SEO and content metadata
+
+### Request Format
+```json
+{
+  "content_id": "unique-content-identifier",
+  "raw_content": [
+    {
+      "shipped_content": "Full markdown content...",
+      "image_seo_details": [
+        {
+          "url": "https://example.com/image.png",
+          "alt_text": "SEO-optimized alt text",
+          "theme": "Content theme",
+          "style": "Visual style",
+          "brand": "theboringdev"
+        }
+      ],
+      "seo_details_of_content": {
+        "brief_id": "content_brief_id",
+        "keyword_id": "primary_keyword_id",
+        "trend_id": "associated_trend_id",
+        "content_angle": "Content positioning",
+        "target_word_count": 2500,
+        "status": "DRAFT"
+      }
+    }
+  ]
+}
+```
+
+### Response Format
+```json
+{
+  "success": true,
+  "content_id": "unique-content-identifier",
+  "classification": {
+    "primaryCategory": "automation",
+    "confidenceScore": 0.92,
+    "categoryScores": {
+      "trending": 0.85,
+      "automation": 0.92,
+      "comparisons": 0.30,
+      "news": 0.15,
+      "realityCheck": 0.40,
+      "builderStories": 0.25
+    },
+    "reasoning": "Detailed analysis explanation",
+    "alternativeCategory": "trending"
+  },
+  "seo_elements": {
+    "titleTag": "Optimized title under 60 chars",
+    "metaDescription": "Compelling description under 160 chars",
+    "primaryKeywords": ["keyword1", "keyword2", "keyword3"],
+    "semanticKeywords": ["related1", "related2", "related3"],
+    "internalLinks": [
+      {
+        "anchor": "anchor text",
+        "target": "/internal-url/",
+        "relevance": "why relevant"
+      }
+    ],
+    "externalLinks": [
+      {
+        "anchor": "link text", 
+        "url": "https://authority-source.com",
+        "authority": "high",
+        "relevance": "why included"
+      }
+    ]
+  },
+  "processing_time": 2847
+}
+```
+
+### Content Categories
+1. **Trending AI Opportunities** - Emerging trends and market opportunities
+2. **AI Automation** - Productivity and workflow optimization  
+3. **Tool Comparisons** - Software and tool evaluations
+4. **AI News** - Current events and developments
+5. **AI Reality Check** - Myth-busting and practical perspectives
+6. **Builder Stories** - Personal experiences and case studies
+
+### Example cURL Request
+```bash
+curl -X POST https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/zuhu-content-classifier \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content_id": "content_ai_coding_guide_2025",
+    "raw_content": [
+      {
+        "shipped_content": "# AI Coding: The Unsexy Guide...",
+        "image_seo_details": [
+          {
+            "url": "https://i.ibb.co/example.png",
+            "alt_text": "AI coding workflow diagram",
+            "theme": "AI Development",
+            "style": "Minimalist",
+            "brand": "theboringdev"
+          }
+        ],
+        "seo_details_of_content": {
+          "brief_id": "brief_ai_coding_unsexy_guide_2025",
+          "keyword_id": "kw_ai_coding_guide", 
+          "trend_id": "trend_2025_developer_productivity",
+          "content_angle": "AI Coding: The Unsexy Guide to Actually Shipping Faster",
+          "target_word_count": 2800,
+          "status": "DRAFT"
+        }
+      }
+    ]
+  }'
+```
+
+---
 
 ## AI Intelligence Processor API
 
