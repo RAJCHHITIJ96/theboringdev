@@ -219,6 +219,112 @@ async function updateProcessingStatus(contentId: string, status: string, data?: 
   }
 }
 
+// Bulletproof JSON extraction from Claude responses
+function extractJsonFromResponse(responseText: string): any {
+  console.log('Attempting to extract JSON from response...');
+  
+  // Strategy 1: Try to parse the entire response as JSON
+  try {
+    const parsed = JSON.parse(responseText.trim());
+    console.log('✅ Direct JSON parse successful');
+    return parsed;
+  } catch (e) {
+    console.log('❌ Direct JSON parse failed, trying alternative methods...');
+  }
+
+  // Strategy 2: Look for JSON in code blocks (```json ... ```)
+  const codeBlockMatch = responseText.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/i);
+  if (codeBlockMatch) {
+    try {
+      const parsed = JSON.parse(codeBlockMatch[1]);
+      console.log('✅ JSON code block extraction successful');
+      return parsed;
+    } catch (e) {
+      console.log('❌ JSON code block extraction failed');
+    }
+  }
+
+  // Strategy 3: Find all potential JSON objects and try the largest valid one
+  const jsonMatches = responseText.match(/\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g) || [];
+  
+  for (const match of jsonMatches.sort((a, b) => b.length - a.length)) {
+    try {
+      const parsed = JSON.parse(match);
+      // Validate it has our expected structure
+      if (parsed.classification && parsed.seoElements) {
+        console.log('✅ Pattern-matched JSON extraction successful');
+        return parsed;
+      }
+    } catch (e) {
+      continue;
+    }
+  }
+
+  // Strategy 4: Use a more sophisticated approach to find the main JSON object
+  const lines = responseText.split('\n');
+  let jsonStart = -1;
+  let jsonEnd = -1;
+  let braceCount = 0;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    
+    // Look for the start of our expected JSON structure
+    if (line.includes('"classification"') || line.startsWith('{')) {
+      if (jsonStart === -1) jsonStart = i;
+    }
+    
+    // Count braces to find the end
+    for (const char of line) {
+      if (char === '{') braceCount++;
+      if (char === '}') braceCount--;
+    }
+    
+    // Found the end of the JSON object
+    if (jsonStart !== -1 && braceCount === 0 && line.includes('}')) {
+      jsonEnd = i;
+      break;
+    }
+  }
+  
+  if (jsonStart !== -1 && jsonEnd !== -1) {
+    const jsonLines = lines.slice(jsonStart, jsonEnd + 1);
+    const jsonText = jsonLines.join('\n');
+    
+    try {
+      const parsed = JSON.parse(jsonText);
+      console.log('✅ Line-by-line JSON extraction successful');
+      return parsed;
+    } catch (e) {
+      console.log('❌ Line-by-line JSON extraction failed');
+    }
+  }
+
+  // Strategy 5: Last resort - try to fix common JSON issues
+  let cleanedResponse = responseText
+    .replace(/```json/gi, '')
+    .replace(/```/g, '')
+    .replace(/^\s*[^{]*/, '') // Remove text before first {
+    .replace(/[^}]*$/, '') // Remove text after last }
+    .trim();
+
+  // Fix common JSON issues
+  cleanedResponse = cleanedResponse
+    .replace(/,\s*}/g, '}') // Remove trailing commas
+    .replace(/,\s*]/g, ']') // Remove trailing commas in arrays
+    .replace(/([{,]\s*)(\w+):/g, '$1"$2":'); // Quote unquoted keys
+
+  try {
+    const parsed = JSON.parse(cleanedResponse);
+    console.log('✅ Cleaned JSON extraction successful');
+    return parsed;
+  } catch (e) {
+    console.log('❌ All JSON extraction strategies failed');
+    console.log('Raw response sample:', responseText.substring(0, 500));
+    throw new Error(`Could not extract valid JSON from Claude response. Last error: ${e.message}`);
+  }
+}
+
 // Call Claude API for content classification
 async function classifyWithClaude(rawContent: any): Promise<any> {
   if (!ANTHROPIC_API_KEY) {
@@ -261,20 +367,11 @@ async function classifyWithClaude(rawContent: any): Promise<any> {
     throw new Error('Invalid response format from Claude API');
   }
 
-  // Extract JSON from Claude's response
+// Extract JSON from Claude's response with bulletproof parsing
   const responseText = result.content[0].text;
+  console.log('Raw Claude response:', responseText);
   
-  try {
-    // Try to parse the entire response as JSON first
-    return JSON.parse(responseText);
-  } catch {
-    // If that fails, try to extract JSON from the response
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]);
-    }
-    throw new Error('Could not extract valid JSON from Claude response');
-  }
+  return extractJsonFromResponse(responseText);
 }
 
 // Main request handler
