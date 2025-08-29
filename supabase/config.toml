@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.zuhu-asset-manager]
 verify_jwt = false
+
+[functions.zuhu-unified-processor]
+verify_jwt = false

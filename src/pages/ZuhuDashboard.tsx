@@ -212,19 +212,8 @@ export default function ZuhuDashboard() {
         return;
       }
 
-      // Insert into processing queue
-      const { error: insertError } = await supabase
-        .from('zuhu_content_processing')
-        .insert({
-          content_id: contentId,
-          raw_content: parsedContent,
-          status: 'received'
-        });
-
-      if (insertError) throw insertError;
-
-      // Call the content classifier
-      const { data, error } = await supabase.functions.invoke('zuhu-content-classifier', {
+      // Call the unified ZUHU processor
+      const { data, error } = await supabase.functions.invoke('zuhu-unified-processor', {
         body: {
           content_id: contentId,
           raw_content: parsedContent
@@ -233,7 +222,7 @@ export default function ZuhuDashboard() {
 
       if (error) throw error;
 
-      toast.success('Content submitted successfully!');
+      toast.success('Content submitted to unified pipeline successfully!');
       setRawContent('');
       setContentId('');
       fetchActiveProcessing();
@@ -372,10 +361,10 @@ export default function ZuhuDashboard() {
           <CardHeader>
             <CardTitle className="text-white flex items-center">
               <Database className="w-5 h-5 mr-2" />
-              Content Input
+              ZUHU Unified Pipeline
             </CardTitle>
             <CardDescription className="text-gray-400">
-              Submit raw content for processing
+              Submit raw content to the complete ZUHU processing pipeline
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -398,7 +387,7 @@ export default function ZuhuDashboard() {
                 className="min-h-[300px] bg-gray-900 border-gray-600 text-white font-mono text-xs"
               />
               <p className="text-xs text-gray-500 mt-2">
-                Expected format: Array with shipped_content (markdown), image_seo_details, and seo_details_of_content
+                One endpoint processes all three AI agents: Content Classification → Design Direction → Asset Validation
               </p>
             </div>
             
@@ -415,7 +404,7 @@ export default function ZuhuDashboard() {
               ) : (
                 <>
                   <Play className="w-4 h-4 mr-2" />
-                  Submit Content
+                  Submit to Unified Pipeline
                 </>
               )}
             </Button>

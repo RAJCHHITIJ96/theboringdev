@@ -1,5 +1,102 @@
 # ZUHU Publishing System - API Documentation
 
+## ZUHU AI Intelligence System
+
+ZUHU is a comprehensive AI-powered content intelligence and processing system that transforms raw content through multiple AI agents working in an orchestrated unified pipeline.
+
+### System Architecture
+
+The ZUHU system operates as a **unified pipeline** with a single entry point that orchestrates multiple AI agents:
+
+#### Unified Pipeline Entry Point
+**Endpoint:** `/functions/v1/zuhu-unified-processor`
+- **Purpose:** Single entry point for complete ZUHU pipeline execution
+- **Architecture:** Master orchestrator that calls individual AI agents sequentially
+- **Flow:** Input → Content Classification → Design Direction → Asset Management → Output
+
+#### Individual AI Agents (Called by Unified Processor)
+
+##### Phase 1: Content Classification & Intelligence
+**Agent:** `zuhu-content-classifier`
+- **Purpose:** AI-powered content analysis and classification
+- **AI Model:** Claude (Anthropic)
+- **Function:** Analyzes raw content and classifies it into strategic categories
+
+##### Phase 2: Design Direction & Template Assignment  
+**Agent:** `zuhu-design-director`
+- **Purpose:** AI-powered design template selection and directive creation
+- **AI Model:** Claude (Anthropic) 
+- **Function:** Assigns appropriate design templates based on content classification
+
+##### Phase 3: Asset Management & Media Intelligence
+**Agent:** `zuhu-asset-manager`
+- **Purpose:** AI-powered asset validation and media optimization
+- **AI Model:** Claude (Anthropic)
+- **Function:** Validates image URLs and enhances alt-text for SEO optimization
+
+### API Usage
+
+#### Unified Pipeline API (Recommended)
+
+The unified processor is the **single entry point** for the complete ZUHU pipeline:
+
+```bash
+curl -X POST https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/zuhu-unified-processor \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "raw_content": {
+      "shipped_content": "Your markdown content here...",
+      "image_seo_details": [...],
+      "seo_details_of_content": {...}
+    }
+  }'
+```
+
+**Optional Parameters:**
+- `content_id`: If not provided, a unique ID will be generated automatically
+
+**Response:** Complete pipeline results including all three phases
+
+#### Individual Agent APIs (Advanced Usage)
+
+For advanced users who need to call specific agents individually:
+
+##### 1. Content Classification API
+```bash
+curl -X POST https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/zuhu-content-classifier \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content_id": "unique_content_identifier",
+    "raw_content": {
+      "shipped_content": "Your markdown content here...",
+      "image_seo_details": [...],
+      "seo_details_of_content": {...}
+    }
+  }'
+```
+
+##### 2. Design Direction API
+```bash
+curl -X POST https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/zuhu-design-director \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content_id": "unique_content_identifier"
+  }'
+```
+
+##### 3. Asset Management API
+```bash
+curl -X POST https://ivxfajtibkqytrvvvirb.supabase.co/functions/v1/zuhu-asset-manager \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content_id": "unique_content_identifier"
+  }'
+```
+
 ## ZUHU Content Intelligence Engine API
 
 ### Overview
