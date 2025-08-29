@@ -301,6 +301,42 @@ export type Database = {
         }
         Relationships: []
       }
+      generated_pages: {
+        Row: {
+          content_id: string
+          created_at: string
+          id: string
+          page_content: string | null
+          page_metadata: Json | null
+          performance_metrics: Json | null
+          status: string
+          updated_at: string
+          version: number | null
+        }
+        Insert: {
+          content_id: string
+          created_at?: string
+          id?: string
+          page_content?: string | null
+          page_metadata?: Json | null
+          performance_metrics?: Json | null
+          status?: string
+          updated_at?: string
+          version?: number | null
+        }
+        Update: {
+          content_id?: string
+          created_at?: string
+          id?: string
+          page_content?: string | null
+          page_metadata?: Json | null
+          performance_metrics?: Json | null
+          status?: string
+          updated_at?: string
+          version?: number | null
+        }
+        Relationships: []
+      }
       keyword_intelligence: {
         Row: {
           ahrefs_data: Json | null

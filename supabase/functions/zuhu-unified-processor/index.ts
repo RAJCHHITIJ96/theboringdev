@@ -33,6 +33,18 @@ const PIPELINE_STAGES = [
     function: 'zuhu-asset-manager',
     description: 'AI Asset Validation & Media Intelligence',
     expectedStatus: 'assets_processed'
+  },
+  {
+    name: 'page_composition',
+    function: 'zuhu-page-composer',
+    description: 'Dynamic Page Composer with Design Tokens',
+    expectedStatus: 'page_created'
+  },
+  {
+    name: 'seo_synthesis',
+    function: 'zuhu-seo-synthesizer',
+    description: 'SEO & Design Synthesis Engine',
+    expectedStatus: 'seo_optimized'
   }
 ];
 
