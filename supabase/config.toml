@@ -5,3 +5,9 @@ verify_jwt = false
 
 [functions.zuhu-content-classifier]
 verify_jwt = false
+
+[functions.zuhu-design-director]
+verify_jwt = false
+
+[functions.zuhu-asset-manager]
+verify_jwt = false

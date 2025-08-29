@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      asset_data: {
+        Row: {
+          alt_text_improvements: Json | null
+          asset_health_check: Json | null
+          asset_urls: Json | null
+          content_id: string
+          created_at: string
+          id: string
+          updated_at: string
+          validated_assets: Json | null
+          validation_errors: Json | null
+        }
+        Insert: {
+          alt_text_improvements?: Json | null
+          asset_health_check?: Json | null
+          asset_urls?: Json | null
+          content_id: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          validated_assets?: Json | null
+          validation_errors?: Json | null
+        }
+        Update: {
+          alt_text_improvements?: Json | null
+          asset_health_check?: Json | null
+          asset_urls?: Json | null
+          content_id?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          validated_assets?: Json | null
+          validation_errors?: Json | null
+        }
+        Relationships: []
+      }
       competitor_intelligence: {
         Row: {
           analysis_date: string | null
@@ -210,6 +246,42 @@ export type Database = {
             referencedColumns: ["trend_id"]
           },
         ]
+      }
+      design_directives: {
+        Row: {
+          category: string | null
+          component_map: Json | null
+          content_id: string
+          created_at: string
+          design_philosophy: string | null
+          design_token_set: Json | null
+          id: string
+          template_id: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          component_map?: Json | null
+          content_id: string
+          created_at?: string
+          design_philosophy?: string | null
+          design_token_set?: Json | null
+          id?: string
+          template_id?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          component_map?: Json | null
+          content_id?: string
+          created_at?: string
+          design_philosophy?: string | null
+          design_token_set?: Json | null
+          id?: string
+          template_id?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       existing_articles: {
         Row: {

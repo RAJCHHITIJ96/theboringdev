@@ -21,7 +21,10 @@ import {
   Settings,
   Play,
   Pause,
-  RotateCcw
+  RotateCcw,
+  Palette,
+  Image,
+  TrendingUp
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -79,6 +82,8 @@ export default function ZuhuDashboard() {
   const [rawContent, setRawContent] = useState('');
   const [contentId, setContentId] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [designDirectives, setDesignDirectives] = useState<any[]>([]);
+  const [assetData, setAssetData] = useState<any[]>([]);
 
   // Fetch real-time data
   useEffect(() => {
@@ -117,7 +122,9 @@ export default function ZuhuDashboard() {
     await Promise.all([
       fetchActiveProcessing(),
       fetchRecentStages(),
-      fetchMetrics()
+      fetchMetrics(),
+      fetchDesignDirectives(),
+      fetchAssetData()
     ]);
   };
 
@@ -125,7 +132,7 @@ export default function ZuhuDashboard() {
     const { data, error } = await supabase
       .from('zuhu_content_processing')
       .select('*')
-      .in('status', ['received', 'processing', 'analyzing', 'generating', 'quality_checking'])
+      .in('status', ['received', 'processing', 'analyzing', 'generating', 'quality_checking', 'classified', 'design_approved', 'assets_validated'])
       .order('created_at', { ascending: false });
 
     if (!error && data) {
@@ -160,6 +167,30 @@ export default function ZuhuDashboard() {
         category_breakdown: (data[0].category_breakdown as Record<string, number>) || {},
         error_breakdown: (data[0].error_breakdown as Record<string, number>) || {}
       });
+    }
+  };
+
+  const fetchDesignDirectives = async () => {
+    const { data, error } = await supabase
+      .from('design_directives')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (!error && data) {
+      setDesignDirectives(data);
+    }
+  };
+
+  const fetchAssetData = async () => {
+    const { data, error } = await supabase
+      .from('asset_data')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (!error && data) {
+      setAssetData(data);
     }
   };
 
@@ -214,6 +245,38 @@ export default function ZuhuDashboard() {
     }
   };
 
+  // Trigger design processing for classified content
+  const triggerDesignProcessing = async (contentId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('zuhu-design-director', {
+        body: { content_id: contentId }
+      });
+
+      if (error) throw error;
+
+      toast.success('Design processing triggered!');
+      fetchDashboardData();
+    } catch (error: any) {
+      toast.error(`Failed to trigger design processing: ${error.message}`);
+    }
+  };
+
+  // Trigger asset processing for design-approved content
+  const triggerAssetProcessing = async (contentId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('zuhu-asset-manager', {
+        body: { content_id: contentId }
+      });
+
+      if (error) throw error;
+
+      toast.success('Asset processing triggered!');
+      fetchDashboardData();
+    } catch (error: any) {
+      toast.error(`Failed to trigger asset processing: ${error.message}`);
+    }
+  };
+
   const getStageStatus = (contentId: string, stageName: string) => {
     const stage = recentStages.find(s => s.content_id === contentId && s.stage === stageName);
     return stage?.status || 'pending';
@@ -251,7 +314,7 @@ export default function ZuhuDashboard() {
       </div>
 
       {/* Metrics Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-gray-400">Total Processed</CardTitle>
@@ -274,11 +337,21 @@ export default function ZuhuDashboard() {
 
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-400">Avg Processing</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-400">Design Directives</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-blue-400">{metrics?.avg_processing_time || 0}s</div>
-            <p className="text-xs text-gray-500 mt-1">Per article</p>
+            <div className="text-3xl font-bold text-purple-400">{designDirectives.length}</div>
+            <p className="text-xs text-gray-500 mt-1">Templates assigned</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-gray-400">Asset Data</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-indigo-400">{assetData.length}</div>
+            <p className="text-xs text-gray-500 mt-1">Assets validated</p>
           </CardContent>
         </Card>
 
@@ -369,17 +442,37 @@ export default function ZuhuDashboard() {
               ) : (
                 activeProcessing.map((item) => (
                   <div key={item.id} className="bg-gray-900 rounded-lg p-4 border border-gray-600">
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="font-medium text-white">{item.content_id}</h3>
-                        <p className="text-sm text-gray-400">
-                          Started {new Date(item.processing_start).toLocaleTimeString()}
-                        </p>
-                      </div>
-                      <Badge className={getStatusColor(item.status)}>
-                        {item.status}
-                      </Badge>
-                    </div>
+                     <div className="flex justify-between items-start mb-4">
+                       <div>
+                         <h3 className="font-medium text-white">{item.content_id}</h3>
+                         <p className="text-sm text-gray-400">
+                           Started {new Date(item.processing_start).toLocaleTimeString()}
+                         </p>
+                       </div>
+                       <div className="flex items-center gap-2">
+                         <Badge className={getStatusColor(item.status)}>
+                           {item.status}
+                         </Badge>
+                         {item.status === 'classified' && (
+                           <button
+                             onClick={() => triggerDesignProcessing(item.content_id)}
+                             className="inline-flex items-center px-2 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600"
+                           >
+                             <Play className="h-3 w-3 mr-1" />
+                             Design
+                           </button>
+                         )}
+                         {item.status === 'design_approved' && (
+                           <button
+                             onClick={() => triggerAssetProcessing(item.content_id)}
+                             className="inline-flex items-center px-2 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600"
+                           >
+                             <Play className="h-3 w-3 mr-1" />
+                             Assets
+                           </button>
+                         )}
+                       </div>
+                     </div>
                     
                     <div className="grid grid-cols-4 gap-2">
                       {PROCESSING_STAGES.map((stage, index) => {
