@@ -2,3 +2,6 @@ project_id = "ivxfajtibkqytrvvvirb"
 
 [functions.ai-intelligence-processor]
 verify_jwt = false
+
+[functions.zuhu-content-classifier]
+verify_jwt = false

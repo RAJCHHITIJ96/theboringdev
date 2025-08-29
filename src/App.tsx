@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NavBar } from "@/components/NavBar";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
+import ZuhuDashboard from "./pages/ZuhuDashboard";
 import TrendingOpportunities from "./pages/TrendingOpportunities";
 import AIAutomation from "./pages/AIAutomation";
 import ToolComparisons from "./pages/ToolComparisons";
@@ -31,6 +32,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/temp-dashboard" element={<Dashboard />} />
+              <Route path="/zuhu" element={<ZuhuDashboard />} />
               <Route path="/trending-opportunities" element={<TrendingOpportunities />} />
               <Route path="/ai-automation" element={<AIAutomation />} />
               <Route path="/tool-comparisons" element={<ToolComparisons />} />
