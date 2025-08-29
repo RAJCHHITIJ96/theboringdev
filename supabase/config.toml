@@ -20,3 +20,9 @@ verify_jwt = false
 
 [functions.zuhu-unified-processor]
 verify_jwt = false
+
+[functions.quality-fortress]
+verify_jwt = false
+
+[functions.autonomous-publishing-engine]
+verify_jwt = false

@@ -488,6 +488,108 @@ export type Database = {
           },
         ]
       }
+      publishing_pipeline: {
+        Row: {
+          content_id: string
+          created_at: string
+          deployment_status: string
+          deployment_url: string | null
+          error_logs: Json | null
+          github_commit_sha: string | null
+          id: string
+          netlify_deploy_id: string | null
+          page_id: string | null
+          performance_metrics: Json | null
+          pipeline_stage: string
+          quality_audit_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          content_id: string
+          created_at?: string
+          deployment_status?: string
+          deployment_url?: string | null
+          error_logs?: Json | null
+          github_commit_sha?: string | null
+          id?: string
+          netlify_deploy_id?: string | null
+          page_id?: string | null
+          performance_metrics?: Json | null
+          pipeline_stage?: string
+          quality_audit_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content_id?: string
+          created_at?: string
+          deployment_status?: string
+          deployment_url?: string | null
+          error_logs?: Json | null
+          github_commit_sha?: string | null
+          id?: string
+          netlify_deploy_id?: string | null
+          page_id?: string | null
+          performance_metrics?: Json | null
+          pipeline_stage?: string
+          quality_audit_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publishing_pipeline_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "generated_pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publishing_pipeline_quality_audit_id_fkey"
+            columns: ["quality_audit_id"]
+            isOneToOne: false
+            referencedRelation: "quality_audits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quality_audits: {
+        Row: {
+          audit_results: Json
+          audit_type: string
+          content_id: string
+          created_at: string
+          id: string
+          issues_found: Json
+          quality_score: number
+          recommendations: Json
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          audit_results?: Json
+          audit_type?: string
+          content_id: string
+          created_at?: string
+          id?: string
+          issues_found?: Json
+          quality_score?: number
+          recommendations?: Json
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          audit_results?: Json
+          audit_type?: string
+          content_id?: string
+          created_at?: string
+          id?: string
+          issues_found?: Json
+          quality_score?: number
+          recommendations?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       trend_master: {
         Row: {
           consistency_multiplier: number | null
