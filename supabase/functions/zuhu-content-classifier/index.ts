@@ -398,9 +398,9 @@ serve(async (req) => {
 
     console.log(`[${content_id}] Starting content classification process`);
 
-    // Log analysis stage start
-    await logStage(content_id, 'analysis', 'processing');
-    await updateProcessingStatus(content_id, 'analyzing');
+    // Log analysis stage start - Use standardized status
+    await logStage(content_id, 'content_classification', 'processing');
+    await updateProcessingStatus(content_id, 'processing');
 
     try {
       // Classify content with Claude
@@ -408,10 +408,10 @@ serve(async (req) => {
       
       console.log(`[${content_id}] Classification completed successfully`);
 
-      // Log analysis stage completion
-      await logStage(content_id, 'analysis', 'completed');
+      // Log analysis stage completion - Use standardized status
+      await logStage(content_id, 'content_classification', 'completed');
 
-      // Update processing record with results
+      // Update processing record with results - Use standardized status
       await updateProcessingStatus(content_id, 'classified', {
         category: classificationResult.classification?.primaryCategory,
         confidence_score: classificationResult.classification?.confidenceScore,
@@ -450,13 +450,13 @@ serve(async (req) => {
     } catch (classificationError: any) {
       console.error(`[${content_id}] Classification failed:`, classificationError);
 
-      // Log analysis stage failure
-      await logStage(content_id, 'analysis', 'failed', classificationError.message);
+      // Log analysis stage failure - Use standardized status
+      await logStage(content_id, 'content_classification', 'failed', classificationError.message);
       
       // Update status to failed with error details
       await updateProcessingStatus(content_id, 'failed', {
         error_logs: {
-          stage: 'analysis',
+          stage: 'content_classification',
           error: classificationError.message,
           timestamp: new Date().toISOString(),
           processing_time: Date.now() - startTime

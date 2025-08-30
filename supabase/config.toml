@@ -67,3 +67,6 @@ verify_jwt = false
 
 [functions.autonomous-publishing-engine]
 verify_jwt = false
+
+[functions.zuhu-pipeline-validator]
+verify_jwt = false

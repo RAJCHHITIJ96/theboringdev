@@ -308,6 +308,32 @@ function generateContentId(): string {
   return `zuhu_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
+// Bulletproof status validation before agent calls
+async function validateStatusBeforeAgent(contentId: string, expectedCurrentStatus: string): Promise<boolean> {
+  try {
+    const { data, error } = await supabase
+      .from('zuhu_content_processing')
+      .select('status')
+      .eq('content_id', contentId)
+      .single();
+
+    if (error) {
+      console.error(`[${contentId}] Status validation failed:`, error);
+      return false;
+    }
+
+    if (data.status !== expectedCurrentStatus) {
+      console.error(`[${contentId}] Status mismatch. Expected: ${expectedCurrentStatus}, Actual: ${data.status}`);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error(`[${contentId}] Status validation error:`, error);
+    return false;
+  }
+}
+
 // Main request handler
 serve(async (req) => {
   // Handle CORS preflight requests
