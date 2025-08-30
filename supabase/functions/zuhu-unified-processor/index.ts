@@ -177,18 +177,21 @@ async function executeZuhuPipeline(contentId: string, rawContent: any) {
       processing_time: 0
     };
 
-    // Execute each stage sequentially
+    // Execute each stage sequentially with enhanced logging
     for (let i = 0; i < PIPELINE_STAGES.length; i++) {
       const stage = PIPELINE_STAGES[i];
       const stageStart = Date.now();
       
-      console.log(`[${contentId}] Starting ${stage.name} (${i + 1}/${PIPELINE_STAGES.length})`);
+      console.log(`[${contentId}] 🚀 STARTING STAGE ${i + 1}/${PIPELINE_STAGES.length}: ${stage.name.toUpperCase()}`);
+      console.log(`[${contentId}] Stage Function: ${stage.function}`);
+      console.log(`[${contentId}] Stage Description: ${stage.description}`);
       
       await updateProcessingStage(contentId, stage.name, 'processing', null, {
         stage_index: i + 1,
         total_stages: PIPELINE_STAGES.length,
         function_name: stage.function,
-        description: stage.description
+        description: stage.description,
+        started_timestamp: new Date().toISOString()
       });
 
       try {
@@ -244,7 +247,7 @@ async function executeZuhuPipeline(contentId: string, rawContent: any) {
           }
         });
 
-        console.log(`[${contentId}] Completed ${stage.name} in ${(Date.now() - stageStart) / 1000}s`);
+        console.log(`[${contentId}] ✅ COMPLETED STAGE ${i + 1}/${PIPELINE_STAGES.length}: ${stage.name.toUpperCase()} in ${(Date.now() - stageStart) / 1000}s`);
 
       } catch (stageError: any) {
         console.error(`[${contentId}] Stage ${stage.name} failed:`, stageError);

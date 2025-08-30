@@ -151,18 +151,21 @@ export default function ZuhuDashboard() {
       fetchQualityAudits(),
       fetchDeploymentBatches(),
       // New agent tracking data
-      fetchAgentActivities(),
+      fetchAgentActivities(), // Fetch all activities
       fetchPipelineMonitoring()
     ]);
   };
 
-  // NEW: Fetch agent activities for real-time tracking
-  const fetchAgentActivities = async () => {
+  // ENHANCED: Fetch agent activities with complete I/O tracking
+  const fetchAgentActivities = async (contentId?: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('zuhu-agent-tracker', {
         body: {
           action: 'get_agent_activities',
-          data: { limit: 100 }
+          data: { 
+            content_id: contentId,
+            limit: contentId ? 50 : 100 // More data for specific content
+          }
         }
       });
 
@@ -962,6 +965,254 @@ export default function ZuhuDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* BULLETPROOF: Enhanced Agent Activity Feed and Pipeline Monitoring */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        {/* Agent Activity Feed */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center">
+              <Activity className="w-5 h-5 mr-2" />
+              Agent Activity Feed
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              Live tracking of all agent interactions with complete I/O data
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {agentActivities.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  No agent activities recorded yet
+                </div>
+              ) : (
+                agentActivities.slice(0, 10).map((activity) => (
+                  <div key={activity.id} className="bg-gray-900 rounded-lg p-3 border border-gray-600">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-xs">
+                          Stage {activity.stage_number || '?'}
+                        </Badge>
+                        <span className="text-sm font-medium text-white">
+                          {activity.agent_name}
+                        </span>
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        {new Date(activity.timestamp).toLocaleTimeString()}
+                      </div>
+                    </div>
+                    
+                    <div className="text-xs text-gray-300 mb-2">
+                      Content ID: <span className="font-mono">{activity.content_id}</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge className={
+                        activity.interaction_type === 'output' ? 'bg-green-600' :
+                        activity.interaction_type === 'input' ? 'bg-blue-600' :
+                        activity.interaction_type === 'error' ? 'bg-red-600' :
+                        'bg-gray-600'
+                      }>
+                        {activity.interaction_type}
+                      </Badge>
+                      {activity.processing_duration && (
+                        <Badge variant="outline" className="text-gray-400">
+                          {activity.processing_duration}
+                        </Badge>
+                      )}
+                    </div>
+
+                    {/* Expandable I/O Data */}
+                    {(activity.input_summary || activity.output_summary) && (
+                      <div>
+                        <button
+                          onClick={() => setExpandedActivity(
+                            expandedActivity === activity.id ? null : activity.id
+                          )}
+                          className="text-xs text-blue-400 hover:text-blue-300"
+                        >
+                          {expandedActivity === activity.id ? 'Hide' : 'Show'} I/O Data
+                        </button>
+                        
+                        {expandedActivity === activity.id && (
+                          <div className="mt-2 p-2 bg-gray-800 rounded text-xs">
+                            {activity.input_summary && (
+                              <div className="mb-2">
+                                <div className="font-medium text-blue-400">Input:</div>
+                                <div className="text-gray-300 font-mono break-all">
+                                  {activity.input_summary}
+                                </div>
+                              </div>
+                            )}
+                            {activity.output_summary && (
+                              <div>
+                                <div className="font-medium text-green-400">Output:</div>
+                                <div className="text-gray-300 font-mono break-all">
+                                  {activity.output_summary}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Live Pipeline Monitoring */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center">
+              <BarChart3 className="w-5 h-5 mr-2" />
+              Live Pipeline Monitoring
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              Real-time pipeline status with stage tracking
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4 max-h-96 overflow-y-auto">
+              {pipelineMonitoring.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  No pipeline activities currently active
+                </div>
+              ) : (
+                pipelineMonitoring.slice(0, 8).map((pipeline) => (
+                  <div key={pipeline.id} className="bg-gray-900 rounded-lg p-3 border border-gray-600">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <div className="text-sm font-medium text-white">
+                          {pipeline.content_id}
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          Stage: {pipeline.pipeline_stage}
+                        </div>
+                      </div>
+                      <Badge className={
+                        pipeline.stage_status === 'active' ? 'bg-blue-600' :
+                        pipeline.stage_status === 'completed' ? 'bg-green-600' :
+                        pipeline.stage_status === 'failed' ? 'bg-red-600' :
+                        'bg-gray-600'
+                      }>
+                        {pipeline.stage_status}
+                      </Badge>
+                    </div>
+                    
+                    {pipeline.current_agent && (
+                      <div className="text-xs text-blue-400 mb-1">
+                        Active Agent: {pipeline.current_agent}
+                      </div>
+                    )}
+                    
+                    <div className="text-xs text-gray-400">
+                      Last Activity: {new Date(pipeline.last_activity).toLocaleTimeString()}
+                    </div>
+                    
+                    {pipeline.processing_started_at && (
+                      <div className="text-xs text-gray-400">
+                        Started: {new Date(pipeline.processing_started_at).toLocaleTimeString()}
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* ENHANCED: Complete Agent Timeline View */}
+      {activeProcessing.length > 0 && (
+        <Card className="bg-gray-800 border-gray-700 mt-6">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center">
+              <GitCommit className="w-5 h-5 mr-2" />
+              Complete Agent Pipeline Timeline
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              Full agent input/output tracking per content ID
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {activeProcessing.map((content) => {
+              const contentActivities = agentActivities
+                .filter(activity => activity.content_id === content.content_id)
+                .sort((a, b) => (a.stage_number || 0) - (b.stage_number || 0));
+
+              return (
+                <div key={content.content_id} className="mb-6 p-4 bg-gray-900 rounded-lg border border-gray-600">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium text-white">
+                      {content.content_id}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <Badge className={getStatusColor(content.status)}>
+                        {content.status}
+                      </Badge>
+                      <button
+                        onClick={() => fetchAgentActivities(content.content_id)}
+                        className="text-xs text-blue-400 hover:text-blue-300"
+                      >
+                        Refresh Agent Data
+                      </button>
+                    </div>
+                  </div>
+
+                  {contentActivities.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {contentActivities.map((activity) => (
+                        <div key={activity.id} className="bg-gray-800 p-3 rounded border border-gray-600">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Badge variant="outline" className="text-xs">
+                              Agent {activity.stage_number}
+                            </Badge>
+                            <span className="text-xs font-medium text-white">
+                              {activity.agent_name.replace('zuhu-', '').replace('-', ' ')}
+                            </span>
+                          </div>
+                          
+                          <div className="text-xs text-gray-400 mb-2">
+                            {activity.interaction_type} • {activity.processing_duration}
+                          </div>
+                          
+                          {activity.interaction_data && (
+                            <div className="space-y-2">
+                              {activity.interaction_data.input && (
+                                <div>
+                                  <div className="text-xs font-medium text-blue-400">Input:</div>
+                                  <div className="text-xs text-gray-300 bg-gray-900 p-2 rounded font-mono">
+                                    {JSON.stringify(activity.interaction_data.input, null, 2).substring(0, 150)}...
+                                  </div>
+                                </div>
+                              )}
+                              {activity.interaction_data.output && (
+                                <div>
+                                  <div className="text-xs font-medium text-green-400">Output:</div>
+                                  <div className="text-xs text-gray-300 bg-gray-900 p-2 rounded font-mono">
+                                    {JSON.stringify(activity.interaction_data.output, null, 2).substring(0, 150)}...
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-4 text-gray-500">
+                      No agent activities recorded for this content yet
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Category Classification & Error Tracking */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">

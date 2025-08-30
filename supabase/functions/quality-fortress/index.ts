@@ -130,10 +130,25 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('❌ Quality Fortress Error:', error);
+    
+    // BULLETPROOF: Enhanced error logging with context
+    const errorDetails = {
+      message: error.message,
+      stack: error.stack,
+      contentId: content_id,
+      timestamp: new Date().toISOString(),
+      errorType: error.constructor.name
+    };
+    
+    console.error('🔍 Quality Fortress Error Details:', JSON.stringify(errorDetails, null, 2));
+    
     return new Response(
       JSON.stringify({ 
         error: 'Quality audit failed', 
-        details: error.message 
+        details: error.message,
+        contentId: content_id,
+        errorType: error.constructor.name,
+        timestamp: new Date().toISOString()
       }),
       { 
         status: 500, 
@@ -282,25 +297,33 @@ async function performCheck(checkType: string, contentData: any) {
       };
 
     case 'alt_text':
-      const assets = assetData?.validated_assets || [];
-      const imagesWithAlt = assets.filter((asset: any) => asset.alt_text).length;
-      const totalImages = assets.length;
+      // BULLETPROOF: Handle validated_assets as object with images array
+      const validatedAssets = assetData?.validated_assets || {};
+      const images = validatedAssets.images || [];
+      const imagesWithAlt = images.filter((image: any) => image.alt_text && image.alt_text.trim()).length;
+      const totalImages = images.length;
       const altTextCoverage = totalImages > 0 ? (imagesWithAlt / totalImages) * 100 : 100;
       
       return {
         passed: altTextCoverage >= 90,
-        description: `${imagesWithAlt}/${totalImages} images have alt text (${Math.round(altTextCoverage)}%)`,
-        severity: altTextCoverage >= 90 ? 'none' : 'medium',
-        recommendation: altTextCoverage >= 90 ? null : 'Add descriptive alt text to all images for accessibility and SEO'
+        description: `${imagesWithAlt}/${totalImages} images have alt text (${Math.round(altTextCoverage)}% coverage)`,
+        severity: altTextCoverage >= 90 ? 'none' : (altTextCoverage >= 70 ? 'medium' : 'high'),
+        recommendation: altTextCoverage >= 90 ? null : 'Add descriptive alt text to all images for accessibility and SEO',
+        impact: 'Critical for accessibility compliance and SEO image optimization'
       };
 
     case 'broken_links':
-      const brokenAssets = assetData?.asset_health_check?.brokenAssets || 0;
+      // BULLETPROOF: Handle asset_health_check structure correctly
+      const healthCheck = assetData?.asset_health_check || {};
+      const brokenUrls = Array.isArray(healthCheck.brokenUrls) ? healthCheck.brokenUrls : [];
+      const brokenCount = brokenUrls.length;
+      
       return {
-        passed: brokenAssets === 0,
-        description: brokenAssets > 0 ? `${brokenAssets} broken links found` : 'No broken links detected',
-        severity: brokenAssets > 0 ? 'high' : 'none',
-        recommendation: brokenAssets > 0 ? 'Fix all broken links to maintain user experience and SEO' : null
+        passed: brokenCount === 0,
+        description: brokenCount > 0 ? `${brokenCount} broken links detected: ${brokenUrls.slice(0, 3).join(', ')}${brokenCount > 3 ? '...' : ''}` : 'No broken links detected',
+        severity: brokenCount > 0 ? (brokenCount > 5 ? 'high' : 'medium') : 'none',
+        recommendation: brokenCount > 0 ? `Fix ${brokenCount} broken link${brokenCount > 1 ? 's' : ''} to maintain user experience and SEO` : null,
+        impact: 'High impact on user experience and search engine crawling'
       };
 
     case 'design_alignment':

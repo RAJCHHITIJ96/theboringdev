@@ -176,13 +176,48 @@ async function getAgentActivities(supabase: any, content_id?: string, limit: num
     );
   }
 
+  console.log(`🔍 Agent Tracker: get_agent_activities for content_id: ${content_id}`);
+  
+  // ENHANCED: Process agent activities for better I/O tracking
+  const processedData = (data || []).map((activity: any) => ({
+    ...activity,
+    // Enhance interaction data structure for UI display
+    input_summary: activity.interaction_data?.input ? 
+      JSON.stringify(activity.interaction_data.input).substring(0, 200) + '...' : 
+      'No input data',
+    output_summary: activity.interaction_data?.output ? 
+      JSON.stringify(activity.interaction_data.output).substring(0, 200) + '...' : 
+      'No output data',
+    processing_duration: activity.processing_time_ms ? 
+      `${(activity.processing_time_ms / 1000).toFixed(2)}s` : 
+      'Unknown',
+    stage_number: getStageNumber(activity.agent_name)
+  }));
+
   return new Response(
-    JSON.stringify({ success: true, data }),
+    JSON.stringify({ 
+      success: true, 
+      data: processedData,
+      count: processedData.length
+    }),
     { 
       status: 200, 
       headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
     }
   );
+}
+
+// Helper function to get stage number from agent name
+function getStageNumber(agentName: string): number {
+  const stageMap: Record<string, number> = {
+    'zuhu-content-classifier': 1,
+    'zuhu-design-director': 2,
+    'zuhu-asset-manager': 3,
+    'zuhu-page-composer': 4,
+    'zuhu-seo-synthesizer': 5,
+    'quality-fortress': 6
+  };
+  return stageMap[agentName] || 0;
 }
 
 async function getPipelineStatus(supabase: any, content_id?: string) {
