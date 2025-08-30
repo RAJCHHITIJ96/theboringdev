@@ -62,11 +62,30 @@ serve(async (req) => {
       );
     }
 
-    // Verify content has assets_validated status
-    if (contentData.status !== 'assets_validated') {
-      console.log(`⚠️ Content status is ${contentData.status}, expected assets_validated`);
+    // Track agent input (after data is fetched)
+    await logAgentInteraction(supabase, {
+      content_id: content_id,
+      agent_name: 'zuhu-page-composer',
+      interaction_type: 'input',
+      interaction_data: { content_id, status: contentData.status },
+      status: 'processing'
+    });
+
+    // Update pipeline monitoring
+    await updatePipelineMonitoring(supabase, {
+      content_id: content_id,
+      current_agent: 'zuhu-page-composer',
+      pipeline_stage: 'page_composition',
+      stage_status: 'active',
+      input_data: { content_id, expected_status: 'assets_processed' },
+      processing_started_at: new Date().toISOString()
+    });
+
+    // Verify content has assets_processed status
+    if (contentData.status !== 'assets_processed') {
+      console.log(`⚠️ Content status is ${contentData.status}, expected assets_processed`);
       return new Response(
-        JSON.stringify({ error: `Content status must be assets_validated, current: ${contentData.status}` }),
+        JSON.stringify({ error: `Content status must be assets_processed, current: ${contentData.status}` }),
         { 
           status: 400, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -178,6 +197,37 @@ serve(async (req) => {
 
     console.log('🎉 Page composition completed successfully!');
 
+    // Track successful output
+    await logAgentInteraction(supabase, {
+      content_id: content_id,
+      agent_name: 'zuhu-page-composer',
+      interaction_type: 'output',
+      interaction_data: {
+        page_id: pageData.id,
+        metadata: pageMetadata,
+        composition_stats: {
+          components_used: Object.keys(componentMap).length,
+          assets_integrated: validatedAssets.length,
+          page_size: composedPage.length
+        }
+      },
+      processing_time_ms: Date.now() - new Date(contentData.processing_start || Date.now()).getTime(),
+      status: 'page_created'
+    });
+
+    // Update pipeline monitoring to completed
+    await updatePipelineMonitoring(supabase, {
+      content_id: content_id,
+      current_agent: null,
+      pipeline_stage: 'page_composition',
+      stage_status: 'completed',
+      output_data: {
+        page_id: pageData.id,
+        status: 'page_created',
+        metadata: pageMetadata
+      }
+    });
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -199,6 +249,27 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('❌ Page Composer Error:', error);
+    
+    // Track error
+    await logAgentInteraction(supabase, {
+      content_id: content_id || 'unknown',
+      agent_name: 'zuhu-page-composer',
+      interaction_type: 'error',
+      interaction_data: { error: error.message, stack: error.stack },
+      status: 'failed'
+    });
+
+    // Update pipeline monitoring to error state
+    if (content_id) {
+      await updatePipelineMonitoring(supabase, {
+        content_id: content_id,
+        current_agent: null,
+        pipeline_stage: 'page_composition',
+        stage_status: 'error',
+        error_data: { error: error.message, timestamp: new Date().toISOString() }
+      });
+    }
+
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error during page composition',
@@ -211,6 +282,33 @@ serve(async (req) => {
     );
   }
 });
+
+// Helper functions for agent tracking
+async function logAgentInteraction(supabase: any, interaction: any) {
+  try {
+    await supabase.functions.invoke('zuhu-agent-tracker', {
+      body: {
+        action: 'log_interaction',
+        data: interaction
+      }
+    });
+  } catch (error) {
+    console.error('Failed to log agent interaction:', error);
+  }
+}
+
+async function updatePipelineMonitoring(supabase: any, update: any) {
+  try {
+    await supabase.functions.invoke('zuhu-agent-tracker', {
+      body: {
+        action: 'update_pipeline',
+        data: update
+      }
+    });
+  } catch (error) {
+    console.error('Failed to update pipeline monitoring:', error);
+  }
+}
 
 async function composePage(
   content: any,

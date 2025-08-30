@@ -112,63 +112,34 @@ export default function ZuhuDashboard() {
   const [assetData, setAssetData] = useState<any[]>([]);
   const [qualityAudits, setQualityAudits] = useState<QualityAudit[]>([]);
   const [deploymentBatches, setDeploymentBatches] = useState<DeploymentBatch[]>([]);
+  
+  // New agent tracking states
+  const [agentActivities, setAgentActivities] = useState<any[]>([]);
+  const [pipelineMonitoring, setPipelineMonitoring] = useState<any[]>([]);
+  const [isAutoRefreshEnabled, setIsAutoRefreshEnabled] = useState(true);
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+  const [expandedActivity, setExpandedActivity] = useState<string | null>(null);
 
-  // Fetch real-time data
+  // FREE TIER: Polling-based updates instead of real-time subscriptions
   useEffect(() => {
     fetchDashboardData();
     
-    // Set up real-time subscriptions
-    const contentChannel = supabase
-      .channel('content-processing')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'zuhu_content_processing'
-      }, () => {
-        fetchActiveProcessing();
-      })
-      .subscribe();
-
-    const stagesChannel = supabase
-      .channel('processing-stages')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'zuhu_processing_stages'
-      }, () => {
-        fetchRecentStages();
-      })
-      .subscribe();
-
-    const qualityChannel = supabase
-      .channel('quality-audits')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'quality_audits'
-      }, () => {
-        fetchQualityAudits();
-      })
-      .subscribe();
-
-    const deploymentChannel = supabase
-      .channel('deployment-batches')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'deployment_batches'
-      }, () => {
-        fetchDeploymentBatches();
-      })
-      .subscribe();
+    // Auto-refresh every 10 seconds for near real-time feel (FREE TIER OPTIMIZED)
+    let intervalId: NodeJS.Timeout;
+    
+    if (isAutoRefreshEnabled) {
+      intervalId = setInterval(() => {
+        fetchDashboardData();
+        setLastRefresh(new Date());
+      }, 10000); // 10-second polling for free tier
+    }
 
     return () => {
-      supabase.removeChannel(contentChannel);
-      supabase.removeChannel(stagesChannel);
-      supabase.removeChannel(qualityChannel);
-      supabase.removeChannel(deploymentChannel);
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
     };
-  }, []);
+  }, [isAutoRefreshEnabled]);
 
   const fetchDashboardData = async () => {
     await Promise.all([
@@ -178,8 +149,54 @@ export default function ZuhuDashboard() {
       fetchDesignDirectives(),
       fetchAssetData(),
       fetchQualityAudits(),
-      fetchDeploymentBatches()
+      fetchDeploymentBatches(),
+      // New agent tracking data
+      fetchAgentActivities(),
+      fetchPipelineMonitoring()
     ]);
+  };
+
+  // NEW: Fetch agent activities for real-time tracking
+  const fetchAgentActivities = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('zuhu-agent-tracker', {
+        body: {
+          action: 'get_agent_activities',
+          data: { limit: 100 }
+        }
+      });
+
+      if (!error && data?.success) {
+        setAgentActivities(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching agent activities:', error);
+    }
+  };
+
+  // NEW: Fetch pipeline monitoring for pipeline visualization
+  const fetchPipelineMonitoring = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('zuhu-agent-tracker', {
+        body: {
+          action: 'get_pipeline_status',
+          data: {}
+        }
+      });
+
+      if (!error && data?.success) {
+        setPipelineMonitoring(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching pipeline monitoring:', error);
+    }
+  };
+
+  // NEW: Manual refresh button
+  const handleManualRefresh = async () => {
+    await fetchDashboardData();
+    setLastRefresh(new Date());
+    toast.success('Dashboard refreshed!');
   };
 
   const fetchActiveProcessing = async () => {
@@ -419,6 +436,27 @@ export default function ZuhuDashboard() {
             <p className="text-gray-400 text-lg">theboringdev • Intelligent Content Automation</p>
           </div>
           <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-xs text-gray-400">
+              <Activity className="w-4 h-4" />
+              Last refresh: {lastRefresh.toLocaleTimeString()}
+            </div>
+            <Button 
+              onClick={handleManualRefresh}
+              variant="outline" 
+              size="sm"
+            >
+              <RotateCcw className="w-4 h-4 mr-1" />
+              Refresh
+            </Button>
+            <Button 
+              onClick={() => setIsAutoRefreshEnabled(!isAutoRefreshEnabled)}
+              variant="outline" 
+              size="sm"
+              className={isAutoRefreshEnabled ? 'bg-green-600 hover:bg-green-700' : ''}
+            >
+              {isAutoRefreshEnabled ? <Pause className="w-4 h-4 mr-1" /> : <Play className="w-4 h-4 mr-1" />}
+              Auto-refresh {isAutoRefreshEnabled ? 'ON' : 'OFF'}
+            </Button>
             <Badge variant="outline" className="bg-green-900 text-green-200 border-green-700">
               <Activity className="w-4 h-4 mr-1" />
               System Active
@@ -601,6 +639,159 @@ export default function ZuhuDashboard() {
                             +{batch.published_urls.length - 2} more
                           </span>
                         )}
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* NEW: Agent Activity Feed & Pipeline Monitoring */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Real-Time Agent Activity Feed */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center justify-between">
+              <div className="flex items-center">
+                <Zap className="w-5 h-5 mr-2" />
+                Agent Activity Feed
+              </div>
+              <Badge variant="outline" className="text-blue-400 border-blue-700">
+                {agentActivities.length} Activities
+              </Badge>
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              Real-time agent I/O tracking • Free tier polling (10s updates)
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="max-h-96 overflow-y-auto">
+            <div className="space-y-2">
+              {agentActivities.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  No agent activities yet
+                </div>
+              ) : (
+                agentActivities.slice(0, 20).map((activity) => (
+                  <div 
+                    key={activity.id} 
+                    className="bg-gray-900 rounded-lg p-3 border border-gray-600 hover:bg-gray-850 cursor-pointer"
+                    onClick={() => setExpandedActivity(expandedActivity === activity.id ? null : activity.id)}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Badge 
+                            variant="outline" 
+                            className={
+                              activity.interaction_type === 'input' ? 'text-blue-400 border-blue-700' :
+                              activity.interaction_type === 'output' ? 'text-green-400 border-green-700' :
+                              activity.interaction_type === 'error' ? 'text-red-400 border-red-700' :
+                              'text-yellow-400 border-yellow-700'
+                            }
+                          >
+                            {activity.interaction_type}
+                          </Badge>
+                          <span className="font-medium text-white text-sm">{activity.agent_name}</span>
+                          {activity.processing_time_ms && (
+                            <span className="text-xs text-gray-400">
+                              {activity.processing_time_ms}ms
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-400">
+                          {activity.content_id} • {new Date(activity.timestamp).toLocaleTimeString()}
+                        </p>
+                      </div>
+                      <div className="flex items-center">
+                        {activity.status && (
+                          <Badge className={getStatusColor(activity.status)} variant="outline">
+                            {activity.status}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {expandedActivity === activity.id && (
+                      <div className="mt-3 pt-3 border-t border-gray-600">
+                        <h4 className="text-sm font-medium text-white mb-2">
+                          {activity.interaction_type === 'input' ? 'Input Data:' : 
+                           activity.interaction_type === 'output' ? 'Output Data:' : 
+                           'Error Data:'}
+                        </h4>
+                        <pre className="text-xs bg-gray-800 p-2 rounded border border-gray-600 overflow-x-auto">
+                          {JSON.stringify(activity.interaction_data, null, 2)}
+                        </pre>
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Pipeline Monitoring with Current States */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center justify-between">
+              <div className="flex items-center">
+                <BarChart3 className="w-5 h-5 mr-2" />
+                Live Pipeline Monitoring
+              </div>
+              <Badge variant="outline" className="text-purple-400 border-purple-700">
+                {pipelineMonitoring.filter(p => p.stage_status === 'active').length} Active
+              </Badge>
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              Current agent processing states and pipeline flow
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="max-h-96 overflow-y-auto">
+            <div className="space-y-3">
+              {pipelineMonitoring.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  No active pipeline processes
+                </div>
+              ) : (
+                pipelineMonitoring.slice(0, 10).map((pipeline) => (
+                  <div key={pipeline.id} className="bg-gray-900 rounded-lg p-3 border border-gray-600">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="font-medium text-white text-sm">{pipeline.content_id}</h4>
+                        <p className="text-xs text-gray-400">
+                          Stage: {pipeline.pipeline_stage} • Agent: {pipeline.current_agent || 'None'}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge 
+                          className={
+                            pipeline.stage_status === 'active' ? 'text-green-400 bg-green-900 border-green-700' :
+                            pipeline.stage_status === 'completed' ? 'text-blue-400 bg-blue-900 border-blue-700' :
+                            pipeline.stage_status === 'error' ? 'text-red-400 bg-red-900 border-red-700' :
+                            'text-gray-400 bg-gray-900 border-gray-700'
+                          }
+                          variant="outline"
+                        >
+                          {pipeline.stage_status}
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    {pipeline.processing_started_at && (
+                      <div className="text-xs text-gray-500">
+                        Started: {new Date(pipeline.processing_started_at).toLocaleTimeString()} • 
+                        Last activity: {new Date(pipeline.last_activity).toLocaleTimeString()}
+                      </div>
+                    )}
+                    
+                    {pipeline.error_data && (
+                      <div className="mt-2 p-2 bg-red-900 border border-red-700 rounded">
+                        <p className="text-xs text-red-200">
+                          Error: {JSON.stringify(pipeline.error_data).substring(0, 100)}...
+                        </p>
                       </div>
                     )}
                   </div>
