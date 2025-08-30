@@ -55,8 +55,130 @@ async function getDesignApprovedContent(contentId: string) {
   return data;
 }
 
-// Extract image URLs from content
-function extractImageUrls(content: any): string[] {
+// Extract all assets from the new structured input format
+function extractAssetsFromStructuredInput(content: any) {
+  const assets = {
+    images: [],
+    tables: [],
+    charts: [],
+    code_snippets: [],
+    video_embeds: []
+  };
+
+  try {
+    console.log('Extracting assets from structured content...');
+    
+    // Check if we have the new structured format
+    if (content.raw_content && Array.isArray(content.raw_content) && content.raw_content[0]?.assets_manager_details) {
+      const assetDetails = content.raw_content[0].assets_manager_details;
+      console.log('Found structured assets_manager_details:', JSON.stringify(assetDetails, null, 2));
+      
+      // Extract images
+      if (assetDetails.images && Array.isArray(assetDetails.images)) {
+        assetDetails.images.forEach((imageObj: any, index: number) => {
+          Object.keys(imageObj).forEach(key => {
+            const imageData = imageObj[key];
+            if (imageData && imageData.link) {
+              assets.images.push({
+                id: key,
+                url: imageData.link,
+                alt_text: imageData.alt_text || '',
+                placement: imageData.where_to_place || '',
+                index
+              });
+            }
+          });
+        });
+      }
+
+      // Extract tables
+      if (assetDetails.tables && Array.isArray(assetDetails.tables)) {
+        assetDetails.tables.forEach((tableObj: any, index: number) => {
+          Object.keys(tableObj).forEach(key => {
+            const tableData = tableObj[key];
+            if (tableData) {
+              assets.tables.push({
+                id: key,
+                title: tableData.title || '',
+                description: tableData.description || '',
+                placement: tableData.where_to_place || '',
+                index
+              });
+            }
+          });
+        });
+      }
+
+      // Extract charts
+      if (assetDetails.charts && Array.isArray(assetDetails.charts)) {
+        assetDetails.charts.forEach((chartObj: any, index: number) => {
+          Object.keys(chartObj).forEach(key => {
+            const chartData = chartObj[key];
+            if (chartData) {
+              assets.charts.push({
+                id: key,
+                data: chartData.data || '',
+                description: chartData.description || '',
+                placement: chartData.where_to_place || '',
+                index
+              });
+            }
+          });
+        });
+      }
+
+      // Extract code snippets
+      if (assetDetails.code_snippets && Array.isArray(assetDetails.code_snippets)) {
+        assetDetails.code_snippets.forEach((codeObj: any, index: number) => {
+          Object.keys(codeObj).forEach(key => {
+            const codeData = codeObj[key];
+            if (codeData) {
+              assets.code_snippets.push({
+                id: key,
+                code: codeData.code || '',
+                description: codeData.description || '',
+                placement: codeData.where_to_place || '',
+                index
+              });
+            }
+          });
+        });
+      }
+
+      // Extract video embeds
+      if (assetDetails.video_embeds && Array.isArray(assetDetails.video_embeds)) {
+        assetDetails.video_embeds.forEach((videoObj: any, index: number) => {
+          Object.keys(videoObj).forEach(key => {
+            const videoData = videoObj[key];
+            if (videoData) {
+              assets.video_embeds.push({
+                id: key,
+                embed_link: videoData.embed_link || '',
+                description: videoData.description || '',
+                placement: videoData.where_to_place || '',
+                index
+              });
+            }
+          });
+        });
+      }
+    } else {
+      // Fallback: Try to extract from legacy format
+      console.log('No structured assets found, attempting legacy extraction...');
+      assets.images = extractLegacyImageUrls(content);
+    }
+
+    console.log(`Extracted ${assets.images.length} images, ${assets.tables.length} tables, ${assets.charts.length} charts, ${assets.code_snippets.length} code snippets, ${assets.video_embeds.length} video embeds`);
+    
+  } catch (error) {
+    console.error('Error extracting assets from structured input:', error);
+  }
+
+  return assets;
+}
+
+// Legacy image extraction for backward compatibility
+function extractLegacyImageUrls(content: any): any[] {
   const imageUrls: string[] = [];
   
   try {
@@ -98,10 +220,17 @@ function extractImageUrls(content: any): string[] {
       }
     }
   } catch (error) {
-    console.error('Error extracting image URLs:', error);
+    console.error('Error extracting legacy image URLs:', error);
   }
 
-  return [...new Set(imageUrls)]; // Remove duplicates
+  // Convert to new format
+  return [...new Set(imageUrls)].map((url, index) => ({
+    id: `legacy_image_${index}`,
+    url,
+    alt_text: '',
+    placement: '',
+    index
+  }));
 }
 
 // Check if URL is accessible
@@ -122,9 +251,35 @@ async function checkUrlHealth(url: string): Promise<{ url: string; status: strin
   }
 }
 
-// Get existing alt text from content
+// Extract SEO details from structured input
+function extractSeoDetails(content: any) {
+  try {
+    if (content.raw_content && Array.isArray(content.raw_content) && content.raw_content[0]?.seo_details) {
+      return content.raw_content[0].seo_details;
+    }
+  } catch (error) {
+    console.error('Error extracting SEO details:', error);
+  }
+  return null;
+}
+
+// Get existing alt text from content (legacy or structured)
 function getExistingAltText(content: any, imageUrl: string): string {
   try {
+    // Check structured format first
+    if (content.raw_content && Array.isArray(content.raw_content) && content.raw_content[0]?.assets_manager_details?.images) {
+      const images = content.raw_content[0].assets_manager_details.images;
+      for (const imageObj of images) {
+        for (const key of Object.keys(imageObj)) {
+          const imageData = imageObj[key];
+          if (imageData && imageData.link === imageUrl && imageData.alt_text) {
+            return imageData.alt_text;
+          }
+        }
+      }
+    }
+    
+    // Fallback to legacy format
     if (content.raw_content && Array.isArray(content.raw_content) && content.raw_content[0]?.image_seo_details) {
       const imageSeoDetails = content.raw_content[0].image_seo_details;
       if (Array.isArray(imageSeoDetails)) {
@@ -224,90 +379,113 @@ Return ONLY a JSON object:
   }
 }
 
-// Main asset processing logic
+// Main asset processing logic - BULLETPROOF VERSION
 async function processAssets(contentId: string) {
-  console.log(`[${contentId}] Starting asset processing`);
+  console.log(`[${contentId}] 🚀 Starting bulletproof asset processing`);
   
   try {
-    await updateProcessingStage(contentId, 'asset_validation', 'processing');
+    await updateProcessingStage(contentId, 'asset_processing', 'processing');
 
     // Get the design-approved content
     const contentData = await getDesignApprovedContent(contentId);
     const category = contentData.category || 'General';
     
     console.log(`[${contentId}] Processing assets for category: ${category}`);
+    console.log(`[${contentId}] Raw content structure:`, JSON.stringify(contentData.raw_content, null, 2));
 
-    // Extract image URLs from content
-    const imageUrls = extractImageUrls(contentData);
-    console.log(`[${contentId}] Found ${imageUrls.length} images to process`);
+    // Extract all assets from structured input
+    const extractedAssets = extractAssetsFromStructuredInput(contentData);
+    
+    // Extract SEO details
+    const seoDetails = extractSeoDetails(contentData);
+    console.log(`[${contentId}] SEO details:`, seoDetails);
 
-    // Health check all URLs
-    const healthChecks = await Promise.all(
-      imageUrls.map(url => checkUrlHealth(url))
-    );
-
-    const brokenAssets = healthChecks.filter(check => check.status === 'broken');
-    if (brokenAssets.length > 0) {
-      console.warn(`[${contentId}] Found ${brokenAssets.length} broken image links`);
-    }
-
-    // Process alt text improvements
+    // Process images with health checks and alt text improvements
+    const processedImages: any[] = [];
     const altTextImprovements: any[] = [];
-    const validatedAssets: any[] = [];
-
-    for (const url of imageUrls) {
-      const healthCheck = healthChecks.find(check => check.url === url);
-      const existingAltText = getExistingAltText(contentData, url);
+    
+    if (extractedAssets.images.length > 0) {
+      console.log(`[${contentId}] Processing ${extractedAssets.images.length} images`);
       
-      let altTextResult = null;
-      if (healthCheck?.status === 'healthy') {
-        try {
-          altTextResult = await improveAltTextWithClaude(url, existingAltText, category);
-        } catch (error) {
-          console.error(`[${contentId}] Alt text improvement failed for ${url}:`, error);
+      for (const imageAsset of extractedAssets.images) {
+        const healthCheck = await checkUrlHealth(imageAsset.url);
+        const existingAltText = imageAsset.alt_text || getExistingAltText(contentData, imageAsset.url);
+        
+        let altTextResult = null;
+        if (healthCheck?.status === 'healthy') {
+          try {
+            altTextResult = await improveAltTextWithClaude(imageAsset.url, existingAltText, category);
+          } catch (error) {
+            console.error(`[${contentId}] Alt text improvement failed for ${imageAsset.url}:`, error);
+          }
+        }
+
+        const processedImage = {
+          id: imageAsset.id,
+          url: imageAsset.url,
+          placement: imageAsset.placement,
+          originalAltText: existingAltText,
+          improvedAltText: altTextResult?.improvedAltText || existingAltText,
+          altTextScore: altTextResult?.score || 0,
+          needsImprovement: altTextResult?.needsImprovement || false,
+          healthStatus: healthCheck?.status || 'unknown',
+          statusCode: healthCheck?.statusCode,
+          index: imageAsset.index
+        };
+
+        processedImages.push(processedImage);
+        
+        if (altTextResult?.needsImprovement) {
+          altTextImprovements.push({
+            id: imageAsset.id,
+            url: imageAsset.url,
+            originalAltText: existingAltText,
+            improvedAltText: altTextResult.improvedAltText,
+            score: altTextResult.score,
+            reasoning: altTextResult.reasoning
+          });
         }
       }
-
-      const assetData = {
-        url,
-        originalAltText: existingAltText,
-        improvedAltText: altTextResult?.improvedAltText || existingAltText,
-        altTextScore: altTextResult?.score || 0,
-        needsImprovement: altTextResult?.needsImprovement || false,
-        healthStatus: healthCheck?.status || 'unknown',
-        statusCode: healthCheck?.statusCode
-      };
-
-      validatedAssets.push(assetData);
-      
-      if (altTextResult?.needsImprovement) {
-        altTextImprovements.push({
-          url,
-          originalAltText: existingAltText,
-          improvedAltText: altTextResult.improvedAltText,
-          score: altTextResult.score,
-          reasoning: altTextResult.reasoning
-        });
-      }
     }
 
-    // Create asset data record
+    // Count healthy and broken assets
+    const healthyImages = processedImages.filter(img => img.healthStatus === 'healthy').length;
+    const brokenImages = processedImages.filter(img => img.healthStatus === 'broken');
+    
+    // Create comprehensive asset data record
     const assetDataRecord = {
       content_id: contentId,
-      asset_urls: imageUrls,
-      validated_assets: validatedAssets,
+      asset_urls: extractedAssets.images.map(img => img.url), // For backward compatibility
+      validated_assets: {
+        images: processedImages,
+        tables: extractedAssets.tables,
+        charts: extractedAssets.charts,
+        code_snippets: extractedAssets.code_snippets,
+        video_embeds: extractedAssets.video_embeds,
+        seo_details: seoDetails
+      },
       asset_health_check: {
-        totalAssets: imageUrls.length,
-        healthyAssets: healthChecks.filter(check => check.status === 'healthy').length,
-        brokenAssets: brokenAssets.length,
-        brokenUrls: brokenAssets.map(asset => asset.url)
+        totalAssets: extractedAssets.images.length + extractedAssets.tables.length + 
+                    extractedAssets.charts.length + extractedAssets.code_snippets.length + 
+                    extractedAssets.video_embeds.length,
+        totalImages: extractedAssets.images.length,
+        healthyImages,
+        brokenImages: brokenImages.length,
+        brokenUrls: brokenImages.map(asset => asset.url),
+        tablesCount: extractedAssets.tables.length,
+        chartsCount: extractedAssets.charts.length,
+        codeSnippetsCount: extractedAssets.code_snippets.length,
+        videoEmbedsCount: extractedAssets.video_embeds.length
       },
       alt_text_improvements: altTextImprovements,
-      validation_errors: brokenAssets.map(asset => ({
+      validation_errors: brokenImages.map(asset => ({
+        id: asset.id,
         url: asset.url,
         error: `HTTP ${asset.statusCode}: Asset not accessible`
       }))
     };
+
+    console.log(`[${contentId}] Asset summary: ${assetDataRecord.asset_health_check.totalAssets} total assets processed`);
 
     // Save asset data to database
     const { data: savedAssetData, error: saveError } = await supabase
@@ -320,11 +498,11 @@ async function processAssets(contentId: string) {
       throw new Error(`Failed to save asset data: ${saveError.message}`);
     }
 
-    // Update content status to assets_validated
+    // CRITICAL FIX: Update content status to 'assets_processed' (not 'assets_validated')
     const { error: updateError } = await supabase
       .from('zuhu_content_processing')
       .update({ 
-        status: 'assets_validated',
+        status: 'assets_processed', // ✅ CORRECT STATUS
         updated_at: new Date().toISOString()
       })
       .eq('content_id', contentId);
@@ -333,29 +511,35 @@ async function processAssets(contentId: string) {
       throw new Error(`Failed to update content status: ${updateError.message}`);
     }
 
-    await updateProcessingStage(contentId, 'asset_validation', 'completed');
+    await updateProcessingStage(contentId, 'asset_processing', 'completed');
     
-    console.log(`[${contentId}] Asset processing completed successfully`);
+    console.log(`[${contentId}] ✅ Asset processing completed successfully`);
     return {
       success: true,
       contentId,
-      assetsProcessed: imageUrls.length,
-      healthyAssets: healthChecks.filter(check => check.status === 'healthy').length,
-      brokenAssets: brokenAssets.length,
+      assetsProcessed: assetDataRecord.asset_health_check.totalAssets,
+      imagesProcessed: extractedAssets.images.length,
+      healthyImages,
+      brokenImages: brokenImages.length,
+      tablesProcessed: extractedAssets.tables.length,
+      chartsProcessed: extractedAssets.charts.length,
+      codeSnippetsProcessed: extractedAssets.code_snippets.length,
+      videoEmbedsProcessed: extractedAssets.video_embeds.length,
       altTextImprovements: altTextImprovements.length,
-      assetData: savedAssetData
+      assetData: savedAssetData,
+      seoDetailsExtracted: !!seoDetails
     };
 
   } catch (error) {
-    console.error(`[${contentId}] Asset processing failed:`, error);
-    await updateProcessingStage(contentId, 'asset_validation', 'failed', error.message);
+    console.error(`[${contentId}] ❌ Asset processing failed:`, error);
+    await updateProcessingStage(contentId, 'asset_processing', 'failed', error.message);
     
     // Update content status to failed
     await supabase
       .from('zuhu_content_processing')
       .update({ 
         status: 'failed',
-        error_logs: [{ stage: 'asset_validation', error: error.message, timestamp: new Date().toISOString() }],
+        error_logs: [{ stage: 'asset_processing', error: error.message, timestamp: new Date().toISOString() }],
         updated_at: new Date().toISOString()
       })
       .eq('content_id', contentId);
