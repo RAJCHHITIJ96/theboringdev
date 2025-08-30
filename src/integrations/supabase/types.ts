@@ -883,6 +883,36 @@ export type Database = {
         }
         Relationships: []
       }
+      zuhu_status_transitions: {
+        Row: {
+          agent_name: string | null
+          content_id: string
+          from_status: string | null
+          id: string
+          metadata: Json | null
+          to_status: string
+          transition_time: string | null
+        }
+        Insert: {
+          agent_name?: string | null
+          content_id: string
+          from_status?: string | null
+          id?: string
+          metadata?: Json | null
+          to_status: string
+          transition_time?: string | null
+        }
+        Update: {
+          agent_name?: string | null
+          content_id?: string
+          from_status?: string | null
+          id?: string
+          metadata?: Json | null
+          to_status?: string
+          transition_time?: string | null
+        }
+        Relationships: []
+      }
       zuhu_system_metrics: {
         Row: {
           avg_processing_time: number | null
@@ -975,7 +1005,10 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      validate_status_transition: {
+        Args: { new_status: string; old_status: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
