@@ -105,6 +105,64 @@ serve(async (req) => {
 
     console.log(`✅ Quality audit completed with score: ${auditResult.qualityScore}/100`);
 
+    // BULLETPROOF: Determine final status based on quality score
+    let finalStatus = 'quality_approved';
+    if (auditResult.qualityScore >= 80) {
+      finalStatus = 'approved_for_publishing';
+      console.log(`🚀 Quality score ${auditResult.qualityScore}/100 passed threshold - APPROVED FOR PUBLISHING`);
+    } else {
+      finalStatus = 'requires_manual_review';
+      console.log(`⚠️ Quality score ${auditResult.qualityScore}/100 below threshold - REQUIRES MANUAL REVIEW`);
+    }
+
+    // Update content processing status
+    try {
+      const { error: statusError } = await supabase
+        .from('zuhu_content_processing')
+        .update({ 
+          status: finalStatus,
+          quality_audit_id: auditRecord.id,
+          quality_metrics: {
+            quality_score: auditResult.qualityScore,
+            audit_summary: {
+              issuesFound: auditResult.issuesFound.length,
+              recommendationsGenerated: auditResult.recommendations.length,
+              readyForPublishing: auditResult.qualityScore >= 80
+            },
+            threshold_passed: auditResult.qualityScore >= 80
+          },
+          updated_at: new Date().toISOString()
+        })
+        .eq('content_id', content_id);
+
+      if (statusError) {
+        console.error('❌ Failed to update content status:', statusError);
+      } else {
+        console.log(`✅ Content status updated to: ${finalStatus}`);
+      }
+    } catch (statusUpdateError) {
+      console.error('❌ Status update error:', statusUpdateError);
+    }
+
+    // BULLETPROOF: Auto-trigger autonomous publishing if approved
+    if (finalStatus === 'approved_for_publishing') {
+      try {
+        console.log(`🤖 Auto-triggering autonomous publishing for content: ${content_id}`);
+        const { data: publishResult, error: publishError } = await supabase.functions.invoke('autonomous-publishing-engine', {
+          body: { trigger_source: 'quality_fortress', content_id }
+        });
+        
+        if (publishError) {
+          console.error('❌ Auto-publish trigger failed:', publishError);
+        } else {
+          console.log('✅ Auto-publish triggered successfully:', publishResult);
+        }
+      } catch (publishTriggerError) {
+        console.error('❌ Auto-publish trigger error:', publishTriggerError);
+        // Don't fail the quality audit if publishing trigger fails
+      }
+    }
+
     const response = {
       success: true,
       contentId: content_id,

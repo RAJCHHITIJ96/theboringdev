@@ -204,8 +204,49 @@ async function executeZuhuPipeline(contentId: string, rawContent: any) {
           payload = { content_id: contentId };
         }
 
+        // BULLETPROOF: Log agent interaction to tracker BEFORE calling agent
+        try {
+          await supabase.functions.invoke('zuhu-agent-tracker', {
+            body: {
+              action: 'log_agent_interaction',
+              interaction: {
+                content_id: contentId,
+                agent_name: stage.function,
+                interaction_type: 'agent_call_start',
+                input_data: payload,
+                status: 'processing',
+                processing_time_ms: null,
+                timestamp: new Date().toISOString()
+              }
+            }
+          });
+        } catch (trackerError) {
+          console.error(`[${contentId}] Agent tracker logging failed (start):`, trackerError);
+        }
+
         // Call the agent
         const stageResult = await callAgent(stage.function, payload);
+        
+        // BULLETPROOF: Log agent interaction to tracker AFTER successful completion
+        try {
+          await supabase.functions.invoke('zuhu-agent-tracker', {
+            body: {
+              action: 'log_agent_interaction',
+              interaction: {
+                content_id: contentId,
+                agent_name: stage.function,
+                interaction_type: 'agent_call_completed',
+                input_data: payload,
+                output_data: stageResult,
+                status: 'completed',
+                processing_time_ms: Date.now() - stageStart,
+                timestamp: new Date().toISOString()
+              }
+            }
+          });
+        } catch (trackerError) {
+          console.error(`[${contentId}] Agent tracker logging failed (completion):`, trackerError);
+        }
         
         // Store stage result
         results.pipeline_results[stage.name] = {
@@ -251,6 +292,28 @@ async function executeZuhuPipeline(contentId: string, rawContent: any) {
 
       } catch (stageError: any) {
         console.error(`[${contentId}] Stage ${stage.name} failed:`, stageError);
+        
+        // BULLETPROOF: Log agent error to tracker
+        try {
+          await supabase.functions.invoke('zuhu-agent-tracker', {
+            body: {
+              action: 'log_agent_interaction',
+              interaction: {
+                content_id: contentId,
+                agent_name: stage.function,
+                interaction_type: 'agent_call_failed',
+                input_data: payload,
+                output_data: null,
+                status: 'failed',
+                error_message: stageError.message,
+                processing_time_ms: Date.now() - stageStart,
+                timestamp: new Date().toISOString()
+              }
+            }
+          });
+        } catch (trackerError) {
+          console.error(`[${contentId}] Agent tracker logging failed (error):`, trackerError);
+        }
         
         await updateProcessingStage(contentId, stage.name, 'failed', stageError.message, {
           processing_time_ms: Date.now() - stageStart,

@@ -312,11 +312,21 @@ serve(async (req) => {
   console.log('🚀 Autonomous Publishing Engine HTTP Request');
 
   try {
+    // BULLETPROOF: Check if this is an auto-trigger from quality-fortress
+    const requestBody = await req.json().catch(() => ({}));
+    const { trigger_source, content_id } = requestBody;
+    
+    if (trigger_source === 'quality_fortress') {
+      console.log(`🎯 Auto-triggered by Quality Fortress for content: ${content_id}`);
+    }
+    
     const result = await executeAutonomousPublishing();
     
     return new Response(
       JSON.stringify({
         ...result,
+        trigger_source: trigger_source || 'manual',
+        triggered_content_id: content_id || null,
         timestamp: new Date().toISOString(),
         message: result.success 
           ? `Successfully published ${result.published_count} content items`
