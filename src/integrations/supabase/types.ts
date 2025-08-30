@@ -746,6 +746,42 @@ export type Database = {
         }
         Relationships: []
       }
+      zuhu_agent_interactions: {
+        Row: {
+          agent_name: string
+          content_id: string
+          expires_at: string
+          id: string
+          interaction_data: Json
+          interaction_type: string
+          processing_time_ms: number | null
+          status: string | null
+          timestamp: string
+        }
+        Insert: {
+          agent_name: string
+          content_id: string
+          expires_at?: string
+          id?: string
+          interaction_data?: Json
+          interaction_type: string
+          processing_time_ms?: number | null
+          status?: string | null
+          timestamp?: string
+        }
+        Update: {
+          agent_name?: string
+          content_id?: string
+          expires_at?: string
+          id?: string
+          interaction_data?: Json
+          interaction_type?: string
+          processing_time_ms?: number | null
+          status?: string | null
+          timestamp?: string
+        }
+        Relationships: []
+      }
       zuhu_api_config: {
         Row: {
           auth_config: Json | null
@@ -846,6 +882,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      zuhu_pipeline_monitoring: {
+        Row: {
+          content_id: string
+          current_agent: string | null
+          error_data: Json | null
+          id: string
+          input_data: Json | null
+          last_activity: string
+          output_data: Json | null
+          pipeline_stage: string
+          processing_started_at: string | null
+          stage_status: string
+          updated_at: string
+        }
+        Insert: {
+          content_id: string
+          current_agent?: string | null
+          error_data?: Json | null
+          id?: string
+          input_data?: Json | null
+          last_activity?: string
+          output_data?: Json | null
+          pipeline_stage: string
+          processing_started_at?: string | null
+          stage_status?: string
+          updated_at?: string
+        }
+        Update: {
+          content_id?: string
+          current_agent?: string | null
+          error_data?: Json | null
+          id?: string
+          input_data?: Json | null
+          last_activity?: string
+          output_data?: Json | null
+          pipeline_stage?: string
+          processing_started_at?: string | null
+          stage_status?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       zuhu_processing_stages: {
         Row: {
@@ -1005,6 +1083,10 @@ export type Database = {
       }
     }
     Functions: {
+      cleanup_expired_agent_interactions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       validate_status_transition: {
         Args: { new_status: string; old_status: string }
         Returns: boolean
