@@ -76,3 +76,6 @@ verify_jwt = false
 
 [functions.shaper-ai]
 verify_jwt = false
+
+[functions.github-publisher]
+verify_jwt = false

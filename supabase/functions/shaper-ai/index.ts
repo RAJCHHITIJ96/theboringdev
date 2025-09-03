@@ -81,16 +81,30 @@ function validateInput(input: any): { valid: boolean; data?: ShaperAIInput; erro
       input = JSON.parse(input);
     }
 
+    // PHASE 3A: Handle AI Coder Agent output format
+    // AI Coder Agent sends: { success: true, component: "...", metadata: {...}, message: "..." }
+    // Shaper AI expects: { component: "...", metadata: {...} }
+    let processedInput = input;
+    
+    if (input.success !== undefined && input.component && input.metadata) {
+      console.log('🔄 Detected AI Coder Agent format, transforming input...');
+      processedInput = {
+        component: input.component,
+        metadata: input.metadata
+      };
+      console.log('✅ Input transformed for compatibility');
+    }
+
     // Validate required fields
-    if (!input.component || typeof input.component !== 'string') {
+    if (!processedInput.component || typeof processedInput.component !== 'string') {
       return { valid: false, error: 'Missing or invalid component field' };
     }
 
-    if (!input.metadata || typeof input.metadata !== 'object') {
+    if (!processedInput.metadata || typeof processedInput.metadata !== 'object') {
       return { valid: false, error: 'Missing or invalid metadata field' };
     }
 
-    const meta = input.metadata;
+    const meta = processedInput.metadata;
     const required = ['component_name', 'route_slug', 'category', 'title', 'description', 'publish_date', 'read_time'];
     
     for (const field of required) {
@@ -104,7 +118,7 @@ function validateInput(input: any): { valid: boolean; data?: ShaperAIInput; erro
       meta.assets_count = { images: 0, videos: 0, tables: 0, charts: 0, code_snippets: 0 };
     }
 
-    return { valid: true, data: input as ShaperAIInput };
+    return { valid: true, data: processedInput as ShaperAIInput };
   } catch (error) {
     return { valid: false, error: `Input validation failed: ${error.message}` };
   }
