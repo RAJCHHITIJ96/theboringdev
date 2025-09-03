@@ -5,65 +5,27 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface InputData {
-  category: string;
-  shipped_content: string;
-  assets_manager_details: {
-    images: Array<{
-      [key: string]: {
-        src: string;
-        alt: string;
-        where_to_place: string;
-        description: string;
-      };
-    }>;
-    tables: Array<{
-      [key: string]: {
-        title: string;
-        where_to_place: string;
-        description: string;
-      };
-    }>;
-    charts: Array<{
-      [key: string]: {
-        chart_data: string;
-        where_to_place: string;
-        description: string;
-      };
-    }>;
-    code_snippets: Array<{
-      [key: string]: {
-        snippet: string;
-        where_to_place: string;
-        description: string;
-      };
-    }>;
-    videos: Array<{
-      [key: string]: {
-        embed_url: string;
-        where_to_place: string;
-        description: string;
-      };
-    }>;
+// Enhanced flexible input interface
+interface FlexibleInputData {
+  category?: string;
+  shipped_content?: string;
+  assets_manager_details?: {
+    images?: Array<any>;
+    tables?: Array<any>;
+    charts?: Array<any>;
+    code_snippets?: Array<any>;
+    videos?: Array<any>;
   };
-  seo_details: {
-    html_head_section: {
-      meta_tags: {
-        title: string;
-        description: string;
-        "og:title": string;
-        "og:description": string;
-        "og:image": string;
+  seo_details?: {
+    html_head_section?: {
+      meta_tags?: {
+        title?: string;
+        description?: string;
+        "og:title"?: string;
+        "og:description"?: string;
+        "og:image"?: string;
       };
-      schema_markup: {
-        "@context": string;
-        "@type": string;
-        headline: string;
-        author: {
-          name: string;
-        };
-        datePublished: string;
-      };
+      schema_markup?: any;
     };
   };
 }
@@ -83,6 +45,56 @@ interface ComponentMetadata {
   };
 }
 
+// Enhanced input validation and normalization
+const validateAndNormalizeInput = (rawInput: any): FlexibleInputData => {
+  console.log('Raw input received:', JSON.stringify(rawInput, null, 2));
+  
+  // Handle string inputs that might be JSON
+  let input = rawInput;
+  if (typeof rawInput === 'string') {
+    try {
+      input = JSON.parse(rawInput);
+    } catch (e) {
+      // If it's not JSON, treat as shipped_content
+      input = { shipped_content: rawInput };
+    }
+  }
+
+  // Provide defaults for missing fields
+  const normalized: FlexibleInputData = {
+    category: input?.category || 'General',
+    shipped_content: input?.shipped_content || input?.content || 'Default content',
+    assets_manager_details: {
+      images: Array.isArray(input?.assets_manager_details?.images) ? input.assets_manager_details.images : [],
+      tables: Array.isArray(input?.assets_manager_details?.tables) ? input.assets_manager_details.tables : [],
+      charts: Array.isArray(input?.assets_manager_details?.charts) ? input.assets_manager_details.charts : [],
+      code_snippets: Array.isArray(input?.assets_manager_details?.code_snippets) ? input.assets_manager_details.code_snippets : [],
+      videos: Array.isArray(input?.assets_manager_details?.videos) ? input.assets_manager_details.videos : [],
+    },
+    seo_details: {
+      html_head_section: {
+        meta_tags: {
+          title: input?.seo_details?.html_head_section?.meta_tags?.title || extractTitle(input?.shipped_content || input?.content || ''),
+          description: input?.seo_details?.html_head_section?.meta_tags?.description || 'Generated article description',
+          "og:title": input?.seo_details?.html_head_section?.meta_tags?.["og:title"] || input?.seo_details?.html_head_section?.meta_tags?.title || extractTitle(input?.shipped_content || input?.content || ''),
+          "og:description": input?.seo_details?.html_head_section?.meta_tags?.["og:description"] || input?.seo_details?.html_head_section?.meta_tags?.description || 'Generated article description',
+          "og:image": input?.seo_details?.html_head_section?.meta_tags?.["og:image"] || '/placeholder.svg'
+        },
+        schema_markup: input?.seo_details?.html_head_section?.schema_markup || {
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          "headline": input?.seo_details?.html_head_section?.meta_tags?.title || extractTitle(input?.shipped_content || input?.content || ''),
+          "author": { "name": "theboringdevTeam" },
+          "datePublished": new Date().toISOString()
+        }
+      }
+    }
+  };
+
+  console.log('Normalized input:', JSON.stringify(normalized, null, 2));
+  return normalized;
+};
+
 const escapeHtml = (text: string): string => {
   const map: { [key: string]: string } = {
     '&': '&amp;',
@@ -100,7 +112,7 @@ const generateComponentName = (title: string): string => {
     .split(' ')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join('')
-    .slice(0, 50);
+    .slice(0, 50) || 'GeneratedComponent';
 };
 
 const generateRouteSlug = (title: string): string => {
@@ -109,7 +121,7 @@ const generateRouteSlug = (title: string): string => {
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
-    .trim();
+    .trim() || 'generated-article';
 };
 
 const calculateReadTime = (content: string): string => {
@@ -120,6 +132,8 @@ const calculateReadTime = (content: string): string => {
 };
 
 const extractTitle = (content: string): string => {
+  if (!content) return 'Untitled Article';
+  
   // Extract first H1 or use first line
   const h1Match = content.match(/^#\s+(.+)$/m);
   if (h1Match) return h1Match[1];
@@ -128,8 +142,13 @@ const extractTitle = (content: string): string => {
   return lines[0]?.replace(/^#+\s*/, '') || 'Untitled Article';
 };
 
-const processContent = (content: string): string => {
+const processMarkdownContent = (content: string): string => {
+  if (!content) return '';
+  
   let processedContent = content;
+  
+  // Remove title (first H1) from content since it's displayed separately
+  processedContent = processedContent.replace(/^#\s+.+$/m, '');
   
   // Convert H2 headings
   processedContent = processedContent.replace(/^##\s+(.+)$/gm, (_, heading) => {
@@ -141,7 +160,7 @@ const processContent = (content: string): string => {
             marginBottom: '32px',
             marginTop: '96px'
           }} className="text-black">
-            ${heading}
+            ${heading.trim()}
           </h2>`;
   });
   
@@ -154,13 +173,33 @@ const processContent = (content: string): string => {
             marginBottom: '24px',
             marginTop: '48px'
           }} className="text-black">
-            ${heading}
+            ${heading.trim()}
           </h3>`;
   });
   
-  // Convert paragraphs
+  // Convert lists (bulleted)
+  processedContent = processedContent.replace(/^[\*\-]\s+(.+)$/gm, (_, item) => {
+    return `          <li style={{
+            fontFamily: "'Inter', -apple-system, sans-serif",
+            fontSize: '21px',
+            lineHeight: '1.7',
+            marginBottom: '16px',
+            paddingLeft: '8px'
+          }}>
+            ${item.trim()}
+          </li>`;
+  });
+  
+  // Wrap lists in ul tags
+  processedContent = processedContent.replace(/((\s*<li[^>]*>.*?<\/li>\s*)+)/gs, (match) => {
+    return `          <ul style={{ marginBottom: '32px', paddingLeft: '24px' }}>
+${match}
+          </ul>`;
+  });
+  
+  // Convert paragraphs (must be after headings and lists)
   processedContent = processedContent.replace(/^(?!#|<|\s*$)(.+)$/gm, (_, paragraph) => {
-    if (paragraph.trim()) {
+    if (paragraph.trim() && !paragraph.includes('<')) {
       return `          <p style={{
             fontFamily: "'Inter', -apple-system, sans-serif",
             fontSize: '21px',
@@ -171,86 +210,116 @@ const processContent = (content: string): string => {
             ${paragraph.trim()}
           </p>`;
     }
-    return '';
+    return paragraph;
   });
   
   return processedContent;
 };
 
-const processAssets = (assets: InputData['assets_manager_details'], content: string): string => {
+const processAssets = (assets: FlexibleInputData['assets_manager_details'], content: string): string => {
+  if (!assets) return content;
+  
   let processedContent = content;
   
   // Process images
-  assets.images.forEach((imageObj, index) => {
-    const image = Object.values(imageObj)[0];
-    const imagePlacement = `
+  if (assets.images && assets.images.length > 0) {
+    assets.images.forEach((imageObj, index) => {
+      const image = typeof imageObj === 'object' && imageObj !== null 
+        ? Object.values(imageObj)[0] || imageObj
+        : imageObj;
+      
+      if (image && (image.src || image.url)) {
+        const imagePlacement = `
           <div className="blog-image-container" style={{ margin: '48px 0', textAlign: 'center' }}>
             <img 
-              src="${image.src}" 
-              alt="${image.alt}" 
+              src="${image.src || image.url}" 
+              alt="${image.alt || image.description || 'Article image'}" 
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px' }}
             />
           </div>`;
-    
-    processedContent += imagePlacement;
-  });
+        
+        processedContent += imagePlacement;
+      }
+    });
+  }
   
   // Process code snippets
-  assets.code_snippets.forEach((codeObj, index) => {
-    const code = Object.values(codeObj)[0];
-    const codeBlock = `
+  if (assets.code_snippets && assets.code_snippets.length > 0) {
+    assets.code_snippets.forEach((codeObj, index) => {
+      const code = typeof codeObj === 'object' && codeObj !== null 
+        ? Object.values(codeObj)[0] || codeObj
+        : codeObj;
+      
+      if (code && (code.snippet || code.code)) {
+        const codeBlock = `
           <div className="my-12">
             <pre className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
               <code className="text-sm font-mono text-gray-100">
-                ${escapeHtml(code.snippet)}
+                ${escapeHtml(code.snippet || code.code)}
               </code>
             </pre>
           </div>`;
-    
-    processedContent += codeBlock;
-  });
+        
+        processedContent += codeBlock;
+      }
+    });
+  }
   
   // Process tables
-  assets.tables.forEach((tableObj, index) => {
-    const table = Object.values(tableObj)[0];
-    const tableMarkup = `
+  if (assets.tables && assets.tables.length > 0) {
+    assets.tables.forEach((tableObj, index) => {
+      const table = typeof tableObj === 'object' && tableObj !== null 
+        ? Object.values(tableObj)[0] || tableObj
+        : tableObj;
+      
+      if (table && (table.title || table.name)) {
+        const tableMarkup = `
           <div className="overflow-x-auto my-12 rounded-lg bg-white border border-gray-200 shadow-sm">
             <div className="p-4 text-center text-lg font-semibold border-b border-gray-200">
-              ${table.title}
+              ${table.title || table.name}
             </div>
           </div>`;
-    
-    processedContent += tableMarkup;
-  });
+        
+        processedContent += tableMarkup;
+      }
+    });
+  }
   
   // Process videos
-  assets.videos.forEach((videoObj, index) => {
-    const video = Object.values(videoObj)[0];
-    const videoEmbed = `
+  if (assets.videos && assets.videos.length > 0) {
+    assets.videos.forEach((videoObj, index) => {
+      const video = typeof videoObj === 'object' && videoObj !== null 
+        ? Object.values(videoObj)[0] || videoObj
+        : videoObj;
+      
+      if (video && (video.embed_url || video.url)) {
+        const videoEmbed = `
           <div className="youtube-embed-container my-12">
             <div className="relative w-full h-0 pb-[56.25%] overflow-hidden rounded-lg">
               <iframe
                 className="absolute top-0 left-0 w-full h-full"
-                src="${video.embed_url}"
-                title="${video.description}"
+                src="${video.embed_url || video.url}"
+                title="${video.description || video.title || 'Video embed'}"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
             </div>
           </div>`;
-    
-    processedContent += videoEmbed;
-  });
+        
+        processedContent += videoEmbed;
+      }
+    });
+  }
   
   return processedContent;
 };
 
-const generateReactComponent = (data: InputData): { component: string; metadata: ComponentMetadata } => {
-  const title = extractTitle(data.shipped_content);
+const generateReactComponent = (data: FlexibleInputData): { component: string; metadata: ComponentMetadata } => {
+  const title = extractTitle(data.shipped_content || '');
   const componentName = generateComponentName(title);
   const routeSlug = generateRouteSlug(title);
-  const readTime = calculateReadTime(data.shipped_content);
+  const readTime = calculateReadTime(data.shipped_content || '');
   const currentDate = new Date().toLocaleDateString('en-US', { 
     year: 'numeric', 
     month: 'long', 
@@ -258,12 +327,14 @@ const generateReactComponent = (data: InputData): { component: string; metadata:
   });
   
   // Process content and assets
-  let processedContent = processContent(data.shipped_content);
+  let processedContent = processMarkdownContent(data.shipped_content || '');
   processedContent = processAssets(data.assets_manager_details, processedContent);
   
   // Get hero image
-  const heroImage = data.assets_manager_details.images[0] 
-    ? Object.values(data.assets_manager_details.images[0])[0].src 
+  const heroImage = data.assets_manager_details?.images?.[0] 
+    ? (typeof data.assets_manager_details.images[0] === 'object' 
+       ? Object.values(data.assets_manager_details.images[0])[0]?.src || Object.values(data.assets_manager_details.images[0])[0]?.url
+       : data.assets_manager_details.images[0]?.src || data.assets_manager_details.images[0]?.url)
     : '/placeholder.svg';
   
   const component = `import React from 'react';
@@ -326,15 +397,15 @@ export default ${componentName};`;
   const metadata: ComponentMetadata = {
     component_name: componentName,
     route_slug: routeSlug,
-    category: data.category,
+    category: data.category || 'General',
     title: title,
-    description: data.seo_details.html_head_section.meta_tags.description,
+    description: data.seo_details?.html_head_section?.meta_tags?.description || 'Generated article description',
     publish_date: new Date().toISOString().split('T')[0],
     read_time: readTime,
     assets_count: {
-      images: data.assets_manager_details.images.length,
-      code_blocks: data.assets_manager_details.code_snippets.length,
-      tables: data.assets_manager_details.tables.length
+      images: data.assets_manager_details?.images?.length || 0,
+      code_blocks: data.assets_manager_details?.code_snippets?.length || 0,
+      tables: data.assets_manager_details?.tables?.length || 0
     }
   };
 
@@ -347,6 +418,8 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  console.log('AI Coder Agent request received:', req.method);
+
   try {
     if (req.method !== 'POST') {
       return new Response(
@@ -358,13 +431,23 @@ serve(async (req) => {
       );
     }
 
-    const inputData: InputData = await req.json();
-
-    // Validate required fields
-    if (!inputData.category || !inputData.shipped_content || !inputData.seo_details) {
+    // Enhanced input parsing
+    let rawInput: any;
+    try {
+      const body = await req.text();
+      console.log('Raw request body:', body);
+      
+      if (!body || body.trim() === '') {
+        throw new Error('Empty request body');
+      }
+      
+      rawInput = JSON.parse(body);
+    } catch (parseError) {
+      console.error('JSON parsing error:', parseError);
       return new Response(
         JSON.stringify({ 
-          error: 'Missing required fields: category, shipped_content, and seo_details are required' 
+          error: 'Invalid JSON format in request body',
+          details: parseError instanceof Error ? parseError.message : 'Unknown parsing error'
         }),
         { 
           status: 400, 
@@ -373,15 +456,40 @@ serve(async (req) => {
       );
     }
 
+    // Validate and normalize input
+    const inputData = validateAndNormalizeInput(rawInput);
+
+    // Basic validation - only check for essential content
+    if (!inputData.shipped_content || inputData.shipped_content.trim() === '') {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Missing required content: shipped_content is required and cannot be empty',
+          received: {
+            category: inputData.category,
+            shipped_content_length: inputData.shipped_content?.length || 0,
+            has_seo_details: !!inputData.seo_details
+          }
+        }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    console.log('Generating component for:', inputData.category, 'with content length:', inputData.shipped_content.length);
+
     // Generate React component using AI Coder Agent logic
     const result = generateReactComponent(inputData);
+
+    console.log('Component generated successfully:', result.metadata.component_name);
 
     return new Response(
       JSON.stringify({
         success: true,
         component: result.component,
         metadata: result.metadata,
-        message: 'React component generated successfully'
+        message: 'React component generated successfully using AI Coder Agent'
       }),
       { 
         status: 200,
@@ -395,7 +503,8 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error during component generation',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
       }),
       { 
         status: 500, 

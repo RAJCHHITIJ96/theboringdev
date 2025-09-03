@@ -70,3 +70,6 @@ verify_jwt = false
 
 [functions.zuhu-pipeline-validator]
 verify_jwt = false
+
+[functions.ai-coder-agent]
+verify_jwt = false
