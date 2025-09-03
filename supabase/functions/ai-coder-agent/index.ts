@@ -1,3 +1,4 @@
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
@@ -5,41 +6,55 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-/**
- * AI CODER AGENT FOR THEBORINGDEV.COM
- * 
- * SYSTEM IDENTITY & MISSION:
- * You are the AI Coder Agent for theboringdev.com - the world's most precise content-to-code transformer.
- * Your mission: Convert raw content + SEO data + assets into bulletproof React components that integrate 
- * seamlessly with the existing theboringdev codebase.
- * 
- * CRITICAL SUCCESS METRICS:
- * - 0% compilation errors (bulletproof TypeScript)
- * - 100% design system compliance (TheBoringSev)
- * - Perfect mobile responsiveness
- * - SEO-optimized meta integration
- * - Production-ready on first generation
- */
-
-// Flexible input interface following the training prompt specifications
 interface FlexibleInputData {
-  category?: string;
-  shipped_content?: string;
+  category: string;
+  shipped_content: string;
   assets_manager_details?: {
-    images?: Array<any>;
-    tables?: Array<any>;
-    charts?: Array<any>;
-    code_snippets?: Array<any>;
-    videos?: Array<any>;
+    images?: Array<{
+      [key: string]: {
+        src: string;
+        alt: string;
+        where_to_place?: string;
+        description?: string;
+      };
+    }>;
+    tables?: Array<{
+      [key: string]: {
+        title: string;
+        where_to_place?: string;
+        description?: string;
+      };
+    }>;
+    charts?: Array<{
+      [key: string]: {
+        chart_data: string;
+        where_to_place?: string;
+        description?: string;
+      };
+    }>;
+    code_snippets?: Array<{
+      [key: string]: {
+        snippet: string;
+        where_to_place?: string;
+        description?: string;
+      };
+    }>;
+    videos?: Array<{
+      [key: string]: {
+        embed_url: string;
+        where_to_place?: string;
+        description?: string;
+      };
+    }>;
   };
   seo_details?: {
     html_head_section?: {
       meta_tags?: {
         title?: string;
         description?: string;
-        "og:title"?: string;
-        "og:description"?: string;
-        "og:image"?: string;
+        'og:title'?: string;
+        'og:description'?: string;
+        'og:image'?: string;
       };
       schema_markup?: any;
     };
@@ -61,318 +76,412 @@ interface ComponentMetadata {
   };
 }
 
-// Enhanced input validation and normalization
-const validateAndNormalizeInput = (rawInput: any): FlexibleInputData => {
-  console.log('AI Coder Agent - Raw input received:', JSON.stringify(rawInput, null, 2));
-  
-  // Handle string inputs that might be JSON
-  let input = rawInput;
-  if (typeof rawInput === 'string') {
+function validateAndNormalizeInput(input: any): FlexibleInputData {
+  console.log('🔍 Validating input:', typeof input);
+
+  // Handle string input (JSON string)
+  if (typeof input === 'string') {
     try {
-      input = JSON.parse(rawInput);
-    } catch (e) {
-      // If it's not JSON, treat as shipped_content
-      input = { shipped_content: rawInput };
+      input = JSON.parse(input);
+    } catch (error) {
+      throw new Error(`Invalid JSON string: ${error.message}`);
     }
   }
 
-  // Provide defaults for missing fields
+  // Ensure input is an object
+  if (!input || typeof input !== 'object') {
+    throw new Error('Input must be a valid object or JSON string');
+  }
+
+  // Validate required fields
+  if (!input.category || typeof input.category !== 'string') {
+    throw new Error('Field "category" is required and must be a string');
+  }
+
+  if (!input.shipped_content || typeof input.shipped_content !== 'string') {
+    throw new Error('Field "shipped_content" is required and must be a string');
+  }
+
+  // Normalize optional fields with defaults
   const normalized: FlexibleInputData = {
-    category: input?.category || 'General',
-    shipped_content: input?.shipped_content || input?.content || 'Default content',
+    category: input.category.trim(),
+    shipped_content: input.shipped_content.trim(),
     assets_manager_details: {
-      images: Array.isArray(input?.assets_manager_details?.images) ? input.assets_manager_details.images : [],
-      tables: Array.isArray(input?.assets_manager_details?.tables) ? input.assets_manager_details.tables : [],
-      charts: Array.isArray(input?.assets_manager_details?.charts) ? input.assets_manager_details.charts : [],
-      code_snippets: Array.isArray(input?.assets_manager_details?.code_snippets) ? input.assets_manager_details.code_snippets : [],
-      videos: Array.isArray(input?.assets_manager_details?.videos) ? input.assets_manager_details.videos : [],
+      images: Array.isArray(input.assets_manager_details?.images) ? input.assets_manager_details.images : [],
+      tables: Array.isArray(input.assets_manager_details?.tables) ? input.assets_manager_details.tables : [],
+      charts: Array.isArray(input.assets_manager_details?.charts) ? input.assets_manager_details.charts : [],
+      code_snippets: Array.isArray(input.assets_manager_details?.code_snippets) ? input.assets_manager_details.code_snippets : [],
+      videos: Array.isArray(input.assets_manager_details?.videos) ? input.assets_manager_details.videos : [],
     },
     seo_details: {
       html_head_section: {
         meta_tags: {
-          title: input?.seo_details?.html_head_section?.meta_tags?.title || extractTitle(input?.shipped_content || input?.content || ''),
-          description: input?.seo_details?.html_head_section?.meta_tags?.description || 'Generated article description',
-          "og:title": input?.seo_details?.html_head_section?.meta_tags?.["og:title"] || input?.seo_details?.html_head_section?.meta_tags?.title || extractTitle(input?.shipped_content || input?.content || ''),
-          "og:description": input?.seo_details?.html_head_section?.meta_tags?.["og:description"] || input?.seo_details?.html_head_section?.meta_tags?.description || 'Generated article description',
-          "og:image": input?.seo_details?.html_head_section?.meta_tags?.["og:image"] || '/placeholder.svg'
+          title: input.seo_details?.html_head_section?.meta_tags?.title || 'Default Title',
+          description: input.seo_details?.html_head_section?.meta_tags?.description || 'Default description',
+          'og:title': input.seo_details?.html_head_section?.meta_tags?.['og:title'] || input.seo_details?.html_head_section?.meta_tags?.title || 'Default Title',
+          'og:description': input.seo_details?.html_head_section?.meta_tags?.['og:description'] || input.seo_details?.html_head_section?.meta_tags?.description || 'Default description',
+          'og:image': input.seo_details?.html_head_section?.meta_tags?.['og:image'] || '/default-og-image.png',
         },
-        schema_markup: input?.seo_details?.html_head_section?.schema_markup || {
-          "@context": "https://schema.org",
-          "@type": "BlogPosting",
-          "headline": input?.seo_details?.html_head_section?.meta_tags?.title || extractTitle(input?.shipped_content || input?.content || ''),
-          "author": { "name": "theboringdevTeam" },
-          "datePublished": new Date().toISOString()
-        }
-      }
-    }
+        schema_markup: input.seo_details?.html_head_section?.schema_markup || {},
+      },
+    },
   };
 
-  console.log('AI Coder Agent - Normalized input:', JSON.stringify(normalized, null, 2));
+  console.log('✅ Input validated and normalized successfully');
   return normalized;
-};
+}
 
-const escapeHtml = (text: string): string => {
+function escapeHtml(text: string): string {
   const map: { [key: string]: string } = {
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
-    "'": '&#039;'
+    "'": '&#039;',
   };
   return text.replace(/[&<>"']/g, (m) => map[m]);
-};
+}
 
-const generateComponentName = (title: string): string => {
+function generateComponentName(title: string): string {
   return title
     .replace(/[^a-zA-Z0-9\s]/g, '')
     .split(' ')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join('')
-    .slice(0, 50) || 'GeneratedComponent';
-};
+    .replace(/\s/g, '');
+}
 
-const generateRouteSlug = (title: string): string => {
+function generateRouteSlug(title: string): string {
   return title
     .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/[^a-zA-Z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
-    .trim() || 'generated-article';
-};
+    .trim()
+    .replace(/^-|-$/g, '');
+}
 
-const calculateReadTime = (content: string): string => {
+function calculateReadTime(content: string): string {
   const wordsPerMinute = 200;
-  const words = content.split(/\s+/).length;
-  const readTime = Math.ceil(words / wordsPerMinute);
-  return `${readTime} min`;
-};
+  const wordCount = content.split(/\s+/).length;
+  const minutes = Math.ceil(wordCount / wordsPerMinute);
+  return `${minutes} min`;
+}
 
-const extractTitle = (content: string): string => {
-  if (!content) return 'Untitled Article';
-  
-  // Extract first H1 or use first line
+function extractTitle(content: string): string {
+  // Extract first H1 from markdown content
   const h1Match = content.match(/^#\s+(.+)$/m);
-  if (h1Match) return h1Match[1];
+  if (h1Match) {
+    return h1Match[1].trim();
+  }
   
-  const lines = content.split('\n').filter(line => line.trim());
-  return lines[0]?.replace(/^#+\s*/, '') || 'Untitled Article';
-};
+  // Fallback: use first line if no H1 found
+  const firstLine = content.split('\n')[0];
+  return firstLine.replace(/^#+\s*/, '').trim();
+}
 
-const processMarkdownContent = (content: string): string => {
-  if (!content) return '';
+function processMarkdownContent(content: string): string {
+  console.log('📝 Processing markdown content...');
   
-  let processedContent = content;
+  // Split content into sections
+  const sections = content.split(/\n(?=#{1,3}\s)/);
+  let processedSections: string[] = [];
   
-  // Remove title (first H1) from content since it's displayed separately
-  processedContent = processedContent.replace(/^#\s+.+$/m, '');
-  
-  // Convert H2 headings
-  processedContent = processedContent.replace(/^##\s+(.+)$/gm, (_, heading) => {
-    return `          <h2 style={{
+  for (const section of sections) {
+    if (!section.trim()) continue;
+    
+    const lines = section.split('\n');
+    const firstLine = lines[0];
+    
+    // Process headers
+    if (firstLine.startsWith('# ')) {
+      // H1 - Main title (handled separately in component structure)
+      continue;
+    } else if (firstLine.startsWith('## ')) {
+      // H2 - Section headers
+      const headerText = firstLine.replace('## ', '').trim();
+      processedSections.push(`
+        <section className="mb-16">
+          <h2 style={{
             fontFamily: "'Playfair Display', 'Crimson Text', serif",
             fontSize: 'clamp(28px, 5vw, 40px)',
             fontWeight: '500',
             lineHeight: '1.2',
             marginBottom: '32px',
-            marginTop: '96px'
+            marginTop: '64px'
           }} className="text-black">
-            ${heading.trim()}
-          </h2>`;
-  });
-  
-  // Convert H3 headings
-  processedContent = processedContent.replace(/^###\s+(.+)$/gm, (_, heading) => {
-    return `          <h3 style={{
+            ${escapeHtml(headerText)}
+          </h2>
+      `);
+      
+      // Process remaining content in section
+      const remainingContent = lines.slice(1).join('\n');
+      if (remainingContent.trim()) {
+        processedSections.push(processContentLines(remainingContent));
+      }
+      
+      processedSections.push('</section>');
+    } else if (firstLine.startsWith('### ')) {
+      // H3 - Subsection headers
+      const headerText = firstLine.replace('### ', '').trim();
+      processedSections.push(`
+          <h3 style={{
             fontFamily: "'Inter', -apple-system, sans-serif",
             fontSize: '24px',
             fontWeight: '600',
-            marginBottom: '24px',
+            lineHeight: '1.3',
+            marginBottom: '20px',
             marginTop: '48px'
           }} className="text-black">
-            ${heading.trim()}
-          </h3>`;
-  });
+            ${escapeHtml(headerText)}
+          </h3>
+      `);
+      
+      // Process remaining content
+      const remainingContent = lines.slice(1).join('\n');
+      if (remainingContent.trim()) {
+        processedSections.push(processContentLines(remainingContent));
+      }
+    } else {
+      // Regular content without header
+      processedSections.push(processContentLines(section));
+    }
+  }
   
-  // Convert lists (bulleted)
-  processedContent = processedContent.replace(/^[\*\-]\s+(.+)$/gm, (_, item) => {
-    return `          <li style={{
+  return processedSections.join('\n');
+}
+
+function processContentLines(content: string): string {
+  const lines = content.split('\n');
+  let processed: string[] = [];
+  let inCodeBlock = false;
+  let codeBlockContent: string[] = [];
+  let currentParagraph: string[] = [];
+  
+  for (const line of lines) {
+    // Handle code blocks
+    if (line.trim().startsWith('```')) {
+      if (inCodeBlock) {
+        // End code block
+        const codeContent = codeBlockContent.join('\n');
+        processed.push(`
+          <div className="my-12">
+            <pre className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
+              <code className="text-sm font-mono text-gray-100">
+                ${escapeHtml(codeContent)}
+              </code>
+            </pre>
+          </div>
+        `);
+        codeBlockContent = [];
+        inCodeBlock = false;
+      } else {
+        // Start code block
+        inCodeBlock = true;
+        // Flush current paragraph
+        if (currentParagraph.length > 0) {
+          processed.push(`
+            <p style={{
+              fontFamily: "'Inter', -apple-system, sans-serif",
+              fontSize: '21px',
+              lineHeight: '1.7',
+              marginBottom: '24px',
+              color: '#374151'
+            }}>
+              ${escapeHtml(currentParagraph.join(' '))}
+            </p>
+          `);
+          currentParagraph = [];
+        }
+      }
+      continue;
+    }
+    
+    if (inCodeBlock) {
+      codeBlockContent.push(line);
+      continue;
+    }
+    
+    // Handle lists
+    if (line.trim().match(/^[-*+]\s+/) || line.trim().match(/^\d+\.\s+/)) {
+      // Flush current paragraph
+      if (currentParagraph.length > 0) {
+        processed.push(`
+          <p style={{
             fontFamily: "'Inter', -apple-system, sans-serif",
             fontSize: '21px',
             lineHeight: '1.7',
-            marginBottom: '16px',
-            paddingLeft: '8px'
+            marginBottom: '24px',
+            color: '#374151'
           }}>
-            ${item.trim()}
-          </li>`;
-  });
-  
-  // Wrap lists in ul tags
-  processedContent = processedContent.replace(/((\s*<li[^>]*>.*?<\/li>\s*)+)/gs, (match) => {
-    return `          <ul style={{ marginBottom: '32px', paddingLeft: '24px' }}>
-${match}
-          </ul>`;
-  });
-  
-  // Convert paragraphs (must be after headings and lists)
-  processedContent = processedContent.replace(/^(?!#|<|\s*$)(.+)$/gm, (_, paragraph) => {
-    if (paragraph.trim() && !paragraph.includes('<')) {
-      return `          <p style={{
+            ${escapeHtml(currentParagraph.join(' '))}
+          </p>
+        `);
+        currentParagraph = [];
+      }
+      
+      const listItem = line.trim().replace(/^[-*+]\s+/, '').replace(/^\d+\.\s+/, '');
+      processed.push(`
+        <div className="mb-4 flex items-start">
+          <span className="text-gray-400 mr-4">•</span>
+          <span style={{
+            fontFamily: "'Inter', -apple-system, sans-serif",
+            fontSize: '21px',
+            lineHeight: '1.7',
+            color: '#374151'
+          }}>
+            ${escapeHtml(listItem)}
+          </span>
+        </div>
+      `);
+      continue;
+    }
+    
+    // Handle bold text
+    let processedLine = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Handle regular paragraphs
+    if (line.trim() === '') {
+      // Empty line - end current paragraph
+      if (currentParagraph.length > 0) {
+        processed.push(`
+          <p style={{
             fontFamily: "'Inter', -apple-system, sans-serif",
             fontSize: '21px',
             lineHeight: '1.7',
             marginBottom: '32px',
             color: '#374151'
           }}>
-            ${paragraph.trim()}
-          </p>`;
+            ${escapeHtml(currentParagraph.join(' '))}
+          </p>
+        `);
+        currentParagraph = [];
+      }
+    } else if (!line.trim().startsWith('#')) {
+      // Add to current paragraph
+      currentParagraph.push(processedLine.trim());
     }
-    return paragraph;
-  });
+  }
   
-  return processedContent;
-};
+  // Flush final paragraph
+  if (currentParagraph.length > 0) {
+    processed.push(`
+      <p style={{
+        fontFamily: "'Inter', -apple-system, sans-serif",
+        fontSize: '21px',
+        lineHeight: '1.7',
+        marginBottom: '32px',
+        color: '#374151'
+      }}>
+        ${escapeHtml(currentParagraph.join(' '))}
+      </p>
+    `);
+  }
+  
+  return processed.join('\n');
+}
 
-const processAssets = (assets: FlexibleInputData['assets_manager_details'], content: string): string => {
-  if (!assets) return content;
-  
-  let processedContent = content;
+function processAssets(assets: FlexibleInputData['assets_manager_details'], processedContent: string): string {
+  let finalContent = processedContent;
   
   // Process images
-  if (assets.images && assets.images.length > 0) {
-    assets.images.forEach((imageObj, index) => {
-      const image = typeof imageObj === 'object' && imageObj !== null 
-        ? Object.values(imageObj)[0] || imageObj
-        : imageObj;
-      
-      if (image && (image.src || image.url)) {
+  if (assets?.images) {
+    for (const imageObj of assets.images) {
+      for (const [key, image] of Object.entries(imageObj)) {
         const imagePlacement = `
-          <div className="blog-image-container" style={{ margin: '48px 0', textAlign: 'center' }}>
+          <div className="blog-image-container my-16">
             <img 
-              src="${image.src || image.url}" 
-              alt="${image.alt || image.description || 'Article image'}" 
-              style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px' }}
+              src="${image.src}" 
+              alt="${escapeHtml(image.alt)}" 
+              className="w-full h-auto rounded-lg"
+              loading="lazy"
             />
-          </div>`;
-        
-        processedContent += imagePlacement;
+          </div>
+        `;
+        // Insert image based on where_to_place logic or append
+        finalContent += imagePlacement;
       }
-    });
-  }
-  
-  // Process code snippets
-  if (assets.code_snippets && assets.code_snippets.length > 0) {
-    assets.code_snippets.forEach((codeObj, index) => {
-      const code = typeof codeObj === 'object' && codeObj !== null 
-        ? Object.values(codeObj)[0] || codeObj
-        : codeObj;
-      
-      if (code && (code.snippet || code.code)) {
-        const codeBlock = `
-          <div className="my-12">
-            <pre className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
-              <code className="text-sm font-mono text-gray-100">
-                ${escapeHtml(code.snippet || code.code)}
-              </code>
-            </pre>
-          </div>`;
-        
-        processedContent += codeBlock;
-      }
-    });
-  }
-  
-  // Process tables
-  if (assets.tables && assets.tables.length > 0) {
-    assets.tables.forEach((tableObj, index) => {
-      const table = typeof tableObj === 'object' && tableObj !== null 
-        ? Object.values(tableObj)[0] || tableObj
-        : tableObj;
-      
-      if (table && (table.title || table.name)) {
-        const tableMarkup = `
-          <div className="overflow-x-auto my-12 rounded-lg bg-white border border-gray-200 shadow-sm">
-            <div className="p-4 text-center text-lg font-semibold border-b border-gray-200">
-              ${table.title || table.name}
-            </div>
-          </div>`;
-        
-        processedContent += tableMarkup;
-      }
-    });
+    }
   }
   
   // Process videos
-  if (assets.videos && assets.videos.length > 0) {
-    assets.videos.forEach((videoObj, index) => {
-      const video = typeof videoObj === 'object' && videoObj !== null 
-        ? Object.values(videoObj)[0] || videoObj
-        : videoObj;
-      
-      if (video && (video.embed_url || video.url)) {
-        const videoEmbed = `
-          <div className="youtube-embed-container my-12">
-            <div className="relative w-full h-0 pb-[56.25%] overflow-hidden rounded-lg">
+  if (assets?.videos) {
+    for (const videoObj of assets.videos) {
+      for (const [key, video] of Object.entries(videoObj)) {
+        const videoPlacement = `
+          <div className="my-16">
+            <div className="aspect-video">
               <iframe
-                className="absolute top-0 left-0 w-full h-full"
-                src="${video.embed_url || video.url}"
-                title="${video.description || video.title || 'Video embed'}"
+                src="${video.embed_url}"
+                title="Video content"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-              />
+                className="w-full h-full rounded-lg"
+              ></iframe>
             </div>
-          </div>`;
-        
-        processedContent += videoEmbed;
+          </div>
+        `;
+        finalContent += videoPlacement;
       }
-    });
+    }
   }
   
-  return processedContent;
-};
+  return finalContent;
+}
 
-const generateReactComponent = (data: FlexibleInputData): { component: string; metadata: ComponentMetadata } => {
-  const title = extractTitle(data.shipped_content || '');
+async function generateReactComponent(data: FlexibleInputData): Promise<{ component: string; metadata: ComponentMetadata }> {
+  console.log('🎯 Generating component for:', data.category, 'with content length:', data.shipped_content.length);
+  
+  const title = extractTitle(data.shipped_content);
   const componentName = generateComponentName(title);
   const routeSlug = generateRouteSlug(title);
-  const readTime = calculateReadTime(data.shipped_content || '');
-  const currentDate = new Date().toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  });
+  const readTime = calculateReadTime(data.shipped_content);
+  const currentDate = new Date().toISOString().split('T')[0];
   
-  // Process content following EXACT AIUGC.tsx patterns
-  let processedContent = processMarkdownContent(data.shipped_content || '');
-  processedContent = processAssets(data.assets_manager_details, processedContent);
+  // Count assets
+  const assetsCount = {
+    images: data.assets_manager_details?.images?.length || 0,
+    code_blocks: Math.floor((data.shipped_content.match(/```/g) || []).length / 2),
+    tables: data.assets_manager_details?.tables?.length || 0,
+  };
   
-  // Get hero image following the training prompt specifications
-  const heroImage = data.assets_manager_details?.images?.[0] 
-    ? (typeof data.assets_manager_details.images[0] === 'object' 
-       ? Object.values(data.assets_manager_details.images[0])[0]?.src || Object.values(data.assets_manager_details.images[0])[0]?.url
-       : data.assets_manager_details.images[0]?.src || data.assets_manager_details.images[0]?.url)
-    : '/placeholder.svg';
+  // Process content
+  const processedContent = processMarkdownContent(data.shipped_content);
+  const finalContent = processAssets(data.assets_manager_details, processedContent);
   
-  // BULLETPROOF REACT COMPONENT - Following Training Prompt Template
+  // Get SEO data
+  const seoTitle = data.seo_details?.html_head_section?.meta_tags?.title || title;
+  const seoDescription = data.seo_details?.html_head_section?.meta_tags?.description || 'Default description';
+  
+  // Generate component
   const component = `import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { NewHeader } from "@/components/NewHeader";
 import Footer from "@/components/Footer";
 
 const ${componentName} = () => {
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>${escapeHtml(seoTitle)}</title>
+        <meta name="description" content="${escapeHtml(seoDescription)}" />
+        <meta property="og:title" content="${escapeHtml(data.seo_details?.html_head_section?.meta_tags?.['og:title'] || seoTitle)}" />
+        <meta property="og:description" content="${escapeHtml(data.seo_details?.html_head_section?.meta_tags?.['og:description'] || seoDescription)}" />
+        <meta property="og:image" content="${data.seo_details?.html_head_section?.meta_tags?.['og:image'] || '/default-og-image.png'}" />
+        <meta property="og:type" content="article" />
+        ${data.seo_details?.html_head_section?.schema_markup ? `<script type="application/ld+json">
+          ${JSON.stringify(data.seo_details.html_head_section.schema_markup)}
+        </script>` : ''}
+      </Helmet>
+      
       <NewHeader />
       
-      {/* Hero Image - CRITICAL: Use blog-image-container class */}
-      <div className="blog-image-container">
-        <img src="${heroImage}" alt="${escapeHtml(title)}" />
-      </div>
-
-      {/* Article Header - EXACT SPACING */}
+      {/* Article Header */}
       <header className="max-w-[680px] mx-auto pt-32 pb-16 text-center px-10">
         <div className="mb-12">
           <p className="text-xs mb-4 text-gray-500 font-mono uppercase tracking-widest">
-            ${data.category}
+            ${escapeHtml(data.category)}
           </p>
           <p className="text-sm font-mono text-gray-600">
             Published on ${currentDate}
@@ -383,7 +492,7 @@ const ${componentName} = () => {
         </div>
       </header>
 
-      {/* Title Section - CRITICAL STYLING */}
+      {/* Title Section */}
       <div className="max-w-[680px] mx-auto text-center pb-20 px-10">
         <h1 style={{
           fontFamily: "'Playfair Display', 'Crimson Text', serif",
@@ -397,10 +506,10 @@ const ${componentName} = () => {
         </h1>
       </div>
 
-      {/* Main Content - EXACT AIUGC.tsx PATTERN */}
+      {/* Main Content */}
       <main className="max-w-[680px] mx-auto px-10 pb-32">
-        <article className="space-y-32">
-${processedContent}
+        <article className="space-y-8">
+          ${finalContent}
         </article>
       </main>
 
@@ -411,121 +520,99 @@ ${processedContent}
 
 export default ${componentName};`;
 
-  // Component Metadata for Shaper AI - Exact Training Prompt Specifications
   const metadata: ComponentMetadata = {
     component_name: componentName,
     route_slug: routeSlug,
-    category: data.category || 'General',
+    category: data.category,
     title: title,
-    description: data.seo_details?.html_head_section?.meta_tags?.description || 'Generated article description',
-    publish_date: new Date().toISOString().split('T')[0],
+    description: seoDescription,
+    publish_date: currentDate,
     read_time: readTime,
-    assets_count: {
-      images: data.assets_manager_details?.images?.length || 0,
-      code_blocks: data.assets_manager_details?.code_snippets?.length || 0,
-      tables: data.assets_manager_details?.tables?.length || 0
-    }
+    assets_count: assetsCount,
   };
 
+  console.log('🎉 Component generated successfully:', componentName);
+  
   return { component, metadata };
-};
+}
 
 serve(async (req) => {
+  console.log('🚀 AI Coder Agent - Request received:', req.method, req.url);
+  
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
-  console.log('🚀 AI Coder Agent - Request received:', req.method, req.url);
-
-  try {
-    if (req.method !== 'POST') {
-      console.log('❌ Invalid method:', req.method);
-      return new Response(
-        JSON.stringify({ error: 'Method not allowed. Use POST.' }),
-        { 
-          status: 405, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
-    }
-
-    // Enhanced input parsing
-    let rawInput: any;
-    try {
-      const body = await req.text();
-      console.log('📥 Raw request body length:', body.length);
-      
-      if (!body || body.trim() === '') {
-        throw new Error('Empty request body');
-      }
-      
-      rawInput = JSON.parse(body);
-      console.log('✅ JSON parsed successfully');
-    } catch (parseError) {
-      console.error('❌ JSON parsing error:', parseError);
-      return new Response(
-        JSON.stringify({ 
-          error: 'Invalid JSON format in request body',
-          details: parseError instanceof Error ? parseError.message : 'Unknown parsing error'
-        }),
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
-    }
-
-    // Validate and normalize input
-    const inputData = validateAndNormalizeInput(rawInput);
-
-    // Basic validation - only check for essential content
-    if (!inputData.shipped_content || inputData.shipped_content.trim() === '') {
-      console.log('❌ Missing shipped_content');
-      return new Response(
-        JSON.stringify({ 
-          error: 'Missing required content: shipped_content is required and cannot be empty',
-          received: {
-            category: inputData.category,
-            shipped_content_length: inputData.shipped_content?.length || 0,
-            has_seo_details: !!inputData.seo_details
-          }
-        }),
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
-    }
-
-    console.log('🎯 Generating component for:', inputData.category, 'with content length:', inputData.shipped_content.length);
-
-    // Generate React component using AI Coder Agent logic
-    const result = generateReactComponent(inputData);
-
-    console.log('🎉 Component generated successfully:', result.metadata.component_name);
-
+  // Only allow POST requests
+  if (req.method !== 'POST') {
     return new Response(
-      JSON.stringify({
-        success: true,
-        component: result.component,
-        metadata: result.metadata,
-        message: 'React component generated successfully using AI Coder Agent'
+      JSON.stringify({ 
+        success: false, 
+        error: 'Method not allowed. Use POST.' 
       }),
       { 
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        status: 405, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    );
+  }
+
+  try {
+    // Parse request body
+    const rawBody = await req.text();
+    console.log('📥 Raw request body length:', rawBody.length);
+    
+    let requestData;
+    try {
+      requestData = JSON.parse(rawBody);
+      console.log('✅ JSON parsed successfully');
+    } catch (parseError) {
+      console.error('❌ JSON parse error:', parseError);
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: `Invalid JSON: ${parseError.message}` 
+        }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    console.log('AI Coder Agent - Raw input received:', JSON.stringify(requestData, null, 2));
+
+    // Validate and normalize input
+    const validatedData = validateAndNormalizeInput(requestData);
+    console.log('AI Coder Agent - Normalized input:', JSON.stringify(validatedData, null, 2));
+
+    // Generate React component
+    const { component, metadata } = await generateReactComponent(validatedData);
+
+    // Return success response
+    const response = {
+      success: true,
+      component: component,
+      metadata: metadata,
+      message: `Component generated successfully: ${metadata.component_name}`,
+    };
+
+    return new Response(
+      JSON.stringify(response),
+      { 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
     );
 
   } catch (error) {
-    console.error('💥 AI Coder Agent Error:', error);
+    console.error('❌ AI Coder Agent Error:', error);
     
     return new Response(
       JSON.stringify({ 
-        error: 'Internal server error during component generation',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
+        success: false, 
+        error: error.message || 'Internal server error',
+        details: error.stack || 'No stack trace available'
       }),
       { 
         status: 500, 
