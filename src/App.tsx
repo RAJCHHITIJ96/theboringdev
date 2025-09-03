@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import MCPConverter from "./pages/MCPConverter";
 import AiCoderTester from "./pages/AiCoderTester";
 import AICoderAgent from "./pages/AICoderAgent";
+import ShaperTester from "./pages/ShaperTester";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const App = () => (
               <Route path="/mcp-converter" element={<MCPConverter />} />
               <Route path="/ai-coder-tester" element={<AiCoderTester />} />
               <Route path="/ai-coder-agent" element={<AICoderAgent />} />
+              <Route path="/shaper-tester" element={<ShaperTester />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

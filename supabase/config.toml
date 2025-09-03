@@ -73,3 +73,6 @@ verify_jwt = false
 
 [functions.ai-coder-agent]
 verify_jwt = false
+
+[functions.shaper-ai]
+verify_jwt = false
