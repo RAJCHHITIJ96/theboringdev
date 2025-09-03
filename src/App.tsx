@@ -17,6 +17,7 @@ import AIUGC from "./pages/AIUGC";
 import BuilderStories from "./pages/BuilderStories";
 import NotFound from "./pages/NotFound";
 import MCPConverter from "./pages/MCPConverter";
+import AiCoderTester from "./pages/AiCoderTester";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="/ai-ugc" element={<AIUGC />} />
               <Route path="/builder-stories" element={<BuilderStories />} />
               <Route path="/mcp-converter" element={<MCPConverter />} />
+              <Route path="/ai-coder-tester" element={<AiCoderTester />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
