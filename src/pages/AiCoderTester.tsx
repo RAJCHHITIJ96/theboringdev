@@ -3,7 +3,6 @@ import NewHeader from "@/components/NewHeader";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -196,8 +195,18 @@ High volume often means low quality. Solution: Implement quality scoring and aut
 
     setIsLoading(true);
     try {
-      const parsedInput = JSON.parse(inputData);
+      console.log('🚀 Testing AI Coder Agent with input length:', inputData.length);
       
+      // Parse JSON first to validate
+      let parsedInput;
+      try {
+        parsedInput = JSON.parse(inputData);
+        console.log('✅ JSON parsed successfully:', Object.keys(parsedInput));
+      } catch (parseError) {
+        throw new Error('Invalid JSON format in input data');
+      }
+      
+      console.log('📤 Sending request to /functions/v1/ai-coder-agent');
       const response = await fetch('/functions/v1/ai-coder-agent', {
         method: 'POST',
         headers: {
@@ -206,13 +215,25 @@ High volume often means low quality. Solution: Implement quality scoring and aut
         body: JSON.stringify(parsedInput)
       });
 
+      console.log('📥 Response status:', response.status, response.statusText);
+      console.log('📥 Response headers:', Object.fromEntries(response.headers.entries()));
+
+      // Check if response is actually JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const textResponse = await response.text();
+        console.error('❌ Non-JSON response received:', textResponse.substring(0, 200));
+        throw new Error(`Expected JSON response but got ${contentType}. Response: ${textResponse.substring(0, 100)}...`);
+      }
+
       const result = await response.json();
+      console.log('📊 Parsed result:', result);
       setResponse(result);
 
       if (result.success) {
         toast({
           title: "Success",
-          description: "Component generated successfully!",
+          description: "🎉 AI Coder Agent executed successfully!",
         });
       } else {
         toast({
@@ -221,10 +242,17 @@ High volume often means low quality. Solution: Implement quality scoring and aut
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error('💥 AI Coder Agent Error:', error);
+      const errorMessage = error.message || 'Failed to execute AI Coder Agent';
+      setResponse({ 
+        error: errorMessage,
+        details: error,
+        timestamp: new Date().toISOString()
+      });
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Invalid JSON or network error",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -353,7 +381,7 @@ High volume often means low quality. Solution: Implement quality scoring and aut
                       <h3 className="font-semibold text-red-800 mb-2">Error</h3>
                       <p className="text-red-700">{response.error}</p>
                       {response.details && (
-                        <p className="text-red-600 text-sm mt-1">{response.details}</p>
+                        <p className="text-red-600 text-sm mt-1">{JSON.stringify(response.details, null, 2)}</p>
                       )}
                     </div>
                   )}
@@ -371,10 +399,16 @@ High volume often means low quality. Solution: Implement quality scoring and aut
         {/* API Documentation */}
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>API Documentation</CardTitle>
-            <CardDescription>Complete API endpoint specification for the AI Coder Agent</CardDescription>
+            <CardTitle>🚀 AI Coder Agent API Documentation</CardTitle>
+            <CardDescription>Complete specification for the bulletproof content-to-code transformer</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
+            {/* Status */}
+            <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
+              <h3 className="font-semibold text-green-800 mb-2">✅ Status: DEPLOYED</h3>
+              <p className="text-green-700 text-sm">AI Coder Agent is now deployed and ready for testing!</p>
+            </div>
+
             {/* Endpoint */}
             <div>
               <h3 className="font-semibold mb-2">Endpoint</h3>
@@ -452,16 +486,18 @@ High volume often means low quality. Solution: Implement quality scoring and aut
 
             {/* Features */}
             <div>
-              <h3 className="font-semibold mb-2">Key Features</h3>
+              <h3 className="font-semibold mb-2">🎯 AI Coder Agent Features</h3>
               <ul className="space-y-1 text-sm text-muted-foreground">
-                <li>• Converts markdown content to React components</li>
-                <li>• Follows TheBoringSev design system strictly</li>
-                <li>• Generates SEO-optimized meta tags</li>
-                <li>• Processes images, code blocks, tables, and videos</li>
-                <li>• Creates mobile-responsive layouts</li>
-                <li>• Generates PascalCase component names and URL slugs</li>
-                <li>• Calculates read time automatically</li>
-                <li>• Production-ready TypeScript code output</li>
+                <li>✅ Converts markdown content to React components</li>
+                <li>✅ Follows TheBoringSev design system strictly</li>
+                <li>✅ Generates SEO-optimized meta tags</li>
+                <li>✅ Processes images, code blocks, tables, and videos</li>
+                <li>✅ Creates mobile-responsive layouts</li>
+                <li>✅ Generates PascalCase component names and URL slugs</li>
+                <li>✅ Calculates read time automatically</li>
+                <li>✅ Production-ready TypeScript code output</li>
+                <li>✅ Bulletproof error handling and validation</li>
+                <li>✅ Flexible input processing (handles malformed data gracefully)</li>
               </ul>
             </div>
           </CardContent>

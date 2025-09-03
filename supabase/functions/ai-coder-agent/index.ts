@@ -47,7 +47,7 @@ interface ComponentMetadata {
 
 // Enhanced input validation and normalization
 const validateAndNormalizeInput = (rawInput: any): FlexibleInputData => {
-  console.log('Raw input received:', JSON.stringify(rawInput, null, 2));
+  console.log('AI Coder Agent - Raw input received:', JSON.stringify(rawInput, null, 2));
   
   // Handle string inputs that might be JSON
   let input = rawInput;
@@ -91,7 +91,7 @@ const validateAndNormalizeInput = (rawInput: any): FlexibleInputData => {
     }
   };
 
-  console.log('Normalized input:', JSON.stringify(normalized, null, 2));
+  console.log('AI Coder Agent - Normalized input:', JSON.stringify(normalized, null, 2));
   return normalized;
 };
 
@@ -418,10 +418,11 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  console.log('AI Coder Agent request received:', req.method);
+  console.log('🚀 AI Coder Agent - Request received:', req.method, req.url);
 
   try {
     if (req.method !== 'POST') {
+      console.log('❌ Invalid method:', req.method);
       return new Response(
         JSON.stringify({ error: 'Method not allowed. Use POST.' }),
         { 
@@ -435,15 +436,16 @@ serve(async (req) => {
     let rawInput: any;
     try {
       const body = await req.text();
-      console.log('Raw request body:', body);
+      console.log('📥 Raw request body length:', body.length);
       
       if (!body || body.trim() === '') {
         throw new Error('Empty request body');
       }
       
       rawInput = JSON.parse(body);
+      console.log('✅ JSON parsed successfully');
     } catch (parseError) {
-      console.error('JSON parsing error:', parseError);
+      console.error('❌ JSON parsing error:', parseError);
       return new Response(
         JSON.stringify({ 
           error: 'Invalid JSON format in request body',
@@ -461,6 +463,7 @@ serve(async (req) => {
 
     // Basic validation - only check for essential content
     if (!inputData.shipped_content || inputData.shipped_content.trim() === '') {
+      console.log('❌ Missing shipped_content');
       return new Response(
         JSON.stringify({ 
           error: 'Missing required content: shipped_content is required and cannot be empty',
@@ -477,12 +480,12 @@ serve(async (req) => {
       );
     }
 
-    console.log('Generating component for:', inputData.category, 'with content length:', inputData.shipped_content.length);
+    console.log('🎯 Generating component for:', inputData.category, 'with content length:', inputData.shipped_content.length);
 
     // Generate React component using AI Coder Agent logic
     const result = generateReactComponent(inputData);
 
-    console.log('Component generated successfully:', result.metadata.component_name);
+    console.log('🎉 Component generated successfully:', result.metadata.component_name);
 
     return new Response(
       JSON.stringify({
@@ -498,7 +501,7 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('AI Coder Agent Error:', error);
+    console.error('💥 AI Coder Agent Error:', error);
     
     return new Response(
       JSON.stringify({ 
