@@ -5,7 +5,23 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Enhanced flexible input interface
+/**
+ * AI CODER AGENT FOR THEBORINGDEV.COM
+ * 
+ * SYSTEM IDENTITY & MISSION:
+ * You are the AI Coder Agent for theboringdev.com - the world's most precise content-to-code transformer.
+ * Your mission: Convert raw content + SEO data + assets into bulletproof React components that integrate 
+ * seamlessly with the existing theboringdev codebase.
+ * 
+ * CRITICAL SUCCESS METRICS:
+ * - 0% compilation errors (bulletproof TypeScript)
+ * - 100% design system compliance (TheBoringSev)
+ * - Perfect mobile responsiveness
+ * - SEO-optimized meta integration
+ * - Production-ready on first generation
+ */
+
+// Flexible input interface following the training prompt specifications
 interface FlexibleInputData {
   category?: string;
   shipped_content?: string;
@@ -326,17 +342,18 @@ const generateReactComponent = (data: FlexibleInputData): { component: string; m
     day: 'numeric' 
   });
   
-  // Process content and assets
+  // Process content following EXACT AIUGC.tsx patterns
   let processedContent = processMarkdownContent(data.shipped_content || '');
   processedContent = processAssets(data.assets_manager_details, processedContent);
   
-  // Get hero image
+  // Get hero image following the training prompt specifications
   const heroImage = data.assets_manager_details?.images?.[0] 
     ? (typeof data.assets_manager_details.images[0] === 'object' 
        ? Object.values(data.assets_manager_details.images[0])[0]?.src || Object.values(data.assets_manager_details.images[0])[0]?.url
        : data.assets_manager_details.images[0]?.src || data.assets_manager_details.images[0]?.url)
     : '/placeholder.svg';
   
+  // BULLETPROOF REACT COMPONENT - Following Training Prompt Template
   const component = `import React from 'react';
 import { NewHeader } from "@/components/NewHeader";
 import Footer from "@/components/Footer";
@@ -348,7 +365,7 @@ const ${componentName} = () => {
       
       {/* Hero Image - CRITICAL: Use blog-image-container class */}
       <div className="blog-image-container">
-        <img src="${heroImage}" alt="${title}" />
+        <img src="${heroImage}" alt="${escapeHtml(title)}" />
       </div>
 
       {/* Article Header - EXACT SPACING */}
@@ -376,7 +393,7 @@ const ${componentName} = () => {
           letterSpacing: '-0.01em',
           marginBottom: '80px'
         }} className="text-black">
-          ${title}
+          ${escapeHtml(title)}
         </h1>
       </div>
 
@@ -394,6 +411,7 @@ ${processedContent}
 
 export default ${componentName};`;
 
+  // Component Metadata for Shaper AI - Exact Training Prompt Specifications
   const metadata: ComponentMetadata = {
     component_name: componentName,
     route_slug: routeSlug,
