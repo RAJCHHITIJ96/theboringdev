@@ -19,9 +19,9 @@ const TheAipoweredMeetingSummariesGuide = () => {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "BlogPosting",
-              "headline": "The AI Meeting Summaries Guide",
+              "headline": "The AI-Powered Meeting Summaries Guide",
               "author": {"name": "futureopsTeam"},
-              "datePublished": "2025-03-01"
+              "datePublished": "2025-09-04"
             })
           }}
         />
@@ -369,12 +369,12 @@ const TheAipoweredMeetingSummariesGuide = () => {
           <div className="my-12">
             <pre className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
               <code className="text-sm font-mono text-gray-100">
-{`def summarize_meeting(transcript_text):
+                def summarize_meeting(transcript_text):
     summary = openai.ChatCompletion.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": f"Summarize this meeting transcript into key points, action items, and decisions: {transcript_text}"}]
+        model=&quot;gpt-4o&quot;,
+        messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: f&quot;Summarize this meeting transcript into key points, action items, and decisions: {transcript_text}&quot;}]
     )
-    return summary.choices[0].message.content`}
+    return summary.choices[0].message.content
               </code>
             </pre>
           </div>
