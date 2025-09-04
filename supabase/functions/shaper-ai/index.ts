@@ -322,21 +322,70 @@ export const CATEGORY_CONFIG = {
 
 async function writeFileToLovable(filePath: string, content: string): Promise<boolean> {
   try {
-    // Use GitHub API to create/update files in the connected repository
     const githubToken = Deno.env.get('GITHUB_API_TOKEN');
+    const repoOwner = Deno.env.get('GITHUB_REPO_OWNER');
+    const repoName = Deno.env.get('GITHUB_REPO_NAME');
     
-    if (!githubToken) {
-      console.error('GitHub token not found');
+    if (!githubToken || !repoOwner || !repoName) {
+      console.error('Missing GitHub configuration:', { 
+        hasToken: !!githubToken, 
+        hasOwner: !!repoOwner, 
+        hasRepo: !!repoName 
+      });
       return false;
     }
 
-    // For now, we'll use a webhook approach to trigger file writing
-    // This simulates writing to the Lovable project
-    console.log(`📝 Writing file: ${filePath} (${Math.round(content.length / 1024)}KB)`);
+    console.log(`📝 Writing REAL file: ${filePath} (${Math.round(content.length / 1024)}KB)`);
     
-    // In a real implementation, this would write to the actual file system
-    // For now, we'll return true to indicate success
-    return true;
+    // Check if file exists first
+    let existingSha = null;
+    try {
+      const getFileResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+        headers: {
+          'Authorization': `Bearer ${githubToken}`,
+          'Accept': 'application/vnd.github.v3+json',
+        }
+      });
+      
+      if (getFileResponse.ok) {
+        const existingFile = await getFileResponse.json();
+        existingSha = existingFile.sha;
+      }
+    } catch (error) {
+      console.log(`    File ${filePath} doesn't exist, creating new...`);
+    }
+
+    // Create/update file via GitHub API
+    const fileContent = btoa(unescape(encodeURIComponent(content))); // Base64 encode
+    
+    const updateFileData: any = {
+      message: `🤖 Shaper AI: ${existingSha ? 'Update' : 'Add'} ${filePath}`,
+      content: fileContent,
+      branch: 'main'
+    };
+    
+    if (existingSha) {
+      updateFileData.sha = existingSha;
+    }
+
+    const updateFileResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${githubToken}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateFileData)
+    });
+
+    if (updateFileResponse.ok) {
+      console.log(`✅ Successfully wrote ${filePath} to GitHub repository`);
+      return true;
+    } else {
+      const errorText = await updateFileResponse.text();
+      console.error(`Failed to write ${filePath}:`, updateFileResponse.status, errorText);
+      return false;
+    }
     
   } catch (error) {
     console.error(`Failed to write file ${filePath}:`, error);

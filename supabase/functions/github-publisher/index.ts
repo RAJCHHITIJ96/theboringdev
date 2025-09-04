@@ -304,23 +304,55 @@ async function executeGitOperations(input: GitHubPublisherInput): Promise<GitOpe
       throw new Error('GitHub API token not found');
     }
 
-    // Repository info (you'll need to set these as env vars)
-    const owner = Deno.env.get('GITHUB_REPO_OWNER') || 'your-username';
-    const repo = Deno.env.get('GITHUB_REPO_NAME') || 'your-repo';
+    // Repository info from environment variables
+    const owner = Deno.env.get('GITHUB_REPO_OWNER');
+    const repo = Deno.env.get('GITHUB_REPO_NAME');
     
-    console.log(`📝 Creating real Git operations for branch: ${branchName}`);
+    if (!owner || !repo) {
+      throw new Error(`GitHub repository configuration missing. Owner: ${owner}, Repo: ${repo}`);
+    }
     
-    // 1. Get main branch SHA for branching
+    console.log(`📝 Creating real Git operations for branch: ${branchName} on ${owner}/${repo}`);
+    
+    // 1. Get main branch SHA for branching (try multiple branch names)
     console.log('🔍 Getting main branch reference...');
-    const mainBranchResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs/heads/main`, {
+    let mainBranchResponse;
+    let branchName_main = 'main';
+    
+    // Try 'main' first, then 'master' if main doesn't exist
+    mainBranchResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs/heads/main`, {
       headers: {
-        'Authorization': `token ${githubToken}`,
+        'Authorization': `Bearer ${githubToken}`,
         'Accept': 'application/vnd.github.v3+json',
       }
     });
 
     if (!mainBranchResponse.ok) {
-      throw new Error(`Failed to get main branch: ${mainBranchResponse.statusText}`);
+      console.log('Main branch not found, trying master...');
+      mainBranchResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs/heads/master`, {
+        headers: {
+          'Authorization': `Bearer ${githubToken}`,
+          'Accept': 'application/vnd.github.v3+json',
+        }
+      });
+      branchName_main = 'master';
+    }
+
+    if (!mainBranchResponse.ok) {
+      // List all branches to see what's available
+      const allBranchesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs/heads`, {
+        headers: {
+          'Authorization': `Bearer ${githubToken}`,
+          'Accept': 'application/vnd.github.v3+json',
+        }
+      });
+      
+      if (allBranchesResponse.ok) {
+        const branches = await allBranchesResponse.json();
+        console.log('Available branches:', branches.map((b: any) => b.ref));
+      }
+      
+      throw new Error(`Failed to get default branch. Status: ${mainBranchResponse.status}, tried 'main' and 'master'`);
     }
 
     const mainBranchData = await mainBranchResponse.json();
@@ -331,7 +363,7 @@ async function executeGitOperations(input: GitHubPublisherInput): Promise<GitOpe
     const createBranchResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs`, {
       method: 'POST',
       headers: {
-        'Authorization': `token ${githubToken}`,
+        'Authorization': `Bearer ${githubToken}`,
         'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json',
       },
@@ -360,7 +392,7 @@ async function executeGitOperations(input: GitHubPublisherInput): Promise<GitOpe
       try {
         const getFileResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file.path}?ref=${branchName}`, {
           headers: {
-            'Authorization': `token ${githubToken}`,
+            'Authorization': `Bearer ${githubToken}`,
             'Accept': 'application/vnd.github.v3+json',
           }
         });
@@ -389,7 +421,7 @@ async function executeGitOperations(input: GitHubPublisherInput): Promise<GitOpe
       const updateFileResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file.path}`, {
         method: 'PUT',
         headers: {
-          'Authorization': `token ${githubToken}`,
+          'Authorization': `Bearer ${githubToken}`,
           'Accept': 'application/vnd.github.v3+json',
           'Content-Type': 'application/json',
         },
