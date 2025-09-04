@@ -20,29 +20,28 @@ export interface ArticleEntry {
 }
 
 export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
-  "ai-automation": [],
-  "ai-news": [],
-  "tool-comparisons": [],
-  "builder-stories": [],
-  "ai-reality-check": [],
-  "trending-opportunities": [],
-  "AI Automation": [
+  "ai-automation": [
     {
       "slug": "the-ai-powered-meeting-summaries-guide",
       "component": "TheAipoweredMeetingSummariesGuide",
       "title": "The AI-Powered Meeting Summaries Guide",
       "publishDate": "2025-09-04",
-      "category": "AI Automation",
+      "category": "ai-automation",
       "description": "Learn how AI meeting summaries save time, boost productivity, and ensure no detail is missed. Real case study with 1,400% ROI.",
       "readTime": "2 min",
-      "url": "/AI Automation/the-ai-powered-meeting-summaries-guide",
+      "url": "/ai-automation/the-ai-powered-meeting-summaries-guide",
       "assetsCount": {
         "images": 1,
         "code_blocks": 1,
         "tables": 1
       }
     }
-  ]
+  ],
+  "ai-news": [],
+  "tool-comparisons": [],
+  "builder-stories": [],
+  "ai-reality-check": [],
+  "trending-opportunities": []
 };
 
 export function getArticleBySlug(category: string, slug: string): ArticleEntry | undefined {
