@@ -38,8 +38,10 @@ export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
       "url": "/AI Automation/the-ai-powered-meeting-summaries-guide",
       "assetsCount": {
         "images": 1,
-        "code_blocks": 1,
-        "tables": 1
+        "videos": 0,
+        "tables": 1,
+        "charts": 0,
+        "code_snippets": 1
       }
     }
   ]

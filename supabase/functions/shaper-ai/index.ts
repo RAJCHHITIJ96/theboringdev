@@ -153,7 +153,26 @@ import Footer from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
 `;
 
-  // Add SEO meta tags if not present
+    // Fix JSON-LD schema generation to prevent build errors
+    const jsonLdScript = `<script 
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              "headline": "${metadata.title}",
+              "author": {"name": "futureopsTeam"},
+              "datePublished": "${metadata.publish_date}"
+            })
+          }}
+        />`;
+
+    enhancedComponent = enhancedComponent.replace(
+      /<script type="application\/ld\+json">[\s\S]*?<\/script>/g,
+      jsonLdScript
+    );
+
+  // Add SEO meta tags if not present  
   const seoTags = `<Helmet>
         <title>${metadata.title}</title>
         <meta name="description" content="${metadata.description}" />
@@ -485,6 +504,43 @@ async function updateAppRouting(metadata: ShaperAIInput['metadata']): Promise<bo
   }
 }
 
+// Lovable integration - write files directly to Lovable
+async function writeToLovable(filePath: string, content: string): Promise<boolean> {
+  try {
+    const lovableApiUrl = Deno.env.get('LOVABLE_API_URL') || 'https://lovable.dev';
+    const lovableToken = Deno.env.get('LOVABLE_API_TOKEN') || Deno.env.get('LOVABLE_TOKEN');
+    
+    if (!lovableToken) {
+      console.log(`⚠️ Lovable API token not configured, skipping Lovable write for ${filePath}`);
+      return false;
+    }
+    
+    // Use Lovable's native file writing system
+    const response = await fetch(`${lovableApiUrl}/api/v1/files`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${lovableToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        path: filePath,
+        content: content
+      })
+    });
+    
+    if (!response.ok) {
+      console.log(`⚠️ Lovable write failed for ${filePath} (${response.status}), falling back to GitHub only`);
+      return false;
+    } else {
+      console.log(`✅ Successfully wrote ${filePath} to Lovable`);
+      return true;
+    }
+  } catch (error) {
+    console.log(`⚠️ Lovable integration error for ${filePath}:`, error);
+    return false;
+  }
+}
+
 async function processInput(input: ShaperAIInput): Promise<ShaperAIOutput> {
   const { component, metadata } = input;
 
@@ -521,11 +577,21 @@ async function processInput(input: ShaperAIInput): Promise<ShaperAIOutput> {
   const registryEntry = generateArticleRegistryEntry(metadata);
   const registryContent = await updateArticlesRegistry(registryEntry);
   
-  // Actually write files to the Lovable project
-  console.log('📝 Writing component file...');
+  // Actually write files to BOTH Lovable and GitHub for dual sync
+  console.log('📝 Writing component file to Lovable and GitHub...');
+  
+  // Write to Lovable first for immediate editor updates
+  const lovableComponentWrite = await writeToLovable(componentPath, enhancedComponent);
+  
+  // Then write to GitHub for version control  
   const componentWritten = await writeFileToLovable(componentPath, enhancedComponent);
   
-  console.log('📝 Updating articles registry...');
+  console.log('📝 Updating articles registry in Lovable and GitHub...');
+  
+  // Write registry to Lovable first
+  const lovableRegistryWrite = await writeToLovable(registryPath, registryContent);
+  
+  // Then write to GitHub
   const registryWritten = await writeFileToLovable(registryPath, registryContent);
   
   console.log('🔗 Updating App.tsx routing...');

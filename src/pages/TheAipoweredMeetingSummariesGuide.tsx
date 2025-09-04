@@ -13,9 +13,18 @@ const TheAipoweredMeetingSummariesGuide = () => {
         <meta property="og:description" content="Case study: 320 meetings summarized in 60 days with 1,400% ROI. Learn tools, scripts, and strategies." />
         <meta property="og:image" content="/meeting-hero.png" />
         <meta property="og:type" content="article" />
-        <script type="application/ld+json">
-          {"@context":"https://schema.org","@type":"BlogPosting","headline":"The AI Meeting Summaries Guide","author":{"name":"futureopsTeam"},"datePublished":"2025-03-01"}
-        </script>
+        <script 
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              "headline": "The AI Meeting Summaries Guide",
+              "author": {"name": "futureopsTeam"},
+              "datePublished": "2025-03-01"
+            })
+          }}
+        />
       </Helmet>
       
       <NewHeader />
@@ -360,12 +369,12 @@ const TheAipoweredMeetingSummariesGuide = () => {
           <div className="my-12">
             <pre className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
               <code className="text-sm font-mono text-gray-100">
-                def summarize_meeting(transcript_text):
+{`def summarize_meeting(transcript_text):
     summary = openai.ChatCompletion.create(
-        model=&quot;gpt-4o&quot;,
-        messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: f&quot;Summarize this meeting transcript into key points, action items, and decisions: {transcript_text}&quot;}]
+        model="gpt-4o",
+        messages=[{"role": "user", "content": f"Summarize this meeting transcript into key points, action items, and decisions: {transcript_text}"}]
     )
-    return summary.choices[0].message.content
+    return summary.choices[0].message.content`}
               </code>
             </pre>
           </div>
