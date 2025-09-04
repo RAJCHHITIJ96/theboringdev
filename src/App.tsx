@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NavBar } from "@/components/NavBar";
+import { ArticleRenderer } from "@/components/ArticleRenderer";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import ZuhuDashboard from "./pages/ZuhuDashboard";
@@ -47,6 +48,15 @@ const App = () => (
               <Route path="/ai-coder-tester" element={<AiCoderTester />} />
               <Route path="/ai-coder-agent" element={<AICoderAgent />} />
               <Route path="/shaper-tester" element={<ShaperTester />} />
+              
+              {/* Dynamic Article Routes */}
+              <Route path="/ai-automation/:slug" element={<ArticleRenderer category="ai-automation" />} />
+              <Route path="/ai-news/:slug" element={<ArticleRenderer category="ai-news" />} />
+              <Route path="/tool-comparisons/:slug" element={<ArticleRenderer category="tool-comparisons" />} />
+              <Route path="/builder-stories/:slug" element={<ArticleRenderer category="builder-stories" />} />
+              <Route path="/ai-reality-check/:slug" element={<ArticleRenderer category="ai-reality-check" />} />
+              <Route path="/trending-opportunities/:slug" element={<ArticleRenderer category="trending-opportunities" />} />
+              
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
