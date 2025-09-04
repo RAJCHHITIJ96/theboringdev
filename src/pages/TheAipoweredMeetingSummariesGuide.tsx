@@ -33,7 +33,7 @@ const TheAipoweredMeetingSummariesGuide = () => {
       <header className="max-w-[680px] mx-auto pt-32 pb-16 text-center px-10">
         <div className="mb-12">
           <p className="text-xs mb-4 text-gray-500 font-mono uppercase tracking-widest">
-            AI Automation
+            ai-automation
           </p>
           <p className="text-sm font-mono text-gray-600">
             Published on 2025-09-04
