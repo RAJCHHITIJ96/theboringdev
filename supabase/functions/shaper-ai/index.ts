@@ -140,9 +140,10 @@ function enhanceComponent(component: string, metadata: ShaperAIInput['metadata']
   // Remove any existing imports to avoid duplicates
   let enhancedComponent = component.replace(/^import.*from.*["'].*["'];?\n?/gm, '');
   
-  // Add standardized imports
-  const imports = `import { NewHeader } from "@/components/NewHeader";
-import { Footer } from "@/components/Footer";
+  // Add standardized imports with correct default import syntax
+  const imports = `import React from 'react';
+import NewHeader from "@/components/NewHeader";
+import Footer from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
 `;
 
