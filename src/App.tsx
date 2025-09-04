@@ -58,7 +58,8 @@ const App = () => (
               <Route path="/trending-opportunities/:slug" element={<ArticleRenderer category="trending-opportunities" />} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
+                      <Route path="/AI Automation/:slug" element={<ArticleRenderer category="AI Automation" />} />
+        <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
         </div>
