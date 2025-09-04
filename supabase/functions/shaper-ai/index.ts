@@ -395,10 +395,90 @@ async function writeFileToLovable(filePath: string, content: string): Promise<bo
 
 async function updateAppRouting(metadata: ShaperAIInput['metadata']): Promise<boolean> {
   try {
-    // This would update App.tsx to add the new route
-    // For now, we'll assume success since we can't directly modify files
-    console.log(`🔗 Adding route: /${metadata.category}/${metadata.route_slug} -> ${metadata.component_name}`);
-    return true;
+    const githubToken = Deno.env.get('GITHUB_API_TOKEN');
+    const repoOwner = Deno.env.get('GITHUB_REPO_OWNER');
+    const repoName = Deno.env.get('GITHUB_REPO_NAME');
+    
+    if (!githubToken || !repoOwner || !repoName) {
+      console.error('Missing GitHub configuration for routing update');
+      return false;
+    }
+
+    console.log(`🔗 Adding REAL route: /${metadata.category}/${metadata.route_slug} -> ${metadata.component_name}`);
+    
+    // Get current App.tsx content
+    const getAppResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/src/App.tsx`, {
+      headers: {
+        'Authorization': `Bearer ${githubToken}`,
+        'Accept': 'application/vnd.github.v3+json',
+      }
+    });
+
+    if (!getAppResponse.ok) {
+      console.error('Failed to get App.tsx:', getAppResponse.status);
+      return false;
+    }
+
+    const appFile = await getAppResponse.json();
+    const currentContent = atob(appFile.content);
+    
+    // Check if route already exists
+    const routePattern = `<Route path="/${metadata.category}/:slug" element={<ArticleRenderer category="${metadata.category}" />} />`;
+    
+    if (currentContent.includes(routePattern)) {
+      console.log('✅ Route already exists in App.tsx');
+      return true;
+    }
+    
+    // Add the route before the 404 route
+    const routeToAdd = `        <Route path="/${metadata.category}/:slug" element={<ArticleRenderer category="${metadata.category}" />} />`;
+    
+    let updatedContent = currentContent;
+    
+    // Find the position to insert the route (before the NotFound route)
+    const notFoundRouteIndex = updatedContent.indexOf('<Route path="*" element={<NotFound />} />');
+    if (notFoundRouteIndex !== -1) {
+      updatedContent = updatedContent.slice(0, notFoundRouteIndex) + 
+                      routeToAdd + '\n        ' + 
+                      updatedContent.slice(notFoundRouteIndex);
+    } else {
+      console.warn('Could not find NotFound route, appending at end');
+      // Fallback: add before closing Routes tag
+      const routesEndIndex = updatedContent.indexOf('</Routes>');
+      if (routesEndIndex !== -1) {
+        updatedContent = updatedContent.slice(0, routesEndIndex) + 
+                        routeToAdd + '\n      ' + 
+                        updatedContent.slice(routesEndIndex);
+      }
+    }
+
+    // Update App.tsx
+    const updateAppData = {
+      message: `🤖 Shaper AI: Add route for ${metadata.category}/${metadata.route_slug}`,
+      content: btoa(unescape(encodeURIComponent(updatedContent))),
+      sha: appFile.sha,
+      branch: 'main'
+    };
+
+    const updateAppResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/src/App.tsx`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${githubToken}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateAppData)
+    });
+
+    if (updateAppResponse.ok) {
+      console.log('✅ Successfully updated App.tsx routing');
+      return true;
+    } else {
+      const errorText = await updateAppResponse.text();
+      console.error('Failed to update App.tsx:', updateAppResponse.status, errorText);
+      return false;
+    }
+    
   } catch (error) {
     console.error('Failed to update App routing:', error);
     return false;
