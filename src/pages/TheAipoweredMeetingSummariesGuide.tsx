@@ -13,9 +13,18 @@ const TheAipoweredMeetingSummariesGuide = () => {
         <meta property="og:description" content="Case study: 320 meetings summarized in 60 days with 1,400% ROI. Learn tools, scripts, and strategies." />
         <meta property="og:image" content="/meeting-hero.png" />
         <meta property="og:type" content="article" />
-        <script type="application/ld+json">
-          {"@context":"https://schema.org","@type":"BlogPosting","headline":"The AI Meeting Summaries Guide","author":{"name":"futureopsTeam"},"datePublished":"2025-03-01"}
-        </script>
+        <script 
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              "headline": "The AI-Powered Meeting Summaries Guide",
+              "author": {"name": "futureopsTeam"},
+              "datePublished": "2025-09-04"
+            })
+          }}
+        />
       </Helmet>
       
       <NewHeader />
