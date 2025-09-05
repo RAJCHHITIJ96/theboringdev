@@ -131,7 +131,18 @@ function validateAndNormalizeInput(input: any): FlexibleInputData {
   return normalized;
 }
 
-function escapeHtml(text: string): string {
+function escapeForJSX(text: string): string {
+  // Only escape quotes and basic HTML for JSX attributes, NOT code content
+  return text.replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function escapeHtmlButNotCode(text: string, isCodeContent: boolean = false): string {
+  if (isCodeContent) {
+    // For code blocks, only escape JSX conflicts, not HTML entities
+    return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  
+  // For regular text, escape HTML entities
   const map: { [key: string]: string } = {
     '&': '&amp;',
     '<': '&lt;',
@@ -233,7 +244,7 @@ function processMarkdownContent(content: string): string {
             marginBottom: '20px',
             marginTop: '48px'
           }} className="text-black">
-            ${escapeHtml(headerText)}
+            ${escapeHtmlButNotCode(headerText)}
           </h3>
       `);
       
@@ -268,7 +279,7 @@ function processContentLines(content: string): string {
           <div className="my-12">
             <pre className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
               <code className="text-sm font-mono text-gray-100">
-                ${escapeHtml(codeContent)}
+                ${escapeHtmlButNotCode(codeContent, true)}
               </code>
             </pre>
           </div>
@@ -288,7 +299,7 @@ function processContentLines(content: string): string {
               marginBottom: '24px',
               color: '#374151'
             }}>
-              ${escapeHtml(currentParagraph.join(' '))}
+              ${escapeHtmlButNotCode(currentParagraph.join(' '))}
             </p>
           `);
           currentParagraph = [];
@@ -314,7 +325,7 @@ function processContentLines(content: string): string {
             marginBottom: '24px',
             color: '#374151'
           }}>
-            ${escapeHtml(currentParagraph.join(' '))}
+            ${escapeHtmlButNotCode(currentParagraph.join(' '))}
           </p>
         `);
         currentParagraph = [];
@@ -330,7 +341,7 @@ function processContentLines(content: string): string {
             lineHeight: '1.7',
             color: '#374151'
           }}>
-            ${escapeHtml(listItem)}
+            ${escapeHtmlButNotCode(listItem)}
           </span>
         </div>
       `);
@@ -352,7 +363,7 @@ function processContentLines(content: string): string {
             marginBottom: '32px',
             color: '#374151'
           }}>
-            ${escapeHtml(currentParagraph.join(' '))}
+            ${escapeHtmlButNotCode(currentParagraph.join(' '))}
           </p>
         `);
         currentParagraph = [];
@@ -373,7 +384,7 @@ function processContentLines(content: string): string {
         marginBottom: '32px',
         color: '#374151'
       }}>
-        ${escapeHtml(currentParagraph.join(' '))}
+        ${escapeHtmlButNotCode(currentParagraph.join(' '))}
       </p>
     `);
   }
@@ -381,10 +392,53 @@ function processContentLines(content: string): string {
   return processed.join('\n');
 }
 
+function findBestInsertionPoint(content: string, targetLocation: string): number {
+  const lines = content.split('\n');
+  const searchTerms = targetLocation.toLowerCase();
+  
+  // Try to find section headers that match the target location
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].toLowerCase();
+    
+    // Match section headers first
+    if (line.includes('<h2') || line.includes('<h3')) {
+      // Extract header text and check for matches
+      const headerMatch = line.match(/>(.*?)</);
+      if (headerMatch) {
+        const headerText = headerMatch[1].toLowerCase();
+        if (searchTerms.includes(headerText.replace(/[^a-z0-9\s]/g, '')) || 
+            headerText.includes(searchTerms.replace(/[^a-z0-9\s]/g, ''))) {
+          // Insert after this header section
+          for (let j = i + 1; j < lines.length; j++) {
+            if (lines[j].includes('</section>') || lines[j].includes('<h2') || lines[j].includes('<h3')) {
+              return j;
+            }
+          }
+          return i + 1;
+        }
+      }
+    }
+    
+    // Match by keywords in content
+    if (searchTerms.includes('hero') && line.includes('header')) {
+      return i + 1;
+    }
+    if (searchTerms.includes('before') && searchTerms.includes('mistake')) {
+      if (line.includes('mistake') || line.includes('common')) {
+        return i;
+      }
+    }
+  }
+  
+  // Default: insert at the end of content
+  return lines.length;
+}
+
 function processAssets(assets: FlexibleInputData['assets_manager_details'], processedContent: string): string {
   let finalContent = processedContent;
+  const contentLines = finalContent.split('\n');
   
-  // Process images
+  // Process images with intelligent placement
   if (assets?.images) {
     for (const imageObj of assets.images) {
       for (const [key, image] of Object.entries(imageObj)) {
@@ -392,14 +446,118 @@ function processAssets(assets: FlexibleInputData['assets_manager_details'], proc
           <div className="blog-image-container my-16">
             <img 
               src="${image.src}" 
-              alt="${escapeHtml(image.alt)}" 
-              className="w-full h-auto rounded-lg"
+              alt="${escapeForJSX(image.alt)}" 
+              className="w-full h-auto rounded-lg shadow-lg"
               loading="lazy"
             />
           </div>
         `;
-        // Insert image based on where_to_place logic or append
-        finalContent += imagePlacement;
+        
+        if (image.where_to_place) {
+          const insertPoint = findBestInsertionPoint(finalContent, image.where_to_place);
+          const lines = finalContent.split('\n');
+          lines.splice(insertPoint, 0, imagePlacement);
+          finalContent = lines.join('\n');
+        } else {
+          finalContent += imagePlacement;
+        }
+      }
+    }
+  }
+  
+  // Process code snippets
+  if (assets?.code_snippets) {
+    for (const codeObj of assets.code_snippets) {
+      for (const [key, codeSnippet] of Object.entries(codeObj)) {
+        const codePlacement = `
+          <div className="my-12">
+            <div className="mb-4">
+              <h4 className="text-lg font-semibold text-gray-800">${escapeForJSX(codeSnippet.snippet)}</h4>
+              <p className="text-sm text-gray-600 mt-2">${escapeForJSX(codeSnippet.description || '')}</p>
+            </div>
+            <div className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
+              <code className="text-sm font-mono text-gray-100">
+                // ${escapeForJSX(codeSnippet.snippet)}
+                // Implementation details would go here
+              </code>
+            </div>
+          </div>
+        `;
+        
+        if (codeSnippet.where_to_place) {
+          const insertPoint = findBestInsertionPoint(finalContent, codeSnippet.where_to_place);
+          const lines = finalContent.split('\n');
+          lines.splice(insertPoint, 0, codePlacement);
+          finalContent = lines.join('\n');
+        } else {
+          finalContent += codePlacement;
+        }
+      }
+    }
+  }
+  
+  // Process tables
+  if (assets?.tables) {
+    for (const tableObj of assets.tables) {
+      for (const [key, table] of Object.entries(tableObj)) {
+        const tablePlacement = `
+          <div className="my-16">
+            <h4 className="text-xl font-semibold mb-6 text-gray-800">${escapeForJSX(table.title)}</h4>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-300 rounded-lg">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="border border-gray-300 px-4 py-2 text-left">Column 1</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">Column 2</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2">Sample Data</td>
+                    <td className="border border-gray-300 px-4 py-2">Sample Data</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+        
+        if (table.where_to_place) {
+          const insertPoint = findBestInsertionPoint(finalContent, table.where_to_place);
+          const lines = finalContent.split('\n');
+          lines.splice(insertPoint, 0, tablePlacement);
+          finalContent = lines.join('\n');
+        } else {
+          finalContent += tablePlacement;
+        }
+      }
+    }
+  }
+  
+  // Process charts
+  if (assets?.charts) {
+    for (const chartObj of assets.charts) {
+      for (const [key, chart] of Object.entries(chartObj)) {
+        const chartPlacement = `
+          <div className="my-16">
+            <div className="bg-gray-50 rounded-lg p-8 text-center">
+              <h4 className="text-xl font-semibold mb-4 text-gray-800">Chart: ${escapeForJSX(chart.chart_data)}</h4>
+              <p className="text-gray-600">${escapeForJSX(chart.description || 'Chart visualization would appear here')}</p>
+              <div className="mt-6 h-64 bg-white rounded border-2 border-dashed border-gray-300 flex items-center justify-center">
+                <span className="text-gray-500">Chart Placeholder</span>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        if (chart.where_to_place) {
+          const insertPoint = findBestInsertionPoint(finalContent, chart.where_to_place);
+          const lines = finalContent.split('\n');
+          lines.splice(insertPoint, 0, chartPlacement);
+          finalContent = lines.join('\n');
+        } else {
+          finalContent += chartPlacement;
+        }
       }
     }
   }
@@ -422,7 +580,15 @@ function processAssets(assets: FlexibleInputData['assets_manager_details'], proc
             </div>
           </div>
         `;
-        finalContent += videoPlacement;
+        
+        if (video.where_to_place) {
+          const insertPoint = findBestInsertionPoint(finalContent, video.where_to_place);
+          const lines = finalContent.split('\n');
+          lines.splice(insertPoint, 0, videoPlacement);
+          finalContent = lines.join('\n');
+        } else {
+          finalContent += videoPlacement;
+        }
       }
     }
   }
@@ -464,15 +630,18 @@ const ${componentName} = () => {
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>${escapeHtml(seoTitle)}</title>
-        <meta name="description" content="${escapeHtml(seoDescription)}" />
-        <meta property="og:title" content="${escapeHtml(data.seo_details?.html_head_section?.meta_tags?.['og:title'] || seoTitle)}" />
-        <meta property="og:description" content="${escapeHtml(data.seo_details?.html_head_section?.meta_tags?.['og:description'] || seoDescription)}" />
-        <meta property="og:image" content="${data.seo_details?.html_head_section?.meta_tags?.['og:image'] || '/default-og-image.png'}" />
+        <title>{${JSON.stringify(seoTitle)}}</title>
+        <meta name="description" content={${JSON.stringify(seoDescription)}} />
+        <meta property="og:title" content={${JSON.stringify(data.seo_details?.html_head_section?.meta_tags?.['og:title'] || seoTitle)}} />
+        <meta property="og:description" content={${JSON.stringify(data.seo_details?.html_head_section?.meta_tags?.['og:description'] || seoDescription)}} />
+        <meta property="og:image" content={${JSON.stringify(data.seo_details?.html_head_section?.meta_tags?.['og:image'] || '/default-og-image.png')}} />
         <meta property="og:type" content="article" />
-        ${data.seo_details?.html_head_section?.schema_markup ? `<script type="application/ld+json">
-          ${JSON.stringify(data.seo_details.html_head_section.schema_markup)}
-        </script>` : ''}
+        {${data.seo_details?.html_head_section?.schema_markup ? `<script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: ${JSON.stringify(JSON.stringify(data.seo_details.html_head_section.schema_markup))}
+          }}
+        />` : 'null'}}
       </Helmet>
       
       <NewHeader />
@@ -481,7 +650,7 @@ const ${componentName} = () => {
       <header className="max-w-[680px] mx-auto pt-32 pb-16 text-center px-10">
         <div className="mb-12">
           <p className="text-xs mb-4 text-gray-500 font-mono uppercase tracking-widest">
-            ${escapeHtml(data.category)}
+            {${JSON.stringify(data.category)}}
           </p>
           <p className="text-sm font-mono text-gray-600">
             Published on ${currentDate}
@@ -502,7 +671,7 @@ const ${componentName} = () => {
           letterSpacing: '-0.01em',
           marginBottom: '80px'
         }} className="text-black">
-          ${escapeHtml(title)}
+          ${escapeHtmlButNotCode(title)}
         </h1>
       </div>
 

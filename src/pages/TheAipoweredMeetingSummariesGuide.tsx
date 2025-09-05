@@ -369,7 +369,7 @@ const TheAipoweredMeetingSummariesGuide = () => {
           <div className="my-12">
             <pre className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
               <code className="text-sm font-mono text-gray-100">
-{`def summarize_meeting(transcript_text):
+                {`def summarize_meeting(transcript_text):
     summary = openai.ChatCompletion.create(
         model="gpt-4o",
         messages=[{"role": "user", "content": f"Summarize this meeting transcript into key points, action items, and decisions: {transcript_text}"}]
