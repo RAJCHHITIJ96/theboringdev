@@ -20,28 +20,31 @@ export interface ArticleEntry {
 }
 
 export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
-  "ai-automation": [
-    {
-      "slug": "ai-agent-security-the-no-nonsense-guide-to-prompt-injection-malicious-use",
-      "component": "AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse",
-      "title": "AI Agent Security: The No-Nonsense Guide to Prompt Injection & Malicious Use",
-      "publishDate": "2025-09-05",
-      "category": "ai-automation",
-      "description": "Practical defense strategies for AI agent security using the BORINGDEV method. Learn about prompt injection, malicious use, and how to build bulletproof AI agents.",
-      "readTime": "4 min",
-      "url": "/ai-automation/ai-agent-security-the-no-nonsense-guide-to-prompt-injection-malicious-use",
-      "assetsCount": {
-        "images": 5,
-        "code_blocks": 5,
-        "tables": 0
-      }
-    }
-  ],
+  "ai-automation": [],
   "ai-news": [],
   "tool-comparisons": [],
   "builder-stories": [],
   "ai-reality-check": [],
-  "trending-opportunities": []
+  "trending-opportunities": [],
+  "AI Automation": [
+    {
+      "slug": "the-ai-powered-meeting-summaries-guide",
+      "component": "TheAipoweredMeetingSummariesGuide",
+      "title": "The AI-Powered Meeting Summaries Guide",
+      "publishDate": "2025-09-04",
+      "category": "AI Automation",
+      "description": "Learn how AI meeting summaries save time, boost productivity, and ensure no detail is missed. Real case study with 1,400% ROI.",
+      "readTime": "2 min",
+      "url": "/AI Automation/the-ai-powered-meeting-summaries-guide",
+      "assetsCount": {
+        "images": 1,
+        "videos": 0,
+        "tables": 1,
+        "charts": 0,
+        "code_snippets": 1
+      }
+    }
+  ]
 };
 
 export function getArticleBySlug(category: string, slug: string): ArticleEntry | undefined {
