@@ -196,23 +196,30 @@ function extractTitle(content: string): string {
 function processMarkdownContent(content: string): string {
   console.log('📝 Processing markdown content...');
   
-  // CRITICAL FIX: Remove CONTENT prefix and extract actual content
+  // CRITICAL FIX: Clean problematic content FIRST
   let cleanContent = content;
   
-  // Remove "CONTENT:" prefix and hero image instruction if present
-  if (content.includes('CONTENT:')) {
-    const contentMatch = content.match(/CONTENT:\s*(?:Hero Image:.*?)?\s*([\s\S]*)/);
-    if (contentMatch && contentMatch[1]) {
-      cleanContent = contentMatch[1].trim();
-    }
-  }
+  // Remove hero image lines that contain problematic syntax
+  cleanContent = cleanContent.replace(/^Hero Image:.*$/gm, '');
   
-  // Remove any trailing closing braces that break JSX
-  cleanContent = cleanContent.replace(/\}\s*$/, '');
+  // Remove any lines that end with standalone closing braces
+  cleanContent = cleanContent.replace(/^.*}\s*$/gm, '');
+  
+  // Clean up multiple consecutive newlines
+  cleanContent = cleanContent.replace(/\n\s*\n\s*\n/g, '\n\n');
+  
+  // Remove any stray closing braces that aren't part of code blocks
+  cleanContent = cleanContent.replace(/(?<!```[^`]*)}(?![^`]*```)/g, '');
+  
+  // Clean and normalize content
+  cleanContent = cleanContent
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .trim();
   
   console.log('✅ Content cleaned and normalized');
   
-  // Split content into sections
+  // Split content into sections by headers
   const sections = cleanContent.split(/\n(?=#{1,3}\s)/);
   let processedSections: string[] = [];
   
@@ -222,12 +229,11 @@ function processMarkdownContent(content: string): string {
     const lines = section.split('\n');
     const firstLine = lines[0];
     
-    // Process headers
+    // Skip the main H1 title - it's handled separately
     if (firstLine.startsWith('# ')) {
-      // H1 - Main title (handled separately in component structure)
       continue;
     } else if (firstLine.startsWith('## ')) {
-      // H2 - Section headers
+      // H2 Section Header
       const headerText = firstLine.replace('## ', '').trim();
       processedSections.push(`
         <section className="mb-16">
@@ -243,15 +249,14 @@ function processMarkdownContent(content: string): string {
           </h2>
       `);
       
-      // Process remaining content in section
+      // Process remaining content in this section
       const remainingContent = lines.slice(1).join('\n');
       if (remainingContent.trim()) {
         processedSections.push(processContentLines(remainingContent));
       }
-      
       processedSections.push('</section>');
     } else if (firstLine.startsWith('### ')) {
-      // H3 - Subsection headers
+      // H3 Subsection Header
       const headerText = firstLine.replace('### ', '').trim();
       processedSections.push(`
           <h3 style={{
@@ -266,7 +271,7 @@ function processMarkdownContent(content: string): string {
           </h3>
       `);
       
-      // Process remaining content
+      // Process remaining content in this section
       const remainingContent = lines.slice(1).join('\n');
       if (remainingContent.trim()) {
         processedSections.push(processContentLines(remainingContent));
@@ -745,6 +750,21 @@ function processAssets(assets: FlexibleInputData['assets_manager_details'], proc
   return finalContent;
 }
 
+// Input sanitization function
+function sanitizeInput(inputData: FlexibleInputData): FlexibleInputData {
+  if (inputData.shipped_content) {
+    // Remove hero image declarations that cause JSX issues
+    inputData.shipped_content = inputData.shipped_content
+      .replace(/^Hero Image:.*$/gm, '')
+      .replace(/^.*}\s*$/gm, '')
+      .replace(/\n\s*\n\s*\n/g, '\n\n')
+      .trim();
+    
+    console.log('✅ Input content sanitized');
+  }
+  return inputData;
+}
+
 async function generateReactComponent(data: FlexibleInputData): Promise<{ component: string; metadata: ComponentMetadata }> {
   console.log('🎯 Generating component for:', data.category, 'with content length:', data.shipped_content.length);
   
@@ -915,10 +935,13 @@ serve(async (req) => {
 
     // Validate and normalize input
     const validatedData = validateAndNormalizeInput(requestData);
-    console.log('AI Coder Agent - Normalized input:', JSON.stringify(validatedData, null, 2));
+    console.log('✅ Input validated and normalized successfully');
+
+    // Sanitize input to prevent JSX issues
+    const sanitizedData = sanitizeInput(validatedData);
 
     // Generate React component
-    const { component, metadata } = await generateReactComponent(validatedData);
+    const { component, metadata } = await generateReactComponent(sanitizedData);
 
     // Return success response
     const response = {
