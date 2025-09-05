@@ -558,6 +558,8 @@ def example_function():
     """
     pass`;
 }
+
+function processAssets(assets: FlexibleInputData['assets_manager_details'], processedContent: string): string {
   let finalContent = processedContent;
   const contentLines = finalContent.split('\n');
   
