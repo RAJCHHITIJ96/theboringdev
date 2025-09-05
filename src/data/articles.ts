@@ -32,8 +32,10 @@ export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
       "url": "/ai-automation/ai-agent-security-the-no-nonsense-guide-to-prompt-injection-malicious-use",
       "assetsCount": {
         "images": 5,
-        "code_blocks": 5,
-        "tables": 0
+        "code_snippets": 5,
+        "tables": 0,
+        "charts": 0,
+        "videos": 0
       }
     }
   ],

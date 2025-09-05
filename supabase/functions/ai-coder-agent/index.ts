@@ -71,8 +71,10 @@ interface ComponentMetadata {
   read_time: string;
   assets_count: {
     images: number;
-    code_blocks: number;
+    code_snippets: number;
     tables: number;
+    charts: number;
+    videos: number;
   };
 }
 
@@ -194,8 +196,24 @@ function extractTitle(content: string): string {
 function processMarkdownContent(content: string): string {
   console.log('📝 Processing markdown content...');
   
+  // CRITICAL FIX: Remove CONTENT prefix and extract actual content
+  let cleanContent = content;
+  
+  // Remove "CONTENT:" prefix and hero image instruction if present
+  if (content.includes('CONTENT:')) {
+    const contentMatch = content.match(/CONTENT:\s*(?:Hero Image:.*?)?\s*([\s\S]*)/);
+    if (contentMatch && contentMatch[1]) {
+      cleanContent = contentMatch[1].trim();
+    }
+  }
+  
+  // Remove any trailing closing braces that break JSX
+  cleanContent = cleanContent.replace(/\}\s*$/, '');
+  
+  console.log('✅ Content cleaned and normalized');
+  
   // Split content into sections
-  const sections = content.split(/\n(?=#{1,3}\s)/);
+  const sections = cleanContent.split(/\n(?=#{1,3}\s)/);
   let processedSections: string[] = [];
   
   for (const section of sections) {
@@ -560,31 +578,35 @@ def example_function():
 }
 
 function processAssets(assets: FlexibleInputData['assets_manager_details'], processedContent: string): string {
+  console.log('🎨 Processing assets with bulletproof JSX generation...');
   let finalContent = processedContent;
-  const contentLines = finalContent.split('\n');
   
-  // Process images with intelligent placement
+  // CRITICAL FIX: Process images with perfect JSX structure
   if (assets?.images) {
+    console.log(`📷 Processing ${assets.images.length} images`);
+    
     for (const imageObj of assets.images) {
       for (const [key, image] of Object.entries(imageObj)) {
+        // Generate bulletproof JSX with proper escaping
         const imagePlacement = `
           <div className="blog-image-container my-16">
             <img 
-              src="${image.src}" 
+              src="${escapeForJSX(image.src)}" 
               alt="${escapeForJSX(image.alt)}" 
               className="w-full h-auto rounded-lg shadow-lg"
               loading="lazy"
             />
-          </div>
-        `;
+          </div>`;
         
         if (image.where_to_place) {
           const insertPoint = findBestInsertionPoint(finalContent, image.where_to_place);
           const lines = finalContent.split('\n');
           lines.splice(insertPoint, 0, imagePlacement);
           finalContent = lines.join('\n');
+          console.log(`✅ Image placed at insertion point: ${insertPoint}`);
         } else {
           finalContent += imagePlacement;
+          console.log('✅ Image appended to end of content');
         }
       }
     }
@@ -735,13 +757,25 @@ async function generateReactComponent(data: FlexibleInputData): Promise<{ compon
   // Count assets
   const assetsCount = {
     images: data.assets_manager_details?.images?.length || 0,
-    code_blocks: Math.floor((data.shipped_content.match(/```/g) || []).length / 2),
+    code_snippets: Math.floor((data.shipped_content.match(/```/g) || []).length / 2),
     tables: data.assets_manager_details?.tables?.length || 0,
+    charts: data.assets_manager_details?.charts?.length || 0,
+    videos: data.assets_manager_details?.videos?.length || 0,
   };
   
-  // Process content
+  // CRITICAL FIX: Process content with proper validation
+  console.log('🔄 Starting content processing pipeline...');
   const processedContent = processMarkdownContent(data.shipped_content);
+  console.log('✅ Markdown processing complete');
+  
   const finalContent = processAssets(data.assets_manager_details, processedContent);
+  console.log('✅ Asset processing complete');
+  
+  // CRITICAL: Validate final content for JSX compliance
+  if (finalContent.includes('undefined') || finalContent.includes('${')) {
+    console.error('❌ JSX validation failed - template literals not resolved');
+    throw new Error('Content processing failed - invalid JSX detected');
+  }
   
   // Get SEO data
   const seoTitle = data.seo_details?.html_head_section?.meta_tags?.title || title;
