@@ -142,42 +142,135 @@ function validateRouteSlug(slug: string): boolean {
   return kebabCaseRegex.test(slug);
 }
 
+// JSX repair function to fix malformed JSX
+function repairMalformedJSX(component: string): string {
+  console.log('🔧 Repairing malformed JSX...');
+  
+  let repairedComponent = component;
+  
+  // Fix #1: Close unclosed img tags
+  repairedComponent = repairedComponent.replace(
+    /<img([^>]*?)(?<!\/)\s*\n\s*(?=<[^/])/g, 
+    '<img$1 />\n\n          '
+  );
+  
+  // Fix #2: Close unclosed self-closing tags
+  repairedComponent = repairedComponent.replace(
+    /<(img|br|hr|input|meta|link)([^>]*?)(?<!\/)\s*\n\s*(?=<[^/])/g,
+    '<$1$2 />\n\n          '
+  );
+  
+  // Fix #3: Remove duplicate closing tags
+  repairedComponent = repairedComponent.replace(
+    /\/>\s*(loading="lazy")\s*\/>/g,
+    ' $1 />'
+  );
+  
+  // Fix #4: Ensure proper img tag closure
+  repairedComponent = repairedComponent.replace(
+    /className="w-full h-auto rounded-lg shadow-lg"\s*\n\s*<div/g,
+    'className="w-full h-auto rounded-lg shadow-lg"\n              loading="lazy"\n            />\n          </div>\n\n          <div'
+  );
+  
+  console.log('✅ JSX repaired successfully');
+  return repairedComponent;
+}
+
+// JSX validation function
+function validateJSX(component: string): { isValid: boolean; errors: string[] } {
+  const errors: string[] = [];
+  
+  // Check for unclosed img tags
+  const unclosedImgRegex = /<img[^>]*(?<!\/)\s*\n\s*</g;
+  if (unclosedImgRegex.test(component)) {
+    errors.push('Found unclosed img tags');
+  }
+  
+  // Check for malformed self-closing tags
+  const malformedSelfClosing = /<(img|br|hr|input|meta|link)[^>]*(?<!\/)\s*\n\s*</g;
+  if (malformedSelfClosing.test(component)) {
+    errors.push('Found malformed self-closing tags');
+  }
+  
+  // Check for duplicate attributes
+  const duplicateAttrs = /(\w+)=["'][^"']*["']\s+\1=/g;
+  if (duplicateAttrs.test(component)) {
+    errors.push('Found duplicate attributes');
+  }
+  
+  // Check for common JSX syntax issues
+  if (component.includes('className="w-full h-auto rounded-lg shadow-lg"\n\n          <div')) {
+    errors.push('Found unclosed img tag before div');
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors: errors
+  };
+}
+
 function enhanceComponent(component: string, metadata: ShaperAIInput['metadata']): string {
-  // Safely extract component content by finding the main component function
-  const componentMatch = component.match(/const\s+\w+\s*=\s*\(\)\s*=>\s*\{[\s\S]*\}\s*;\s*export\s+default\s+\w+;?/);
-  let enhancedComponent = componentMatch ? componentMatch[0] : component;
+  console.log('🔧 Enhancing component with JSX validation and repair...');
   
-  // Remove only React-related imports to avoid JSX corruption
-  enhancedComponent = enhancedComponent.replace(/^import\s+React[^;]*;\s*\n?/gm, '');
-  enhancedComponent = enhancedComponent.replace(/^import[^;]*from\s+["']react-helmet-async["'][^;]*;\s*\n?/gm, '');
-  enhancedComponent = enhancedComponent.replace(/^import[^;]*NewHeader[^;]*;\s*\n?/gm, '');
-  enhancedComponent = enhancedComponent.replace(/^import[^;]*Footer[^;]*;\s*\n?/gm, '');
+  // Step 1: Validate incoming JSX
+  const validation = validateJSX(component);
   
-  // Add standardized imports with correct default import syntax
-  const imports = `import React from 'react';
+  if (!validation.isValid) {
+    console.warn('⚠️ Malformed JSX detected:', validation.errors);
+    
+    // Step 2: Attempt to repair JSX
+    component = repairMalformedJSX(component);
+    
+    // Step 3: Re-validate after repair
+    const revalidation = validateJSX(component);
+    if (!revalidation.isValid) {
+      console.error('❌ JSX repair failed:', revalidation.errors);
+      throw new Error(`JSX validation failed after repair: ${revalidation.errors.join(', ')}`);
+    }
+    
+    console.log('✅ JSX successfully repaired');
+  }
+  
+  // Step 4: Safe enhancement (minimal changes to avoid corruption)
+  let enhancedComponent = component;
+  
+  // Only fix import issues if needed (safer approach)
+  if (enhancedComponent.includes('{ NewHeader }') && !enhancedComponent.includes('import NewHeader from')) {
+    enhancedComponent = enhancedComponent.replace(
+      /import { NewHeader } from "@\/components\/NewHeader";/,
+      'import NewHeader from "@/components/NewHeader";'
+    );
+  }
+  
+  // Add standardized imports with correct default import syntax (only if missing)
+  if (!enhancedComponent.includes('import React from')) {
+    const imports = `import React from 'react';
 import NewHeader from "@/components/NewHeader";
 import Footer from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
+
 `;
+    enhancedComponent = imports + enhancedComponent;
+  }
 
-    // Fix JSON-LD schema generation to prevent build errors
-    const jsonLdScript = `<script 
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "BlogPosting",
-              "headline": "${metadata.title}",
-              "author": {"name": "futureopsTeam"},
-              "datePublished": "${metadata.publish_date}"
-            })
-          }}
-        />`;
+  // Fix JSON-LD schema generation to prevent build errors (safer replacement)
+  const jsonLdScript = `<script 
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": "${metadata.title}",
+            "author": {"name": "futureopsTeam"},
+            "datePublished": "${metadata.publish_date}"
+          })
+        }}
+      />`;
 
-    enhancedComponent = enhancedComponent.replace(
-      /<script type="application\/ld\+json">[\s\S]*?<\/script>/g,
-      jsonLdScript
-    );
+  enhancedComponent = enhancedComponent.replace(
+    /<script type="application\/ld\+json">[\s\S]*?<\/script>/g,
+    jsonLdScript
+  );
 
   // Add SEO meta tags if not present  
   const seoTags = `<Helmet>
@@ -201,15 +294,22 @@ import { Helmet } from "react-helmet-async";
     );
   }
 
-  // Ensure responsive classes are applied
+  // Ensure responsive classes are applied (safer approach)
   if (!enhancedComponent.includes('min-h-screen')) {
     enhancedComponent = enhancedComponent.replace(
-      /<div className="([^"]*)">/,
-      '<div className="min-h-screen bg-background $1">'
+      /(<div className=")([^"]*)(">)/,
+      '$1min-h-screen bg-background $2$3'
     );
   }
-
-  return imports + enhancedComponent;
+  
+  // Step 5: Final validation
+  const finalValidation = validateJSX(enhancedComponent);
+  if (!finalValidation.isValid) {
+    throw new Error(`Final JSX validation failed: ${finalValidation.errors.join(', ')}`);
+  }
+  
+  console.log('✅ Component enhanced successfully');
+  return enhancedComponent;
 }
 
 function generateArticleRegistryEntry(metadata: ShaperAIInput['metadata']): ArticleRegistryEntry {

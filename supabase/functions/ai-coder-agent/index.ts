@@ -592,7 +592,7 @@ function processAssets(assets: FlexibleInputData['assets_manager_details'], proc
     
     for (const imageObj of assets.images) {
       for (const [key, image] of Object.entries(imageObj)) {
-        // Generate bulletproof JSX with proper escaping
+        // Generate bulletproof JSX with proper escaping and validation
         const imagePlacement = `
           <div className="blog-image-container my-16">
             <img 
