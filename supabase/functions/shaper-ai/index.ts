@@ -143,8 +143,15 @@ function validateRouteSlug(slug: string): boolean {
 }
 
 function enhanceComponent(component: string, metadata: ShaperAIInput['metadata']): string {
-  // Remove any existing imports to avoid duplicates
-  let enhancedComponent = component.replace(/^import.*from.*["'].*["'];?\n?/gm, '');
+  // Safely extract component content by finding the main component function
+  const componentMatch = component.match(/const\s+\w+\s*=\s*\(\)\s*=>\s*\{[\s\S]*\}\s*;\s*export\s+default\s+\w+;?/);
+  let enhancedComponent = componentMatch ? componentMatch[0] : component;
+  
+  // Remove only React-related imports to avoid JSX corruption
+  enhancedComponent = enhancedComponent.replace(/^import\s+React[^;]*;\s*\n?/gm, '');
+  enhancedComponent = enhancedComponent.replace(/^import[^;]*from\s+["']react-helmet-async["'][^;]*;\s*\n?/gm, '');
+  enhancedComponent = enhancedComponent.replace(/^import[^;]*NewHeader[^;]*;\s*\n?/gm, '');
+  enhancedComponent = enhancedComponent.replace(/^import[^;]*Footer[^;]*;\s*\n?/gm, '');
   
   // Add standardized imports with correct default import syntax
   const imports = `import React from 'react';
