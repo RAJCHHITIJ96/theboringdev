@@ -25,15 +25,17 @@ export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
       "slug": "the-ai-powered-meeting-summaries-guide",
       "component": "TheAipoweredMeetingSummariesGuide",
       "title": "The AI-Powered Meeting Summaries Guide",
-      "publishDate": "2025-09-04",
+      "publishDate": "2025-09-06",
       "category": "ai-automation",
       "description": "Learn how AI meeting summaries save time, boost productivity, and ensure no detail is missed. Real case study with 1,400% ROI.",
       "readTime": "2 min",
       "url": "/ai-automation/the-ai-powered-meeting-summaries-guide",
       "assetsCount": {
         "images": 1,
-        "code_blocks": 1,
-        "tables": 1
+        "code_snippets": 1,
+        "tables": 1,
+        "charts": 1,
+        "videos": 0
       }
     }
   ],
