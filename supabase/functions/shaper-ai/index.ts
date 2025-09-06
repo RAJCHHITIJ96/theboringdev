@@ -82,23 +82,30 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 // Validation functions
 function validateInput(input: any): { valid: boolean; data?: ShaperAIInput; error?: string } {
   try {
+    console.log('🔍 Validating Shaper AI input:', typeof input);
+    
     // Handle string input (JSON)
     if (typeof input === 'string') {
       input = JSON.parse(input);
     }
 
-    // PHASE 3A: Handle AI Coder Agent output format
+    // Handle AI Coder Agent output format
     // AI Coder Agent sends: { success: true, component: "...", metadata: {...}, message: "..." }
     // Shaper AI expects: { component: "...", metadata: {...} }
     let processedInput = input;
     
     if (input.success !== undefined && input.component && input.metadata) {
-      console.log('🔄 Detected AI Coder Agent format, transforming input...');
+      console.log('🔄 Detected AI Coder Agent format, extracting component and metadata...');
+      
+      if (!input.success) {
+        return { valid: false, error: `AI Coder failed: ${input.error || 'Unknown error'}` };
+      }
+      
       processedInput = {
         component: input.component,
         metadata: input.metadata
       };
-      console.log('✅ Input transformed for compatibility');
+      console.log('✅ AI Coder output transformed for Shaper AI compatibility');
     }
 
     // Validate required fields
@@ -119,13 +126,15 @@ function validateInput(input: any): { valid: boolean; data?: ShaperAIInput; erro
       }
     }
 
-    // Validate assets_count
+    // Validate assets_count structure
     if (!meta.assets_count || typeof meta.assets_count !== 'object') {
       meta.assets_count = { images: 0, videos: 0, tables: 0, charts: 0, code_snippets: 0 };
     }
 
+    console.log('✅ Shaper AI input validation successful');
     return { valid: true, data: processedInput as ShaperAIInput };
   } catch (error) {
+    console.error('❌ Shaper AI input validation failed:', error);
     return { valid: false, error: `Input validation failed: ${error.message}` };
   }
 }
