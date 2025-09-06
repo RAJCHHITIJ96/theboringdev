@@ -22,19 +22,19 @@ export interface ArticleEntry {
 export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
   "ai-automation": [
     {
-      "slug": "the-ai-powered-meeting-summaries-guide",
-      "component": "TheAipoweredMeetingSummariesGuide",
-      "title": "The AI-Powered Meeting Summaries Guide",
-      "publishDate": "2025-09-06",
+      "slug": "ai-agent-security-the-no-nonsense-guide-to-prompt-injection-malicious-use",
+      "component": "AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse",
+      "title": "AI Agent Security: The No-Nonsense Guide to Prompt Injection & Malicious Use",
+      "publishDate": "2025-09-05",
       "category": "ai-automation",
-      "description": "Learn how AI meeting summaries save time, boost productivity, and ensure no detail is missed. Real case study with 1,400% ROI.",
-      "readTime": "2 min",
-      "url": "/ai-automation/the-ai-powered-meeting-summaries-guide",
+      "description": "Practical defense strategies for AI agent security using the BORINGDEV method. Learn about prompt injection, malicious use, and how to build bulletproof AI agents.",
+      "readTime": "4 min",
+      "url": "/ai-automation/ai-agent-security-the-no-nonsense-guide-to-prompt-injection-malicious-use",
       "assetsCount": {
-        "images": 1,
-        "code_snippets": 1,
-        "tables": 1,
-        "charts": 1,
+        "images": 5,
+        "code_snippets": 5,
+        "tables": 0,
+        "charts": 0,
         "videos": 0
       }
     }
