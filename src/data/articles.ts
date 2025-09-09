@@ -20,30 +20,31 @@ export interface ArticleEntry {
 }
 
 export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
-  "ai-automation": [
-    {
-      "slug": "ai-powered-email-automation-strategies",
-      "component": "AiPoweredEmailAutomationStrategies",
-      "title": "AI-Powered Email Automation Strategies",
-      "publishDate": "2025-09-06",
-      "category": "ai-automation",
-      "description": "Learn how to use AI to personalize and automate email marketing campaigns. Save time and increase conversions with real-world strategies.",
-      "readTime": "3 min",
-      "url": "/ai-automation/ai-powered-email-automation-strategies",
-      "assetsCount": {
-        "images": 1,
-        "videos": 0,
-        "tables": 1,
-        "charts": 1,
-        "code_snippets": 1
-      }
-    }
-  ],
+  "ai-automation": [],
   "ai-news": [],
   "tool-comparisons": [],
   "builder-stories": [],
   "ai-reality-check": [],
-  "trending-opportunities": []
+  "trending-opportunities": [],
+  "AI Automation": [
+    {
+      "slug": "ai-coding-unsexy-guide-shipping-faster",
+      "component": "AiCodingUnsexeGuide",
+      "title": "AI Coding: The Unsexy Guide to Actually Shipping Faster",
+      "publishDate": "2024-12-09",
+      "category": "AI Automation",
+      "description": "A practical guide for developers to use AI coding assistants effectively. Learn what AI coding really is, pitfalls to avoid, and how to ship faster.",
+      "readTime": "4 min",
+      "url": "/AI Automation/ai-coding-unsexy-guide-shipping-faster",
+      "assetsCount": {
+        "images": 3,
+        "code_blocks": 1,
+        "tables": 1,
+        "charts": 0,
+        "videos": 0
+      }
+    }
+  ]
 };
 
 export function getArticleBySlug(category: string, slug: string): ArticleEntry | undefined {
