@@ -31,9 +31,9 @@ const AICoderAgent = () => {
       "code_snippets": [
         {
           "code_1": {
-            "snippet": "def generate_ugc_video(topic, target_audience):\\n    script = openai.ChatCompletion.create(...)\\n    return video",
+            "snippet": "unit test generation",
             "where_to_place": "In technical implementation",
-            "description": "Core function for video generation"
+            "description": "Core function for video generation with unit tests"
           }
         }
       ]
@@ -177,7 +177,13 @@ const AICoderAgent = () => {
         "where_to_place": "After section 2"
       }
     }],
-    "code_snippets": [...],
+    "code_snippets": [{
+      "code_1": {
+        "snippet": "unit test generation",
+        "where_to_place": "After implementation section",
+        "description": "Example code snippet description"
+      }
+    }],
     "tables": [...],
     "videos": [...]
   },

@@ -405,6 +405,18 @@ function findBestInsertionPoint(content: string, targetLocation: string) {
 }
 
 function generateCodeForSnippet(snippetName: string, description = "") {
+  // Add safety check for undefined snippetName
+  if (!snippetName || typeof snippetName !== 'string') {
+    console.warn('generateCodeForSnippet called with invalid snippetName:', snippetName);
+    return `# Example code snippet
+# ${description || 'No description provided'}
+
+def example_function():
+    """
+    Please provide a valid snippet name/type for better code generation.
+    """
+    pass`;
+  }
   const lower = snippetName.toLowerCase();
   if (lower.includes("system prompt")) {
     return `SYSTEM_PROMPT = """
@@ -514,11 +526,13 @@ function processAssets(assets: any, processedContent: string) {
   if (assets?.code_snippets) {
     for (const codeObj of assets.code_snippets) {
       for (const [, codeSnippet] of Object.entries<any>(codeObj)) {
-        const actual = generateCodeForSnippet(codeSnippet.snippet, codeSnippet.description);
+        // Handle both 'snippet' and 'content' field names for compatibility
+        const snippetName = codeSnippet.snippet || codeSnippet.content || 'example code';
+        const actual = generateCodeForSnippet(snippetName, codeSnippet.description);
         const block = `
           <div className="my-12">
             <div className="mb-4">
-              <h4 className="text-lg font-semibold text-gray-800">${escapeForText(codeSnippet.snippet)}</h4>
+              <h4 className="text-lg font-semibold text-gray-800">${escapeForText(snippetName)}</h4>
               ${codeSnippet.description ? `<p className="text-sm text-gray-600 mt-2">${escapeForText(codeSnippet.description)}</p>` : ""}
             </div>
             <div className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
