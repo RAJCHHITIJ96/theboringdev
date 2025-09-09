@@ -187,8 +187,49 @@ async function validateESLint(files: GitHubPublisherInput['files_created']): Pro
   };
 }
 
+// Path validation for Windows compatibility
+function validateFilePaths(files: GitHubPublisherInput['files_created']): { passed: boolean; error?: string } {
+  for (const file of files) {
+    // Check path length (Windows limit)
+    if (file.path.length > 200) {
+      return {
+        passed: false,
+        error: `File path too long for Windows: ${file.path} (${file.path.length} characters)`
+      };
+    }
+    
+    // Check for invalid Windows path characters
+    const invalidChars = /[<>:"|?*\x00-\x1f]/;
+    if (invalidChars.test(file.path)) {
+      return {
+        passed: false,
+        error: `File path contains invalid Windows characters: ${file.path}`
+      };
+    }
+    
+    // Check component name length specifically
+    if (file.path.includes('/pages/') && file.path.endsWith('.tsx')) {
+      const componentFileName = file.path.split('/').pop()?.replace('.tsx', '') || '';
+      if (componentFileName.length > 50) {
+        return {
+          passed: false,
+          error: `Component filename too long: ${componentFileName} (${componentFileName.length} chars)`
+        };
+      }
+    }
+  }
+  
+  return { passed: true };
+}
+
 async function validateBuild(files: GitHubPublisherInput['files_created']): Promise<{ passed: boolean; error?: string }> {
   try {
+    // First validate file paths
+    const pathValidation = validateFilePaths(files);
+    if (!pathValidation.passed) {
+      return pathValidation;
+    }
+    
     for (const file of files) {
       if (file.path.endsWith('.tsx')) {
         // Check for common build-breaking issues
@@ -434,7 +475,14 @@ async function executeGitOperations(input: GitHubPublisherInput): Promise<GitOpe
       } else {
         const errorData = await updateFileResponse.text();
         console.error(`    ❌ Failed to add ${file.path}:`, errorData);
-        throw new Error(`Failed to add ${file.path}: ${updateFileResponse.statusText}`);
+        console.error(`    Path length: ${file.path.length} characters`);
+        
+        // Provide more specific error messages
+        if (file.path.length > 200) {
+          throw new Error(`File path too long for Git operations: ${file.path.substring(0, 50)}... (${file.path.length} chars)`);
+        } else {
+          throw new Error(`Failed to add ${file.path}: ${updateFileResponse.statusText}`);
+        }
       }
     }
     
