@@ -26,19 +26,19 @@ export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
   "builder-stories": [],
   "ai-reality-check": [],
   "trending-opportunities": [],
-  "AI Automation": [
+  "AI Security": [
     {
-      "slug": "ai-coding-unsexy-guide-shipping-faster",
-      "component": "AiCodingUnsexeGuide",
-      "title": "AI Coding: The Unsexy Guide to Actually Shipping Faster",
-      "publishDate": "2024-12-09",
-      "category": "AI Automation",
-      "description": "A practical guide for developers to use AI coding assistants effectively. Learn what AI coding really is, pitfalls to avoid, and how to ship faster.",
-      "readTime": "4 min",
-      "url": "/AI Automation/ai-coding-unsexy-guide-shipping-faster",
+      "slug": "ai-agent-security-the-no-nonsense-guide-to-prompt-injection-and-malicious-use",
+      "component": "AiAgentSecurityTheNoNonsenseGuide",
+      "title": "AI Agent Security: The No-Nonsense Guide to Prompt Injection & Malicious Use",
+      "publishDate": "2024-03-15",
+      "category": "AI Security",
+      "description": "A practical developer's guide to securing AI agents against prompt injection, malicious use, and other vulnerabilities using the BORINGDEV method.",
+      "readTime": "11 min",
+      "url": "/AI Security/ai-agent-security-the-no-nonsense-guide-to-prompt-injection-and-malicious-use",
       "assetsCount": {
-        "images": 3,
-        "code_snippets": 1,
+        "images": 5,
+        "code_blocks": 5,
         "tables": 1,
         "charts": 0,
         "videos": 0
