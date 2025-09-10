@@ -28,17 +28,17 @@ export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
   "trending-opportunities": [],
   "AI Security": [
     {
-      "slug": "ai-agent-security-the-no-nonsense-guide-to-prompt-injection-and-malicious-use",
-      "component": "AiAgentSecurityTheNoNonsenseGuide",
+      "slug": "ai-agent-security-prompt-injection-malicious-use-guide",
+      "component": "AIAgentSecurityGuide",
       "title": "AI Agent Security: The No-Nonsense Guide to Prompt Injection & Malicious Use",
       "publishDate": "2024-03-15",
       "category": "AI Security",
-      "description": "A practical developer's guide to securing AI agents against prompt injection, malicious use, and other vulnerabilities using the BORINGDEV method.",
-      "readTime": "11 min",
-      "url": "/AI Security/ai-agent-security-the-no-nonsense-guide-to-prompt-injection-and-malicious-use",
+      "description": "Learn practical defense strategies against AI prompt injection and malicious use. The BORINGDEV method with code examples for secure AI agent development.",
+      "readTime": "16 min",
+      "url": "/AI Security/ai-agent-security-prompt-injection-malicious-use-guide",
       "assetsCount": {
         "images": 5,
-        "code_blocks": 5,
+        "code_blocks": 6,
         "tables": 1,
         "charts": 0,
         "videos": 0
