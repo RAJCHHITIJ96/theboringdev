@@ -28,19 +28,19 @@ export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
   "trending-opportunities": [],
   "AI Automation": [
     {
-      "slug": "ai-coding-unsexy-guide-shipping-faster",
-      "component": "AiCodingUnsexeGuide",
-      "title": "AI Coding: The Unsexy Guide to Actually Shipping Faster",
-      "publishDate": "2024-12-09",
+      "slug": "ai-powered-email-automation-strategies",
+      "component": "AiEmailAutomationStrategies",
+      "title": "AI-Powered Email Automation Strategies",
+      "publishDate": "2025-08-31",
       "category": "AI Automation",
-      "description": "A practical guide for developers to use AI coding assistants effectively. Learn what AI coding really is, pitfalls to avoid, and how to ship faster.",
+      "description": "Discover how AI-powered email automation increases engagement, optimizes send times, and drives higher ROI.",
       "readTime": "4 min",
-      "url": "/AI Automation/ai-coding-unsexy-guide-shipping-faster",
+      "url": "/AI Automation/ai-powered-email-automation-strategies",
       "assetsCount": {
-        "images": 3,
-        "code_snippets": 1,
+        "images": 1,
+        "code_blocks": 1,
         "tables": 1,
-        "charts": 0,
+        "charts": 1,
         "videos": 0
       }
     }
