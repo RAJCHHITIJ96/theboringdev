@@ -38,7 +38,7 @@ export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
       "url": "/AI Automation/ai-coding-unsexy-guide-shipping-faster",
       "assetsCount": {
         "images": 3,
-        "code_blocks": 1,
+        "code_snippets": 1,
         "tables": 1,
         "charts": 0,
         "videos": 0

@@ -21,6 +21,7 @@ import MCPConverter from "./pages/MCPConverter";
 import AiCoderTester from "./pages/AiCoderTester";
 import AICoderAgent from "./pages/AICoderAgent";
 import ShaperTester from "./pages/ShaperTester";
+import GeneratedArticles from "./pages/GeneratedArticles";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const App = () => (
               <Route path="/ai-coder-tester" element={<AiCoderTester />} />
               <Route path="/ai-coder-agent" element={<AICoderAgent />} />
               <Route path="/shaper-tester" element={<ShaperTester />} />
+              <Route path="/generated-articles" element={<GeneratedArticles />} />
               
               {/* Dynamic Article Routes */}
               <Route path="/ai-automation/:slug" element={<ArticleRenderer category="ai-automation" />} />
