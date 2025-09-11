@@ -19,11 +19,8 @@ const GeneratedArticle = () => {
       
       <header className="max-w-[680px] mx-auto pt-32 pb-16 text-center px-10">
         <div className="flex items-center justify-center space-x-4 text-sm text-gray-600 mb-4">
-          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-medium">
-            General
-          </span>
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-medium">General</span>
           <span>{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-          <span>•</span>
           <span>1 min read</span>
         </div>
       </header>
@@ -33,7 +30,7 @@ const GeneratedArticle = () => {
           fontFamily: 'Playfair Display, serif',
           fontSize: 'clamp(42px, 5vw, 84px)',
           fontWeight: '700',
-          lineHeight: '1.1',
+          lineHeight: '1.2',
           color: '#1a1a1a',
           marginBottom: '1rem'
         }}>
@@ -50,19 +47,47 @@ const GeneratedArticle = () => {
             color: '#374151'
           }}>
             <p className="mb-6">
-              This is a placeholder article generated from empty content. The component structure is ready to accept your content and will properly render markdown, handle assets, and maintain SEO compliance.
+              This is a placeholder article generated from empty content. The component has been structured to handle dynamic content when provided.
             </p>
             
             <p className="mb-6">
-              When you provide actual content in the <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono">shipped_content</code> field, it will be processed and displayed here with proper formatting, typography, and asset integration.
+              The article follows the design system specifications with proper typography, spacing, and responsive design patterns.
             </p>
             
-            <div className="bg-blue-50 border-l-4 border-blue-400 p-6 my-8">
-              <p className="text-blue-800 font-medium mb-2">Ready for Content</p>
-              <p className="text-blue-700 text-sm leading-relaxed">
-                This component is fully configured with responsive design, SEO optimization, and asset management capabilities. Simply provide your markdown content and assets to generate a complete blog post.
-              </p>
-            </div>
+            <h2 style={{
+              fontFamily: 'Playfair Display, serif',
+              fontSize: 'clamp(28px, 4vw, 40px)',
+              fontWeight: '600',
+              lineHeight: '1.3',
+              color: '#1a1a1a',
+              marginTop: '2rem',
+              marginBottom: '1rem'
+            }}>
+              Content Structure
+            </h2>
+            
+            <p className="mb-6">
+              When content is provided, this component will automatically process markdown, integrate assets, and maintain SEO optimization.
+            </p>
+            
+            <h3 style={{
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '24px',
+              fontWeight: '600',
+              lineHeight: '1.4',
+              color: '#1a1a1a',
+              marginTop: '1.5rem',
+              marginBottom: '0.75rem'
+            }}>
+              Features Include
+            </h3>
+            
+            <ul className="list-disc list-inside space-y-2 mb-6">
+              <li>Responsive typography system</li>
+              <li>SEO optimization with meta tags</li>
+              <li>Asset integration capabilities</li>
+              <li>Mobile-first design approach</li>
+            </ul>
           </div>
         </article>
       </main>
