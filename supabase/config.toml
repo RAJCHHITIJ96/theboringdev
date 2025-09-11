@@ -77,5 +77,14 @@ verify_jwt = false
 [functions.shaper-ai]
 verify_jwt = false
 
+[functions.quality-approval-agent]
+verify_jwt = false
+
+[functions.enhanced-github-publisher]
+verify_jwt = false
+
+[functions.autonomous-publishing-scheduler]
+verify_jwt = false
+
 [functions.github-publisher]
 verify_jwt = false

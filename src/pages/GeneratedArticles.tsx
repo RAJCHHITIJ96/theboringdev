@@ -69,14 +69,16 @@ const GeneratedArticles = () => {
 
   const generateLiveURL = (article: GeneratedPage) => {
     const metadata = article.page_metadata;
-    if (metadata?.category && metadata?.title) {
-      const category = metadata.category.toLowerCase().replace(/\s+/g, '-');
+    if (metadata?.category && metadata?.title && metadata.title !== 'Untitled') {
+      // Create proper slug from title
       const slug = metadata.title.toLowerCase()
         .replace(/[^a-z0-9\s-]/g, '')
         .replace(/\s+/g, '-')
         .replace(/-+/g, '-')
         .trim();
-      return `/${category}/${slug}`;
+      
+      // Use the actual domain for live articles
+      return `https://theboringdev.com/${metadata.category.toLowerCase().replace(/\s+/g, '-')}/${slug}`;
     }
     return `#no-url-available`;
   };
@@ -168,9 +170,53 @@ const GeneratedArticles = () => {
       <main className="max-w-[1200px] mx-auto px-10 pb-32">
         {filteredArticles.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-gray-600 text-lg">
-              {articles.length === 0 ? 'No articles generated yet.' : 'No articles match your current filters.'}
-            </p>
+            <div className="mb-8">
+              <p className="text-gray-600 text-lg mb-6">
+                {articles.length === 0 ? 'No articles generated yet.' : 'No articles match your current filters.'}
+              </p>
+              
+              {/* Featured Published Articles */}
+              <div className="max-w-2xl mx-auto">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Featured Published Articles</h3>
+                <div className="grid gap-4">
+                  <Card className="text-left hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <h4 className="font-semibold text-lg mb-2">AI Agent Security: The No-Nonsense Guide to Prompt Injection & Malicious Use</h4>
+                      <p className="text-gray-600 mb-3 text-sm">Practical defense strategies for AI agent security using the BORINGDEV method. Learn about prompt injection, malicious use, and how to build bulletproof AI agents.</p>
+                      <div className="flex items-center justify-between">
+                        <Badge className="bg-green-500 text-white">Live</Badge>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open('/ai-agent-security-the-nononsense-guide-to-prompt-injection-malicious-use', '_blank')}
+                        >
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          View Article
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="text-left hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <h4 className="font-semibold text-lg mb-2">AI Automation</h4>
+                      <p className="text-gray-600 mb-3 text-sm">Comprehensive guides on building automated workflows that actually work, with real automation systems and measurable ROI from actual businesses.</p>
+                      <div className="flex items-center justify-between">
+                        <Badge className="bg-green-500 text-white">Live</Badge>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open('/ai-automation', '_blank')}
+                        >
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          View Category
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
