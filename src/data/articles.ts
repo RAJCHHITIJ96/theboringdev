@@ -20,31 +20,30 @@ export interface ArticleEntry {
 }
 
 export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
-  "ai-automation": [],
+  "ai-automation": [
+    {
+      "slug": "ai-powered-email-automation-strategies",
+      "component": "AiPoweredEmailAutomationStrategies",
+      "title": "AI-Powered Email Automation Strategies",
+      "publishDate": "2025-09-06",
+      "category": "ai-automation",
+      "description": "Learn how to use AI to personalize and automate email marketing campaigns. Save time and increase conversions with real-world strategies.",
+      "readTime": "3 min",
+      "url": "/ai-automation/ai-powered-email-automation-strategies",
+      "assetsCount": {
+        "images": 1,
+        "videos": 0,
+        "tables": 1,
+        "charts": 1,
+        "code_snippets": 1
+      }
+    }
+  ],
   "ai-news": [],
   "tool-comparisons": [],
   "builder-stories": [],
   "ai-reality-check": [],
-  "trending-opportunities": [],
-  "General": [
-    {
-      "slug": "generated-article",
-      "component": "GeneratedArticle",
-      "title": "Generated Article",
-      "publishDate": "2024-12-19",
-      "category": "General",
-      "description": "Auto-generated article description",
-      "readTime": "1 min",
-      "url": "/General/generated-article",
-      "assetsCount": {
-        "images": 0,
-        "videos": 0,
-        "tables": 0,
-        "charts": 0,
-        "code_snippets": 0
-      }
-    }
-  ]
+  "trending-opportunities": []
 };
 
 export function getArticleBySlug(category: string, slug: string): ArticleEntry | undefined {
