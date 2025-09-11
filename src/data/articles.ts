@@ -26,22 +26,22 @@ export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
   "builder-stories": [],
   "ai-reality-check": [],
   "trending-opportunities": [],
-  "AI Automation": [
+  "General": [
     {
-      "slug": "ai-coding-unsexy-guide-shipping-faster",
-      "component": "AiCodingUnsexeGuide",
-      "title": "AI Coding: The Unsexy Guide to Actually Shipping Faster",
-      "publishDate": "2024-12-09",
-      "category": "AI Automation",
-      "description": "A practical guide for developers to use AI coding assistants effectively. Learn what AI coding really is, pitfalls to avoid, and how to ship faster.",
-      "readTime": "4 min",
-      "url": "/AI Automation/ai-coding-unsexy-guide-shipping-faster",
+      "slug": "generated-article",
+      "component": "GeneratedArticle",
+      "title": "Generated Article",
+      "publishDate": "2024-12-19",
+      "category": "General",
+      "description": "Auto-generated article description",
+      "readTime": "1 min",
+      "url": "/General/generated-article",
       "assetsCount": {
-        "images": 3,
-        "code_snippets": 1,
-        "tables": 1,
+        "images": 0,
+        "videos": 0,
+        "tables": 0,
         "charts": 0,
-        "videos": 0
+        "code_snippets": 0
       }
     }
   ]
