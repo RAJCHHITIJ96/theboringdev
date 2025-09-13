@@ -22,20 +22,20 @@ export interface ArticleEntry {
 export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
   "ai-automation": [
     {
-      "slug": "ai-powered-email-automation-strategies",
-      "component": "AiPoweredEmailAutomationStrategies",
-      "title": "AI-Powered Email Automation Strategies",
-      "publishDate": "2025-09-06",
+      "slug": "building-ai-workflows-that-actually-work",
+      "component": "BuildingAIWorkflows",
+      "title": "Building AI Workflows That Actually Work",
+      "publishDate": "2025-01-15",
       "category": "ai-automation",
-      "description": "Learn how to use AI to personalize and automate email marketing campaigns. Save time and increase conversions with real-world strategies.",
-      "readTime": "3 min",
-      "url": "/ai-automation/ai-powered-email-automation-strategies",
+      "description": "A comprehensive guide to creating reliable AI automation systems that deliver real business value.",
+      "readTime": "8 min",
+      "url": "/ai-automation/building-ai-workflows-that-actually-work",
       "assetsCount": {
-        "images": 1,
-        "videos": 0,
-        "tables": 1,
+        "images": 3,
+        "videos": 1,
+        "tables": 2,
         "charts": 1,
-        "code_snippets": 1
+        "code_snippets": 4
       }
     }
   ],
