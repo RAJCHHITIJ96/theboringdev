@@ -142,13 +142,58 @@ function validateInput(input: any): { valid: boolean; data?: ShaperAIInput; erro
 function validateComponentName(name: string): boolean {
   // Must be PascalCase and valid React component name
   const pascalCaseRegex = /^[A-Z][a-zA-Z0-9]*$/;
+  
+  // Check length limits for Windows compatibility
+  if (name.length > 50) {
+    console.warn(`Component name too long (${name.length} chars): ${name.substring(0, 50)}...`);
+    return false;
+  }
+  
   return pascalCaseRegex.test(name) && !name.includes(' ');
 }
 
 function validateRouteSlug(slug: string): boolean {
   // Must be kebab-case URL friendly
   const kebabCaseRegex = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+  
+  // Check length limits for URLs
+  if (slug.length > 100) {
+    console.warn(`Route slug too long (${slug.length} chars): ${slug.substring(0, 50)}...`);
+    return false;
+  }
+  
   return kebabCaseRegex.test(slug);
+}
+
+// Windows filename validation
+function validateWindowsFilename(filename: string): { valid: boolean; error?: string; suggested?: string } {
+  // Windows path length limit (including full path)
+  const MAX_PATH_LENGTH = 200; // Conservative limit
+  const fullPath = `src/pages/${filename}.tsx`;
+  
+  if (fullPath.length > MAX_PATH_LENGTH) {
+    // Generate a shortened version
+    const baseName = filename.substring(0, 30);
+    const hash = filename.slice(-8); // Keep last 8 chars for uniqueness
+    const suggested = `${baseName}_${hash}`;
+    
+    return {
+      valid: false,
+      error: `Filename too long for Windows (${fullPath.length} chars). Windows limit is ~260 characters.`,
+      suggested: suggested
+    };
+  }
+  
+  // Check for invalid Windows characters
+  const invalidChars = /[<>:"|?*\x00-\x1f]/g;
+  if (invalidChars.test(filename)) {
+    return {
+      valid: false,
+      error: 'Filename contains invalid Windows characters: < > : " | ? *'
+    };
+  }
+  
+  return { valid: true };
 }
 
 // JSX repair function to fix malformed JSX
@@ -685,6 +730,17 @@ async function processInput(input: ShaperAIInput): Promise<ShaperAIOutput> {
 
   if (!validateRouteSlug(metadata.route_slug)) {
     throw new Error(`Invalid route slug: ${metadata.route_slug}`);
+  }
+  
+  // Windows filename validation
+  const filenameValidation = validateWindowsFilename(metadata.component_name);
+  if (!filenameValidation.valid) {
+    if (filenameValidation.suggested) {
+      console.warn(`Using suggested filename: ${filenameValidation.suggested}`);
+      metadata.component_name = filenameValidation.suggested;
+    } else {
+      throw new Error(`Invalid filename for Windows: ${filenameValidation.error}`);
+    }
   }
 
   // Step 2: Enhance component

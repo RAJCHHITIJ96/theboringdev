@@ -20,30 +20,31 @@ export interface ArticleEntry {
 }
 
 export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
-  "ai-automation": [
-    {
-      "slug": "ai-powered-email-automation-strategies",
-      "component": "AiPoweredEmailAutomationStrategies",
-      "title": "AI-Powered Email Automation Strategies",
-      "publishDate": "2025-09-06",
-      "category": "ai-automation",
-      "description": "Learn how to use AI to personalize and automate email marketing campaigns. Save time and increase conversions with real-world strategies.",
-      "readTime": "3 min",
-      "url": "/ai-automation/ai-powered-email-automation-strategies",
-      "assetsCount": {
-        "images": 1,
-        "videos": 0,
-        "tables": 1,
-        "charts": 1,
-        "code_snippets": 1
-      }
-    }
-  ],
+  "ai-automation": [],
   "ai-news": [],
   "tool-comparisons": [],
   "builder-stories": [],
   "ai-reality-check": [],
-  "trending-opportunities": []
+  "trending-opportunities": [],
+  "General": [
+    {
+      "slug": "ultimate-system-test",
+      "component": "UltimateSystemTest",
+      "title": "Ultimate System Test",
+      "publishDate": "2023-10-27",
+      "category": "General",
+      "description": "This is the final battle test of our autonomous publishing system. If this works, we celebrate with coffee! If not, we debug like legends!",
+      "readTime": "1 min",
+      "url": "/General/ultimate-system-test",
+      "assetsCount": {
+        "images": 0,
+        "code_blocks": 0,
+        "tables": 0,
+        "charts": 0,
+        "videos": 0
+      }
+    }
+  ]
 };
 
 export function getArticleBySlug(category: string, slug: string): ArticleEntry | undefined {

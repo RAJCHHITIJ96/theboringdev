@@ -84,12 +84,22 @@ function normalizeUnicode(s: string) {
 }
 
 function generateComponentName(title: string) {
-  return title
+  // Clean the title first
+  const cleanTitle = title
     .replace(/[^a-zA-Z0-9\s]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .substring(0, 50); // Limit length for component names
+  
+  // Generate PascalCase component name
+  const componentName = cleanTitle
     .split(" ")
+    .filter(word => word.length > 0)
     .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-    .join("")
-    .replace(/\s/g, "");
+    .join("");
+  
+  // Ensure it starts with uppercase and is valid
+  return componentName || "Article";
 }
 function generateRouteSlug(title: string) {
   return title
@@ -97,7 +107,8 @@ function generateRouteSlug(title: string) {
     .replace(/[^a-zA-Z0-9\s-]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+    .replace(/^-|-$/g, "")
+    .substring(0, 100); // Limit slug length for URLs
 }
 function calculateReadTime(content: string) {
   const wordsPerMinute = 200;
@@ -105,11 +116,62 @@ function calculateReadTime(content: string) {
   const minutes = Math.ceil(wordCount / wordsPerMinute);
   return `${minutes} min`;
 }
+
+// JSX Content Validation
+function validateJSXContent(content: string) {
+  const errors: string[] = [];
+  
+  // Check for unescaped braces in text content
+  const suspiciousBraces = content.match(/[^&]({|})(?![;}])/g);
+  if (suspiciousBraces) {
+    errors.push('Unescaped braces detected in JSX text content');
+  }
+  
+  // Check for unclosed tags
+  const openTags = (content.match(/<[^/][^>]*[^/]>/g) || []).length;
+  const closeTags = (content.match(/<\/[^>]+>/g) || []).length;
+  const selfClosingTags = (content.match(/<[^>]+\/>/g) || []).length;
+  
+  if (openTags !== closeTags + selfClosingTags) {
+    errors.push('Mismatched JSX tags detected');
+  }
+  
+  // Check for invalid JSX attributes
+  if (content.includes('class=')) {
+    errors.push('Found "class" attribute instead of "className"');
+  }
+  
+  // Check for extremely long content that might break things
+  const lines = content.split('\n');
+  const longLines = lines.filter(line => line.length > 1000);
+  if (longLines.length > 0) {
+    errors.push('Extremely long lines detected that may cause rendering issues');
+  }
+  
+  if (errors.length > 0) {
+    throw new Error(`JSX validation failed: ${errors.join(', ')}`);
+  }
+}
 function extractTitle(content: string) {
   const h1Match = content.match(/^#\s+(.+)$/m);
-  if (h1Match) return h1Match[1].trim();
-  const firstLine = content.split("\n")[0];
-  return firstLine.replace(/^#+\s*/, "").trim();
+  if (h1Match) {
+    const title = h1Match[1].trim();
+    // Extract ONLY the first sentence/phrase, stop at newlines/special chars
+    const cleanTitle = title.split('\n')[0].split('##')[0].split('\\n')[0].trim();
+    // Limit to reasonable length and clean up
+    return cleanTitle.substring(0, 80).replace(/[\r\n\t]/g, ' ').trim();
+  }
+  
+  // Fallback: try to extract from first meaningful line
+  const lines = content.split('\n').filter(line => line.trim().length > 0);
+  for (const line of lines) {
+    const cleaned = line.replace(/^#+\s*/, '').trim();
+    if (cleaned.length > 5 && cleaned.length < 200) {
+      return cleaned.substring(0, 80).replace(/[\r\n\t]/g, ' ').trim();
+    }
+  }
+  
+  return "Untitled Article";
 }
 
 function sanitizeInput(data: any) {
@@ -128,6 +190,7 @@ function sanitizeInput(data: any) {
 // Markdown → JSX
 function processMarkdownContent(content: string) {
   const clean = content.trim();
+  // Split content but be more careful about sections
   const sections = clean.split(/\n(?=#{1,3}\s)/);
   const out: string[] = [];
 
@@ -137,10 +200,17 @@ function processMarkdownContent(content: string) {
     const first = lines[0];
 
     if (first.startsWith("# ")) {
-      // skip duplicate title (rendered separately)
+      // Skip main title (rendered separately in component)
+      const rest = lines.slice(1).join("\n");
+      if (rest.trim()) {
+        out.push(processContentLines(rest));
+      }
       continue;
     } else if (first.startsWith("## ")) {
       const headerText = first.replace(/^##\s*/, "").trim();
+      // Ensure header text is clean and not too long
+      const cleanHeaderText = headerText.substring(0, 100).replace(/[\r\n\t]/g, ' ').trim();
+      
       out.push(`
         <section className="mb-16">
           <h2 style={{
@@ -151,14 +221,19 @@ function processMarkdownContent(content: string) {
             marginBottom: '32px',
             marginTop: '64px'
           }} className="text-black">
-            ${escapeForText(headerText)}
+            ${escapeForText(cleanHeaderText)}
           </h2>
       `.trim());
+      
       const rest = lines.slice(1).join("\n");
-      if (rest.trim()) out.push(processContentLines(rest));
-      out.push(`</section>`);
+      if (rest.trim()) {
+        out.push(processContentLines(rest));
+      }
+      out.push(`        </section>`);
     } else if (first.startsWith("### ")) {
       const headerText = first.replace(/^###\s*/, "").trim();
+      const cleanHeaderText = headerText.substring(0, 100).replace(/[\r\n\t]/g, ' ').trim();
+      
       out.push(`
         <h3 style={{
           fontFamily: "'Inter', -apple-system, sans-serif",
@@ -168,15 +243,20 @@ function processMarkdownContent(content: string) {
           marginBottom: '20px',
           marginTop: '48px'
         }} className="text-black">
-          ${escapeForText(headerText)}
+          ${escapeForText(cleanHeaderText)}
         </h3>
       `.trim());
+      
       const rest = lines.slice(1).join("\n");
-      if (rest.trim()) out.push(processContentLines(rest));
+      if (rest.trim()) {
+        out.push(processContentLines(rest));
+      }
     } else {
+      // Process regular content
       out.push(processContentLines(section));
     }
   }
+  
   return out.join("\n");
 }
 
@@ -325,6 +405,18 @@ function findBestInsertionPoint(content: string, targetLocation: string) {
 }
 
 function generateCodeForSnippet(snippetName: string, description = "") {
+  // Add safety check for undefined snippetName
+  if (!snippetName || typeof snippetName !== 'string') {
+    console.warn('generateCodeForSnippet called with invalid snippetName:', snippetName);
+    return `# Example code snippet
+# ${description || 'No description provided'}
+
+def example_function():
+    """
+    Please provide a valid snippet name/type for better code generation.
+    """
+    pass`;
+  }
   const lower = snippetName.toLowerCase();
   if (lower.includes("system prompt")) {
     return `SYSTEM_PROMPT = """
@@ -410,14 +502,14 @@ function processAssets(assets: any, processedContent: string) {
     for (const imageObj of assets.images) {
       for (const [, image] of Object.entries<any>(imageObj)) {
         const block = `
-<div className="blog-image-container my-16">
-  <img
-    src="${escapeForAttr(image.src)}"
-    alt="${escapeForAttr(image.alt)}"
-    className="w-full h-auto rounded-lg shadow-lg"
-    loading="lazy"
-  />
-</div>`;
+          <div className="blog-image-container my-16">
+            <img
+              src="${escapeForAttr(image.src)}"
+              alt="${escapeForAttr(image.alt)}"
+              className="w-full h-auto rounded-lg shadow-lg"
+              loading="lazy"
+            />
+          </div>`;
         if (image.where_to_place) {
           const idx = findBestInsertionPoint(finalContent, image.where_to_place);
           const lines = finalContent.split("\n");
@@ -434,21 +526,23 @@ function processAssets(assets: any, processedContent: string) {
   if (assets?.code_snippets) {
     for (const codeObj of assets.code_snippets) {
       for (const [, codeSnippet] of Object.entries<any>(codeObj)) {
-        const actual = generateCodeForSnippet(codeSnippet.snippet, codeSnippet.description);
+        // Handle both 'snippet' and 'content' field names for compatibility
+        const snippetName = codeSnippet.snippet || codeSnippet.content || 'example code';
+        const actual = generateCodeForSnippet(snippetName, codeSnippet.description);
         const block = `
-<div className="my-12">
-  <div className="mb-4">
-    <h4 className="text-lg font-semibold text-gray-800">${escapeForText(codeSnippet.snippet)}</h4>
-    ${codeSnippet.description ? `<p className="text-sm text-gray-600 mt-2">${escapeForText(codeSnippet.description)}</p>` : ""}
-  </div>
-  <div className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
-    <pre className="text-sm font-mono text-gray-100">
-      <code>
+          <div className="my-12">
+            <div className="mb-4">
+              <h4 className="text-lg font-semibold text-gray-800">${escapeForText(snippetName)}</h4>
+              ${codeSnippet.description ? `<p className="text-sm text-gray-600 mt-2">${escapeForText(codeSnippet.description)}</p>` : ""}
+            </div>
+            <div className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
+              <pre className="text-sm font-mono text-gray-100">
+                <code>
 ${escapeCodeForJSX(actual)}
-      </code>
-    </pre>
-  </div>
-</div>`.trim();
+                </code>
+              </pre>
+            </div>
+          </div>`;
         if (codeSnippet.where_to_place) {
           const idx = findBestInsertionPoint(finalContent, codeSnippet.where_to_place);
           const lines = finalContent.split("\n");
@@ -466,25 +560,25 @@ ${escapeCodeForJSX(actual)}
     for (const tableObj of assets.tables) {
       for (const [, table] of Object.entries<any>(tableObj)) {
         const block = `
-<div className="my-16">
-  <h4 className="text-xl font-semibold mb-6 text-gray-800">${escapeForText(table.title)}</h4>
-  <div className="overflow-x-auto">
-    <table className="w-full border-collapse border border-gray-300 rounded-lg">
-      <thead className="bg-gray-100">
-        <tr>
-          <th className="border border-gray-300 px-4 py-2 text-left">Column 1</th>
-          <th className="border border-gray-300 px-4 py-2 text-left">Column 2</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td className="border border-gray-300 px-4 py-2">Sample Data</td>
-          <td className="border border-gray-300 px-4 py-2">Sample Data</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>`.trim();
+          <div className="my-16">
+            <h4 className="text-xl font-semibold mb-6 text-gray-800">${escapeForText(table.title)}</h4>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-300 rounded-lg">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="border border-gray-300 px-4 py-2 text-left">Column 1</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">Column 2</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2">Sample Data</td>
+                    <td className="border border-gray-300 px-4 py-2">Sample Data</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>`;
         if (table.where_to_place) {
           const idx = findBestInsertionPoint(finalContent, table.where_to_place);
           const lines = finalContent.split("\n");
@@ -502,15 +596,15 @@ ${escapeCodeForJSX(actual)}
     for (const chartObj of assets.charts) {
       for (const [, chart] of Object.entries<any>(chartObj)) {
         const block = `
-<div className="my-16">
-  <div className="bg-gray-50 rounded-lg p-8 text-center">
-    <h4 className="text-xl font-semibold mb-4 text-gray-800">Chart: ${escapeForText(chart.chart_data)}</h4>
-    <p className="text-gray-600">${escapeForText(chart.description || "Chart visualization would appear here")}</p>
-    <div className="mt-6 h-64 bg-white rounded border-2 border-dashed border-gray-300 flex items-center justify-center">
-      <span className="text-gray-500">Chart Placeholder</span>
-    </div>
-  </div>
-</div>`.trim();
+          <div className="my-16">
+            <div className="bg-gray-50 rounded-lg p-8 text-center">
+              <h4 className="text-xl font-semibold mb-4 text-gray-800">Chart: ${escapeForText(chart.chart_data)}</h4>
+              <p className="text-gray-600">${escapeForText(chart.description || "Chart visualization would appear here")}</p>
+              <div className="mt-6 h-64 bg-white rounded border-2 border-dashed border-gray-300 flex items-center justify-center">
+                <span className="text-gray-500">Chart Placeholder</span>
+              </div>
+            </div>
+          </div>`;
         if (chart.where_to_place) {
           const idx = findBestInsertionPoint(finalContent, chart.where_to_place);
           const lines = finalContent.split("\n");
@@ -573,13 +667,12 @@ async function generateReactComponent(data: any) {
   const processedContent = processMarkdownContent(data.shipped_content);
   const finalContent = processAssets(data.assets_manager_details, processedContent);
 
-  // Validate JSX-sensitive braces inside code/text are escaped
-  if (/[^{]({)[^}]/.test(finalContent) || /[^ {](})[^}]/.test(finalContent)) {
-    // heuristic: allow entities &#123; &#125; only
-    const suspicious = finalContent.replace(/&#123;|&#125;/g, "");
-    if (suspicious.includes("{") || suspicious.includes("}")) {
-      throw new Error("Content processing failed - unescaped braces detected in JSX text");
-    }
+  // Validate JSX structure and content
+  validateJSXContent(finalContent);
+  
+  // Additional validation for common issues
+  if (finalContent.includes('\\n\\n') || finalContent.includes('\\r\\n')) {
+    console.warn('Content contains escaped newlines - this may cause display issues');
   }
 
   const seoTitle = data.seo_details?.html_head_section?.meta_tags?.title || title;
