@@ -28,14 +28,14 @@ export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
   "trending-opportunities": [],
   "General": [
     {
-      "slug": "final-verification-test",
-      "component": "FinalVerificationTest",
-      "title": "Final Verification Test",
+      "slug": "ultimate-system-test",
+      "component": "UltimateSystemTest",
+      "title": "Ultimate System Test",
       "publishDate": "2023-10-27",
       "category": "General",
-      "description": "This is the ultimate test of our autonomous publishing pipeline after cleaning up corrupted files.",
+      "description": "This is the final battle test of our autonomous publishing system. If this works, we celebrate with coffee! If not, we debug like legends!",
       "readTime": "1 min",
-      "url": "/General/final-verification-test",
+      "url": "/General/ultimate-system-test",
       "assetsCount": {
         "images": 0,
         "code_blocks": 0,
