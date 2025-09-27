@@ -59,6 +59,7 @@ const App = () => (
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                       <Route path="/AI Automation/:slug" element={<ArticleRenderer category="AI Automation" />} />
+                <Route path="/Test/:slug" element={<ArticleRenderer category="Test" />} />
         <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
