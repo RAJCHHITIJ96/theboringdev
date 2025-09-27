@@ -20,30 +20,31 @@ export interface ArticleEntry {
 }
 
 export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
-  "ai-automation": [
-    {
-      "slug": "building-ai-workflows-that-actually-work",
-      "component": "BuildingAIWorkflows",
-      "title": "Building AI Workflows That Actually Work",
-      "publishDate": "2025-01-15",
-      "category": "ai-automation",
-      "description": "A comprehensive guide to creating reliable AI automation systems that deliver real business value.",
-      "readTime": "8 min",
-      "url": "/ai-automation/building-ai-workflows-that-actually-work",
-      "assetsCount": {
-        "images": 3,
-        "videos": 1,
-        "tables": 2,
-        "charts": 1,
-        "code_snippets": 4
-      }
-    }
-  ],
+  "ai-automation": [],
   "ai-news": [],
   "tool-comparisons": [],
   "builder-stories": [],
   "ai-reality-check": [],
-  "trending-opportunities": []
+  "trending-opportunities": [],
+  "Test": [
+    {
+      "slug": "test-article",
+      "component": "TestArticle",
+      "title": "Test Article",
+      "publishDate": "2024-05-21",
+      "category": "Test",
+      "description": "This is a test.",
+      "readTime": "1 min",
+      "url": "/Test/test-article",
+      "assetsCount": {
+        "images": 0,
+        "videos": 0,
+        "tables": 0,
+        "charts": 0,
+        "code_snippets": 0
+      }
+    }
+  ]
 };
 
 export function getArticleBySlug(category: string, slug: string): ArticleEntry | undefined {
