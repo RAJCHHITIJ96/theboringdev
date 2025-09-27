@@ -31,7 +31,7 @@ export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
       "slug": "sample-content-for-testing",
       "component": "SampleContentForTesting",
       "title": "Sample Content for Testing",
-      "publishDate": "2024-05-21",
+      "publishDate": "2023-10-27",
       "category": "General",
       "description": "This is a sample content block to test the AI CODER 2 function...",
       "readTime": "1 min",
