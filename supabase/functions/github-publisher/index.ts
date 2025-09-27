@@ -297,7 +297,8 @@ async function executeGitOperations(input: GitHubPublisherInput): Promise<GitOpe
 
   try {
     const article = input.registry_updated.new_entry;
-    const branchName = `article/${article.slug}`;
+    // FIXED: Commit directly to main branch instead of creating feature branches
+    let branchName = 'main'; // Default to main
     
     const githubToken = Deno.env.get('GITHUB_API_TOKEN');
     if (!githubToken) {
@@ -312,14 +313,13 @@ async function executeGitOperations(input: GitHubPublisherInput): Promise<GitOpe
       throw new Error(`GitHub repository configuration missing. Owner: ${owner}, Repo: ${repo}`);
     }
     
-    console.log(`📝 Creating real Git operations for branch: ${branchName} on ${owner}/${repo}`);
+    console.log(`📝 Committing directly to main branch on ${owner}/${repo}`);
     
-    // 1. Get main branch SHA for branching (try multiple branch names)
-    console.log('🔍 Getting main branch reference...');
+    // 1. Detect the default branch (main or master)
+    console.log('🔍 Detecting default branch...');
     let mainBranchResponse;
-    let branchName_main = 'main';
     
-    // Try 'main' first, then 'master' if main doesn't exist
+    // Try 'main' first
     mainBranchResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs/heads/main`, {
       headers: {
         'Authorization': `Bearer ${githubToken}`,
@@ -335,51 +335,17 @@ async function executeGitOperations(input: GitHubPublisherInput): Promise<GitOpe
           'Accept': 'application/vnd.github.v3+json',
         }
       });
-      branchName_main = 'master';
+      branchName = 'master';
     }
 
     if (!mainBranchResponse.ok) {
-      // List all branches to see what's available
-      const allBranchesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs/heads`, {
-        headers: {
-          'Authorization': `Bearer ${githubToken}`,
-          'Accept': 'application/vnd.github.v3+json',
-        }
-      });
-      
-      if (allBranchesResponse.ok) {
-        const branches = await allBranchesResponse.json();
-        console.log('Available branches:', branches.map((b: any) => b.ref));
-      }
-      
-      throw new Error(`Failed to get default branch. Status: ${mainBranchResponse.status}, tried 'main' and 'master'`);
+      throw new Error(`Failed to get default branch. Status: ${mainBranchResponse.status}`);
     }
 
-    const mainBranchData = await mainBranchResponse.json();
-    const baseSha = mainBranchData.object.sha;
+    console.log(`✅ Using branch: ${branchName}`);
     
-    // 2. Create new branch
-    console.log(`🌿 Creating branch: ${branchName}`);
-    const createBranchResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${githubToken}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ref: `refs/heads/${branchName}`,
-        sha: baseSha
-      })
-    });
-
-    if (createBranchResponse.ok) {
-      results.branch_created = true;
-      console.log('✅ Branch created successfully');
-    } else {
-      console.warn('⚠️ Branch might already exist or creation failed');
-      results.branch_created = true; // Continue anyway
-    }
+    // FIXED: Skip branch creation - we're committing directly to main
+    results.branch_created = false; // We're not creating a new branch
     
     // 3. Create/update files via GitHub API
     console.log('📁 Adding files to GitHub...');
@@ -387,7 +353,7 @@ async function executeGitOperations(input: GitHubPublisherInput): Promise<GitOpe
     for (const file of input.files_created) {
       console.log(`  + Creating/updating ${file.path}...`);
       
-      // Get existing file SHA if it exists
+      // Get existing file SHA if it exists  
       let existingSha = null;
       try {
         const getFileResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file.path}?ref=${branchName}`, {
@@ -400,16 +366,19 @@ async function executeGitOperations(input: GitHubPublisherInput): Promise<GitOpe
         if (getFileResponse.ok) {
           const existingFile = await getFileResponse.json();
           existingSha = existingFile.sha;
+          console.log(`    Found existing file: ${file.path}`);
         }
       } catch (error) {
         console.log(`    File ${file.path} doesn't exist, creating new...`);
       }
 
-      // Create/update file
-      const fileContent = btoa(unescape(encodeURIComponent(file.content))); // Base64 encode
+      // Create/update file - FIXED: Clean UTF-8 string encoding
+      const encoder = new TextEncoder();
+      const bytes = encoder.encode(file.content);
+      const fileContent = btoa(String.fromCharCode(...bytes));
       
       const updateFileData: any = {
-        message: `${existingSha ? 'Update' : 'Add'} ${file.path}`,
+        message: `🤖 Auto-deploy: ${existingSha ? 'Update' : 'Add'} ${article.component} (${article.category})`,
         content: fileContent,
         branch: branchName
       };

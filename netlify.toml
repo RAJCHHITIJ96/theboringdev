@@ -1,0 +1,17 @@
+# Netlify Configuration - Force Main Branch
+[build]
+  base = "/"
+  command = "bun run build"
+  publish = "dist/"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Force production branch to main
+[context.production]
+  command = "bun run build"
+  
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

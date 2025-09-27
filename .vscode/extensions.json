@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss", 
+    "ms-vscode.vscode-json",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-pg",
+    "supabase.supabase",
+    "ms-vscode.powershell",
+    "formulahendry.auto-rename-tag",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-json"
+  ]
+}

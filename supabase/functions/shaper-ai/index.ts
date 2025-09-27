@@ -490,8 +490,10 @@ async function writeFileToLovable(filePath: string, content: string): Promise<bo
       console.log(`    File ${filePath} doesn't exist, creating new...`);
     }
 
-    // Create/update file via GitHub API
-    const fileContent = btoa(unescape(encodeURIComponent(content))); // Base64 encode
+    // Create/update file via GitHub API - FIXED: Clean UTF-8 string encoding
+    const encoder = new TextEncoder();
+    const bytes = encoder.encode(content);
+    const fileContent = btoa(String.fromCharCode(...bytes));
     
     const updateFileData: any = {
       message: `🤖 Shaper AI: ${existingSha ? 'Update' : 'Add'} ${filePath}`,
@@ -587,10 +589,12 @@ async function updateAppRouting(metadata: ShaperAIInput['metadata']): Promise<bo
       }
     }
 
-    // Update App.tsx
+    // Update App.tsx - FIXED: Clean UTF-8 string encoding
+    const encoder2 = new TextEncoder();
+    const bytes2 = encoder2.encode(updatedContent);
     const updateAppData = {
       message: `🤖 Shaper AI: Add route for ${metadata.category}/${metadata.route_slug}`,
-      content: btoa(unescape(encodeURIComponent(updatedContent))),
+      content: btoa(String.fromCharCode(...bytes2)),
       sha: appFile.sha,
       branch: 'main'
     };
