@@ -26,22 +26,22 @@ export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
   "builder-stories": [],
   "ai-reality-check": [],
   "trending-opportunities": [],
-  "Test": [
+  "General": [
     {
-      "slug": "test-article",
-      "component": "TestArticle",
-      "title": "Test Article",
-      "publishDate": "2024-05-21",
-      "category": "Test",
-      "description": "This is a test.",
+      "slug": "sample-content-for-testing",
+      "component": "SampleContentForTesting",
+      "title": "Sample Content for Testing",
+      "publishDate": "2023-10-27",
+      "category": "General",
+      "description": "This is a sample content block to test the AI CODER 2 function...",
       "readTime": "1 min",
-      "url": "/Test/test-article",
+      "url": "/General/sample-content-for-testing",
       "assetsCount": {
         "images": 0,
-        "videos": 0,
+        "code_blocks": 0,
         "tables": 0,
         "charts": 0,
-        "code_snippets": 0
+        "videos": 0
       }
     }
   ]
