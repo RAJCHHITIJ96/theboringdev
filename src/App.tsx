@@ -22,6 +22,7 @@ import AiCoderTester from "./pages/AiCoderTester";
 import AICoderAgent from "./pages/AICoderAgent";
 import ShaperTester from "./pages/ShaperTester";
 import DeploymentMonitor from "./pages/DeploymentMonitor";
+import PublishedArticlesDashboard from "./pages/PublishedArticlesDashboard";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,7 @@ const App = () => (
               <Route path="/ai-coder-agent" element={<AICoderAgent />} />
               <Route path="/shaper-tester" element={<ShaperTester />} />
               <Route path="/deployment-monitor" element={<DeploymentMonitor />} />
+              <Route path="/published-articles" element={<PublishedArticlesDashboard />} />
               
               {/* Dynamic Article Routes */}
               <Route path="/ai-automation/:slug" element={<ArticleRenderer category="ai-automation" />} />
