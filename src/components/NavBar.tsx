@@ -20,7 +20,6 @@ export function NavBar({ className }: NavBarProps) {
 
   const navItems: NavItem[] = [
     { name: "Intelligence", url: "#intelligence" },
-    { name: "Published Articles", url: "/published-articles" },
     { name: "Pipeline Monitor", url: "/deployment-monitor" },
     { name: "Validation", url: "#validation" },
     { name: "Trends", url: "#trends" },

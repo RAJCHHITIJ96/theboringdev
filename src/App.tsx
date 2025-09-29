@@ -22,7 +22,6 @@ import AiCoderTester from "./pages/AiCoderTester";
 import AICoderAgent from "./pages/AICoderAgent";
 import ShaperTester from "./pages/ShaperTester";
 import DeploymentMonitor from "./pages/DeploymentMonitor";
-import FocusedDashboard from "./pages/FocusedDashboard";
 
 // Import only the 3 specific pages you requested
 import CleanTestArticle2024 from "./pages/CleanTestArticle2024";
@@ -55,7 +54,6 @@ const App = () => (
               <Route path="/ai-coder-agent" element={<AICoderAgent />} />
               <Route path="/shaper-tester" element={<ShaperTester />} />
               <Route path="/deployment-monitor" element={<DeploymentMonitor />} />
-              <Route path="/published-articles" element={<FocusedDashboard />} />
               
               {/* Only 3 Focused Pages - Simple Static Imports */}
               <Route path="/cleantestarticle2024" element={<CleanTestArticle2024 />} />
