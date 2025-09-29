@@ -24,6 +24,19 @@ import ShaperTester from "./pages/ShaperTester";
 import DeploymentMonitor from "./pages/DeploymentMonitor";
 import PublishedArticlesDashboard from "./pages/PublishedArticlesDashboard";
 
+// Import all discovered pages
+import CleanTestArticle2024 from "./pages/CleanTestArticle2024";
+import SimpleTest from "./pages/SimpleTest";
+import UltimateSystemTest from "./pages/UltimateSystemTest";
+import FinalVerificationTest from "./pages/FinalVerificationTest";
+import SampleContentForTesting from "./pages/SampleContentForTesting";
+import GeneratedArticles from "./pages/GeneratedArticles";
+import Auth from "./pages/Auth";
+import BuildingAIWorkflows from "./pages/BuildingAIWorkflows";
+import AiPoweredEmailAutomationStrategies from "./pages/AiPoweredEmailAutomationStrategies";
+import TheAipoweredMeetingSummariesGuide from "./pages/TheAipoweredMeetingSummariesGuide";
+import AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse from "./pages/AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -52,6 +65,23 @@ const App = () => (
               <Route path="/shaper-tester" element={<ShaperTester />} />
               <Route path="/deployment-monitor" element={<DeploymentMonitor />} />
               <Route path="/published-articles" element={<PublishedArticlesDashboard />} />
+              
+              {/* Discovered Pages Routes */}
+              <Route path="/cleantestarticle2024" element={<CleanTestArticle2024 />} />
+              <Route path="/simpletest" element={<SimpleTest />} />
+              <Route path="/ultimatesystemtest" element={<UltimateSystemTest />} />
+              <Route path="/finalverificationtest" element={<FinalVerificationTest />} />
+              <Route path="/samplecontentfortesting" element={<SampleContentForTesting />} />
+              <Route path="/generatedarticles" element={<GeneratedArticles />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/buildingaiworkflows" element={<BuildingAIWorkflows />} />
+              <Route path="/aipoweredemailautomationstrategies" element={<AiPoweredEmailAutomationStrategies />} />
+              <Route path="/theaipoweredmeetingsummariesguide" element={<TheAipoweredMeetingSummariesGuide />} />
+              <Route path="/aiagentsecuritythenononsenseguide" element={<AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse />} />
+              <Route path="/aiagenttester" element={<AiCoderTester />} />
+              <Route path="/aicodertest" element={<AiCoderTester />} />
+              <Route path="/shapetester" element={<ShaperTester />} />
+              <Route path="/deploymentmonitor" element={<DeploymentMonitor />} />
               
               {/* Dynamic Article Routes */}
               <Route path="/ai-automation/:slug" element={<ArticleRenderer category="ai-automation" />} />
