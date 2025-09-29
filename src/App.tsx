@@ -23,6 +23,7 @@ import AICoderAgent from "./pages/AICoderAgent";
 import ShaperTester from "./pages/ShaperTester";
 import DeploymentMonitor from "./pages/DeploymentMonitor";
 import PublishedArticlesDashboard from "./pages/PublishedArticlesDashboard";
+import PublishedArticlesDashboardSimple from "./pages/PublishedArticlesDashboardSimple";
 
 // Import all discovered pages
 import CleanTestArticle2024 from "./pages/CleanTestArticle2024";
@@ -36,6 +37,7 @@ import BuildingAIWorkflows from "./pages/BuildingAIWorkflows";
 import AiPoweredEmailAutomationStrategies from "./pages/AiPoweredEmailAutomationStrategies";
 import TheAipoweredMeetingSummariesGuide from "./pages/TheAipoweredMeetingSummariesGuide";
 import AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse from "./pages/AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse";
+import SimpleTestDebug from "./pages/SimpleTestDebug";
 
 const queryClient = new QueryClient();
 
@@ -64,11 +66,11 @@ const App = () => (
               <Route path="/ai-coder-agent" element={<AICoderAgent />} />
               <Route path="/shaper-tester" element={<ShaperTester />} />
               <Route path="/deployment-monitor" element={<DeploymentMonitor />} />
-              <Route path="/published-articles" element={<PublishedArticlesDashboard />} />
+              <Route path="/published-articles" element={<PublishedArticlesDashboardSimple />} />
               
               {/* Discovered Pages Routes */}
               <Route path="/cleantestarticle2024" element={<CleanTestArticle2024 />} />
-              <Route path="/simpletest" element={<SimpleTest />} />
+              <Route path="/simpletest" element={<SimpleTestDebug />} />
               <Route path="/ultimatesystemtest" element={<UltimateSystemTest />} />
               <Route path="/finalverificationtest" element={<FinalVerificationTest />} />
               <Route path="/samplecontentfortesting" element={<SampleContentForTesting />} />
