@@ -1,15 +1,16 @@
-# Netlify Configuration - Force Main Branch
+# Netlify Configuration - Optimized for Reliability
 [build]
   base = "/"
-  command = "bun run build"
+  command = "npm run build"
   publish = "dist/"
 
 [build.environment]
   NODE_VERSION = "18"
+  NPM_FLAGS = "--legacy-peer-deps"
 
 # Force production branch to main
 [context.production]
-  command = "bun run build"
+  command = "npm run build"
   
 [[redirects]]
   from = "/*"

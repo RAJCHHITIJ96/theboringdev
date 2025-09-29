@@ -7,7 +7,7 @@ import { Database, TrendingUp, Target, Users, BarChart3 } from "lucide-react";
 interface TableStats {
   name: string;
   count: number;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 const Dashboard = () => {
