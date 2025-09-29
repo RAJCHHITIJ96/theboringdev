@@ -7,9 +7,16 @@
 [build.environment]
   NODE_VERSION = "18"
   NPM_FLAGS = "--legacy-peer-deps"
+  CI = "true"
 
-# Force production branch to main
+# Force all builds to use main branch only
 [context.production]
+  command = "npm run build"
+
+[context.deploy-preview]
+  command = "npm run build"
+
+[context.branch-deploy]
   command = "npm run build"
   
 [[redirects]]
