@@ -1,8 +1,9 @@
 import React, { lazy, Suspense } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getArticleBySlug } from '@/data/articles';
 import NewHeader from '@/components/NewHeader';
 import Footer from '@/components/Footer';
+import NotFound from '@/pages/NotFound';
 
 interface ArticleRendererProps {
   category: string;
@@ -12,14 +13,15 @@ export const ArticleRenderer: React.FC<ArticleRendererProps> = ({ category }) =>
   const { slug } = useParams<{ slug: string }>();
 
   if (!slug) {
-    return <Navigate to="/404" replace />;
+    return <NotFound />;
   }
 
   // Get article metadata from registry
   const article = getArticleBySlug(category, slug);
   
   if (!article) {
-    return <Navigate to="/404" replace />;
+    console.log(`Article not found: category='${category}', slug='${slug}'`);
+    return <NotFound />;
   }
 
   // Dynamically import the component
