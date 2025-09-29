@@ -123,7 +123,7 @@ Primary Output Schema
     "read_time": "X min",
     "assets_count": {
       "images": 0,
-      "code_blocks": 0,
+      "code_snippets": 0,
       "tables": 0,
       "charts": 0,
       "videos": 0
