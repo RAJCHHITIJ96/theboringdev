@@ -7,7 +7,7 @@ import { ExternalLink, Calendar, Clock, Tag, Globe } from 'lucide-react';
 const FocusedDashboard = () => {
   const baseUrl = 'https://fascinating-pothos-a3975f.netlify.app';
   
-  // Only the 3 pages you specified
+  // Your 4 key pages including the awesome DeploymentMonitor
   const focusedPages = [
     {
       filename: 'CleanTestArticle2024.tsx',
@@ -38,6 +38,16 @@ const FocusedDashboard = () => {
       url: `${baseUrl}/ai-ugc`,
       publishDate: '2024-11-15',
       readTime: '6 min read'
+    },
+    {
+      filename: 'DeploymentMonitor.tsx',
+      title: '🚀 AI Deployment Monitor',
+      description: 'Real-time pipeline monitoring dashboard',
+      category: 'monitoring',
+      slug: 'deployment-monitor',
+      url: `${baseUrl}/deployment-monitor`,
+      publishDate: '2024-12-20',
+      readTime: '3 min read'
     }
   ];
 
@@ -48,8 +58,8 @@ const FocusedDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Helmet>
-        <title>Focused Dashboard - 3 Key Pages</title>
-        <meta name="description" content="Simple dashboard for 3 key pages without complex logic" />
+        <title>Focused Dashboard - 4 Key Pages</title>
+        <meta name="description" content="Simple dashboard for 4 key pages including pipeline monitoring" />
       </Helmet>
 
       <NewHeader />
@@ -62,7 +72,7 @@ const FocusedDashboard = () => {
               🎯 Focused Pages Dashboard
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Simple access to your 3 key pages - no complex logic, no errors
+              Simple access to your 4 key pages including pipeline monitoring - no complex logic, no errors
             </p>
           </div>
 
@@ -73,7 +83,7 @@ const FocusedDashboard = () => {
               <div className="text-gray-600">Total Pages</div>
             </div>
             <div className="bg-white rounded-lg shadow-md p-6 text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">3</div>
+              <div className="text-3xl font-bold text-green-600 mb-2">{focusedPages.length}</div>
               <div className="text-gray-600">Ready to Use</div>
             </div>
             <div className="bg-white rounded-lg shadow-md p-6 text-center">
@@ -83,7 +93,7 @@ const FocusedDashboard = () => {
           </div>
 
           {/* Pages Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {focusedPages.map((page, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
                 <div className="p-6">
@@ -140,7 +150,7 @@ const FocusedDashboard = () => {
                 ✅ Simple & Reliable
               </h3>
               <p className="text-green-700 text-sm">
-                This focused dashboard shows only your 3 specified pages with zero complex logic.
+                This focused dashboard shows your 4 key pages including pipeline monitoring with zero complex logic.
                 No dynamic discovery, no complex state management - just simple, working links.
               </p>
             </div>

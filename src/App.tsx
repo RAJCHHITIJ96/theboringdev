@@ -27,7 +27,6 @@ import FocusedDashboard from "./pages/FocusedDashboard";
 // Import only the 3 specific pages you requested
 import CleanTestArticle2024 from "./pages/CleanTestArticle2024";
 import AiPoweredEmailAutomationStrategies from "./pages/AiPoweredEmailAutomationStrategies";
-import AIUGC from "./pages/AIUGC";
 
 const queryClient = new QueryClient();
 
