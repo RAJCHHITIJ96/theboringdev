@@ -25,19 +25,34 @@ import DeploymentMonitor from "./pages/DeploymentMonitor";
 import PublishedArticlesDashboard from "./pages/PublishedArticlesDashboard";
 import PublishedArticlesDashboardSimple from "./pages/PublishedArticlesDashboardSimple";
 
-// Import all discovered pages
-import CleanTestArticle2024 from "./pages/CleanTestArticle2024";
-import SimpleTest from "./pages/SimpleTest";
-import UltimateSystemTest from "./pages/UltimateSystemTest";
-import FinalVerificationTest from "./pages/FinalVerificationTest";
-import SampleContentForTesting from "./pages/SampleContentForTesting";
-import GeneratedArticles from "./pages/GeneratedArticles";
-import Auth from "./pages/Auth";
-import BuildingAIWorkflows from "./pages/BuildingAIWorkflows";
-import AiPoweredEmailAutomationStrategies from "./pages/AiPoweredEmailAutomationStrategies";
-import TheAipoweredMeetingSummariesGuide from "./pages/TheAipoweredMeetingSummariesGuide";
-import AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse from "./pages/AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse";
-import SimpleTestDebug from "./pages/SimpleTestDebug";
+// Dynamic component loader to avoid import conflicts
+import { lazy, Suspense } from "react";
+
+// Dynamic component loader function
+const createDynamicComponent = (componentName: string) => {
+  return lazy(() => 
+    import(`./pages/${componentName}.tsx`)
+      .then(module => ({ default: module.default }))
+      .catch(() => {
+        console.error(`Failed to load component: ${componentName}`);
+        return import('./pages/NotFound.tsx');
+      })
+  );
+};
+
+// Create dynamic components
+const CleanTestArticle2024 = createDynamicComponent('CleanTestArticle2024');
+const SimpleTest = createDynamicComponent('SimpleTest');
+const SimpleTestDebug = createDynamicComponent('SimpleTestDebug');
+const UltimateSystemTest = createDynamicComponent('UltimateSystemTest');
+const FinalVerificationTest = createDynamicComponent('FinalVerificationTest');
+const SampleContentForTesting = createDynamicComponent('SampleContentForTesting');
+const GeneratedArticles = createDynamicComponent('GeneratedArticles');
+const Auth = createDynamicComponent('Auth');
+const BuildingAIWorkflows = createDynamicComponent('BuildingAIWorkflows');
+const AiPoweredEmailAutomationStrategies = createDynamicComponent('AiPoweredEmailAutomationStrategies');
+const TheAipoweredMeetingSummariesGuide = createDynamicComponent('TheAipoweredMeetingSummariesGuide');
+const AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse = createDynamicComponent('AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse');
 
 const queryClient = new QueryClient();
 
@@ -66,24 +81,64 @@ const App = () => (
               <Route path="/ai-coder-agent" element={<AICoderAgent />} />
               <Route path="/shaper-tester" element={<ShaperTester />} />
               <Route path="/deployment-monitor" element={<DeploymentMonitor />} />
-              <Route path="/published-articles" element={<PublishedArticlesDashboardSimple />} />
+              <Route path="/published-articles" element={<PublishedArticlesDashboard />} />
               
-              {/* Discovered Pages Routes */}
-              <Route path="/cleantestarticle2024" element={<CleanTestArticle2024 />} />
-              <Route path="/simpletest" element={<SimpleTestDebug />} />
-              <Route path="/ultimatesystemtest" element={<UltimateSystemTest />} />
-              <Route path="/finalverificationtest" element={<FinalVerificationTest />} />
-              <Route path="/samplecontentfortesting" element={<SampleContentForTesting />} />
-              <Route path="/generatedarticles" element={<GeneratedArticles />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/buildingaiworkflows" element={<BuildingAIWorkflows />} />
-              <Route path="/aipoweredemailautomationstrategies" element={<AiPoweredEmailAutomationStrategies />} />
-              <Route path="/theaipoweredmeetingsummariesguide" element={<TheAipoweredMeetingSummariesGuide />} />
-              <Route path="/aiagentsecuritythenononsenseguide" element={<AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse />} />
-              <Route path="/aiagenttester" element={<AiCoderTester />} />
-              <Route path="/aicodertest" element={<AiCoderTester />} />
-              <Route path="/shapetester" element={<ShaperTester />} />
-              <Route path="/deploymentmonitor" element={<DeploymentMonitor />} />
+              {/* Discovered Pages Routes - All Dynamic */}
+              <Route path="/cleantestarticle2024" element={
+                <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="text-lg text-muted-foreground">Loading...</div></div>}>
+                  <CleanTestArticle2024 />
+                </Suspense>
+              } />
+              <Route path="/simpletest" element={
+                <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="text-lg text-muted-foreground">Loading...</div></div>}>
+                  <SimpleTest />
+                </Suspense>
+              } />
+              <Route path="/ultimatesystemtest" element={
+                <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="text-lg text-muted-foreground">Loading...</div></div>}>
+                  <UltimateSystemTest />
+                </Suspense>
+              } />
+              <Route path="/finalverificationtest" element={
+                <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="text-lg text-muted-foreground">Loading...</div></div>}>
+                  <FinalVerificationTest />
+                </Suspense>
+              } />
+              <Route path="/samplecontentfortesting" element={
+                <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="text-lg text-muted-foreground">Loading...</div></div>}>
+                  <SampleContentForTesting />
+                </Suspense>
+              } />
+              <Route path="/generatedarticles" element={
+                <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="text-lg text-muted-foreground">Loading...</div></div>}>
+                  <GeneratedArticles />
+                </Suspense>
+              } />
+              <Route path="/auth" element={
+                <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="text-lg text-muted-foreground">Loading...</div></div>}>
+                  <Auth />
+                </Suspense>
+              } />
+              <Route path="/buildingaiworkflows" element={
+                <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="text-lg text-muted-foreground">Loading...</div></div>}>
+                  <BuildingAIWorkflows />
+                </Suspense>
+              } />
+              <Route path="/aipoweredemailautomationstrategies" element={
+                <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="text-lg text-muted-foreground">Loading...</div></div>}>
+                  <AiPoweredEmailAutomationStrategies />
+                </Suspense>
+              } />
+              <Route path="/theaipoweredmeetingsummariesguide" element={
+                <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="text-lg text-muted-foreground">Loading...</div></div>}>
+                  <TheAipoweredMeetingSummariesGuide />
+                </Suspense>
+              } />
+              <Route path="/aiagentsecuritythenononsenseguide" element={
+                <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="text-lg text-muted-foreground">Loading...</div></div>}>
+                  <AiAgentSecurityTheNononsenseGuideToPromptInjectionMaliciousUse />
+                </Suspense>
+              } />
               
               {/* Dynamic Article Routes */}
               <Route path="/ai-automation/:slug" element={<ArticleRenderer category="ai-automation" />} />
