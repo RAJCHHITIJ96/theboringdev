@@ -163,6 +163,23 @@ export const ARTICLE_REGISTRY: Record<string, ArticleEntry[]> = {
         "charts": 0,
         "code_snippets": 0
       }
+    },
+    {
+      "slug": "simple-test",
+      "component": "SimpleTest",
+      "title": "Simple Test - AI Coder 2",
+      "publishDate": "2025-01-15",
+      "category": "General",
+      "description": "Basic test for the autonomous AI publishing system",
+      "readTime": "1 min",
+      "url": "/General/simple-test",
+      "assetsCount": {
+        "images": 0,
+        "videos": 0,
+        "tables": 0,
+        "charts": 0,
+        "code_snippets": 0
+      }
     }
   ]
 };
