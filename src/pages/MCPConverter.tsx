@@ -102,7 +102,7 @@ const MCPConverter = () => {
     switch (mode) {
       case 'strict': return 'Minimal conversions, exact input preservation';
       case 'smart': return 'AI-powered with intelligent defaults and foreign key creation';
-      case 'batch': return 'Optimized for bulk processing with dependency ordering';
+      case 'batch': return 'STRICT batch processing - ALL items get COMPLETE structure with ALL fields enforced';
     }
   };
 
@@ -188,8 +188,8 @@ const MCPConverter = () => {
                       <div className="flex items-center gap-2">
                         <BarChart3 className="h-4 w-4 text-green-500" />
                         <div>
-                          <div className="font-medium">Batch Mode</div>
-                          <div className="text-xs text-muted-foreground">Optimized for bulk processing</div>
+                          <div className="font-medium">Batch Mode - Complete Structure</div>
+                          <div className="text-xs text-muted-foreground">STRICT: All items get ALL fields</div>
                         </div>
                       </div>
                     </SelectItem>

@@ -384,11 +384,66 @@ STRICT MODE:
       break;
     case 'batch':
       modeInstructions = `
-BATCH MODE:
-- Process multiple operations efficiently 
-- Ensure proper ordering (TREND_MASTER before KEYWORD_INTELLIGENCE, etc.)
+BATCH MODE - STRICT STRUCTURE ENFORCEMENT:
+⚠️ CRITICAL REQUIREMENTS:
+1. EVERY SINGLE ITEM MUST HAVE THE EXACT SAME COMPLETE STRUCTURE
+2. MANDATORY: Include ALL fields from the schema, even if null or default values
+3. NO OPTIONAL OMISSIONS: Every trend must have every single field defined
+4. COMPLETENESS CHECK: Before returning, verify that all items have identical field structures
+
+PROCESSING RULES:
+- Process multiple operations with proper dependency ordering (TREND_MASTER → KEYWORD_INTELLIGENCE → COMPETITOR_INTELLIGENCE → etc.)
 - Create missing foreign key records with intelligent defaults when needed
-- Optimize for bulk processing and dependency resolution`;
+- Optimize for bulk processing and dependency resolution
+
+STRUCTURE VALIDATION:
+- For TREND_MASTER: ALL 40+ fields must be present in EVERY item
+- For KEYWORD_INTELLIGENCE: ALL 20+ fields must be present in EVERY item
+- For other tables: ALL schema fields must be present in EVERY item
+- If processing 5 trends, ALL 5 MUST have this exact field structure
+- Use null values for missing optional fields, use defaults for required fields
+
+EXAMPLE - EVERY TREND MUST HAVE THIS EXACT COMPLETE STRUCTURE:
+{
+  "operation": "insert",
+  "table": "TREND_MASTER",
+  "data": {
+    "trend_id": "...",
+    "trend_topic": "...",
+    "trend_description": null,
+    "trend_context": null,
+    "trend_source": null,
+    "trend_category": "AI_DEVELOPMENT",
+    "discovery_time_period": "afternoon",
+    "trend_momentum_score": null,
+    "trend_sustainability_score": null,
+    "final_trend_score": null,
+    "google_trends_score": 85,
+    "social_mentions_count": 0,
+    "twitter_hashtag_volume": 0,
+    "reddit_engagement_score": null,
+    "news_articles_count": 0,
+    "github_repo_count": 0,
+    "consistency_multiplier": 1.0,
+    "status": "ACTIVE",
+    "trend_sentiment": null,
+    "trend_audience": null,
+    "trend_keywords": null,
+    "trend_hashtags": null,
+    "trend_related_topics": null,
+    "trend_industry_tags": null,
+    "trend_technologies": null,
+    "trend_companies_mentioned": null,
+    "trend_influencers": null,
+    "trend_content_types": null,
+    "trend_geographic_focus": null,
+    "daily_momentum_history": null,
+    "trend_peak_period": null,
+    "estimated_peak_date": null,
+    "discovery_date": "2025-01-13T...",
+    "last_updated": "2025-01-13T..."
+  }
+}`;
       break;
     default: // smart mode
       modeInstructions = `
@@ -722,6 +777,12 @@ serve(async (req) => {
       validationReport = generateValidationReport(inputData, convertedData);
     }
 
+    // Apply strict batch structure validation if in batch mode
+    if (conversionMode === 'batch') {
+      convertedData = validateBatchStructureCompleteness(convertedData, conversionMode);
+      console.log('✅ Batch structure completeness validation applied');
+    }
+
     const processingTime = Date.now() - startTime;
     console.log(`⚡ Conversion completed in ${processingTime}ms using ${conversionMethod} method`);
     console.log('🧹 Returning clean response format (data only)');
@@ -750,6 +811,73 @@ serve(async (req) => {
     );
   }
 });
+
+function validateBatchStructureCompleteness(convertedData: any, conversionMode: string): any {
+  if (conversionMode !== 'batch') return convertedData;
+  
+  console.log('🔍 Starting batch structure completeness validation...');
+  
+  const items = Array.isArray(convertedData) ? convertedData : [convertedData];
+  if (items.length === 0) return convertedData;
+  
+  // Group items by table
+  const tableGroups: { [key: string]: any[] } = items.reduce((acc: { [key: string]: any[] }, item: any) => {
+    const table = item.table;
+    if (!acc[table]) acc[table] = [];
+    acc[table].push(item);
+    return acc;
+  }, {});
+  
+  let totalFieldsAdded = 0;
+  
+  // For each table, ensure ALL items have ALL fields from the schema
+  for (const [table, tableItems] of Object.entries(tableGroups)) {
+    const schema = DATABASE_SCHEMAS[table as keyof typeof DATABASE_SCHEMAS];
+    if (!schema) {
+      console.log(`⚠️ No schema found for table: ${table}`);
+      continue;
+    }
+    
+    const allFieldNames = Object.keys(schema.fields);
+    console.log(`📋 Validating ${tableItems.length} items for ${table} (${allFieldNames.length} fields required)`);
+    
+    // Enforce complete structure on every item
+    tableItems.forEach((item: any, index: number) => {
+      let fieldsAdded = 0;
+      
+      allFieldNames.forEach((fieldName: string) => {
+        if (!(fieldName in item.data)) {
+          const fieldSchema = schema.fields[fieldName];
+          item.data[fieldName] = validateAndConvertField(null, fieldSchema, fieldName);
+          fieldsAdded++;
+        }
+      });
+      
+      if (fieldsAdded > 0) {
+        console.log(`  ✨ Added ${fieldsAdded} missing fields to ${table} item #${index + 1}`);
+        totalFieldsAdded += fieldsAdded;
+      }
+    });
+    
+    // Verify all items now have the same field count
+    const fieldCounts = tableItems.map((item: any) => Object.keys(item.data).length);
+    const uniqueFieldCounts = [...new Set(fieldCounts)];
+    
+    if (uniqueFieldCounts.length === 1) {
+      console.log(`✅ ${table}: All ${tableItems.length} items have identical structure (${uniqueFieldCounts[0]} fields each)`);
+    } else {
+      console.warn(`⚠️ ${table}: Items have inconsistent field counts:`, uniqueFieldCounts);
+    }
+  }
+  
+  if (totalFieldsAdded > 0) {
+    console.log(`✅ Batch validation complete: Added ${totalFieldsAdded} missing fields to ensure complete structure`);
+  } else {
+    console.log('✅ Batch validation complete: All items already had complete structure');
+  }
+  
+  return convertedData;
+}
 
 function generateValidationReport(inputData: any, outputData: any) {
   const report = {
