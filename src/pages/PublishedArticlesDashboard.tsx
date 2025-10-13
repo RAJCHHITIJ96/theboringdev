@@ -296,7 +296,7 @@ const PublishedArticlesDashboard = () => {
                           {article.category}
                         </span>
                         <div className="flex items-center">
-                          <CheckCircle className="w-4 h-4 text-green-500 mr-1" title="Published & Live" />
+                          <CheckCircle className="w-4 h-4 text-green-500 mr-1" />
                           <span className="text-xs text-green-600">Registry</span>
                         </div>
                       </div>
@@ -385,7 +385,7 @@ const PublishedArticlesDashboard = () => {
                           {page.category}
                         </span>
                         <div className="flex items-center">
-                          <FileText className="w-4 h-4 text-orange-500 mr-1" title="Discovered Page" />
+                          <FileText className="w-4 h-4 text-orange-500 mr-1" />
                           <span className="text-xs text-orange-600">Page</span>
                         </div>
                       </div>

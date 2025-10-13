@@ -1,4 +1,7 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
+import NewHeader from '@/components/NewHeader';
+import Footer from '@/components/Footer';
 
 const BuildingAIWorkflows = () => {
   return (
